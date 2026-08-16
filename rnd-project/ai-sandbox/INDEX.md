@@ -29,6 +29,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | `ASSUMPTIONS.md` | What the method bets on | edit |
 | `SOURCES.md` | Source register with IDs | append |
 | `DATA_ENVIRONMENT.md` | Databricks, uv, run recipes | edit |
+| `RATIONALE.md` | Why each rule exists; failure modes | read on demand |
 | `sessions/LOG.md` | One row per session | append only |
 | `experiments/LOG.md` | One row per experiment | append only |
 

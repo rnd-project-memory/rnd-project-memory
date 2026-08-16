@@ -264,6 +264,12 @@ absolute paths and `~/` are rejected.
 Because Copilot CLI also reads `CLAUDE.md`, a project set up this way works unchanged if you ever
 move to Claude Code. Keep the content in `AGENTS.md`.
 
+**Two classes of file, and only one must be imported.** *Behavioural instruction* shapes what the
+assistant does every session and must be reachable from `AGENTS.md`. *On-demand reference* —
+`docs/`, `LOG.md`, the playbooks, `RATIONALE.md` — is opened when needed and would only waste
+context if loaded every time. Do not `@`-import the second class; the rule below applies to the
+first.
+
 > **Critical, and invisible when it fails:** an instruction file that nothing imports has no
 > effect. It will look correct in the repository and be silently absent from every session. If a
 > file is meant to shape the assistant's behaviour, it must be reachable through `AGENTS.md`.
@@ -301,720 +307,83 @@ Keep write and network operations prompted.
 
 ## 6. File templates
 
-Copy these verbatim. `<PLACEHOLDER>` marks what to replace.
-
-### `AGENTS.md`
-
-```markdown
-# <PROJECT_NAME>
-
-## About this project
-
-<One paragraph: what is being researched or designed, and for whom.>
-
-R&D project. The method is being discovered, not implemented from a specification.
-Knowledge arrives from documentation, Confluence, call transcripts, discussion, and
-data analysis against Azure Databricks. Analysis code is Python, managed with `uv`.
-
-## Session entry point
-
-@ai-sandbox/INDEX.md
-
-## Working rules
-
-- **Owner token:** `<owner>` — my checkpoint is `ai-sandbox/CHECKPOINT-<owner>.md`. Write to
-  that file only; other `CHECKPOINT-*.md` files belong to other people.
-- `docs/` is the permanent knowledge base: settled conclusions only. **Changes to `docs/` are
-  reviewed before they land** — propose the change, then apply it once approved. Working alone
-  that means a deliberate diff pass; with colleagues it means a pull request.
-- `ai-sandbox/` is working memory. It is *not* a second copy of `docs/`. A matured
-  conclusion moves and is deleted from the sandbox, never copied.
-- `CHECKPOINT-<owner>.md` is rewritten, never appended, and capped at 150 lines. Over the cap
-  means something needs promoting to `docs/` — not that the prose needs shortening.
-- Write every entry for a reader who missed the session. In three months that reader is me.
-- Files in `sessions/` and `experiments/` are immutable once written. Corrections go
-  into the next one.
-- Answered questions and confirmed assumptions are **deleted** from their registers,
-  not marked resolved — and the `LOG.md` row names what was resolved, so the answer
-  stays discoverable.
-- Every number that enters `docs/` carries a date and a source.
-- Never commit credentials, tokens, PII, or raw extracted data. See `ai-sandbox/SOURCES.md`.
-
-## Procedures
-
-Ask to follow one of these by path:
-
-| Playbook | When |
-|----------|------|
-| `ai-sandbox/playbooks/session-start.md` | Opening a session |
-| `ai-sandbox/playbooks/checkpoint.md` | Closing a session, or any save point |
-| `ai-sandbox/playbooks/promote.md` | Moving a conclusion into `docs/` |
-| `ai-sandbox/playbooks/ingest-source.md` | Adding a PDF, Confluence page, or transcript |
-| `ai-sandbox/playbooks/run-experiment.md` | Running and recording an analysis |
-
-## Commits
-
-Conventional Commits. Types used here: `docs`, `feat`, `fix`, `chore`, `exp`.
-```
-
-### `ai-sandbox/INDEX.md`
-
-```markdown
-# <PROJECT_NAME> — Session Index
-
-**Updated:** <DATE>
-
-Entry point for every session. Loaded automatically through `AGENTS.md`.
-
----
-
-## Routing rule
-
-| What | Where |
-|------|-------|
-| Settled conclusion | `docs/` |
-| In-flight reasoning | `CHECKPOINT-<owner>.md` (one per person) |
-| What happened in a session | `sessions/<date>-<slug>.md` |
-| What an analysis produced | `experiments/EXP-<YYYY-MM-DD>-<slug>.md` |
-| Where a fact came from | `SOURCES.md` |
-
-`ai-sandbox/` is **not a second copy** of `docs/`. Matured conclusions move out.
-
----
-
-## Artifacts
-
-| File | Contents | Write mode |
-|------|----------|-----------|
-| `CHECKPOINT-<owner>.md` | Current unresolved state | rewrite, ≤150 lines |
-| `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
-| `ASSUMPTIONS.md` | What the method bets on | edit |
-| `SOURCES.md` | Source register with IDs | append |
-| `DATA_ENVIRONMENT.md` | Databricks, uv, run recipes | edit |
-| `sessions/LOG.md` | One row per session | append only |
-| `experiments/LOG.md` | One row per experiment | append only |
-
----
-
-## Current focus
-
-<2–4 lines: the live question, and what is blocking it.>
-
----
-
-## What a new session does
-
-1. Read this file, then your `CHECKPOINT-<owner>.md`, then `OPEN_QUESTIONS.md`.
-2. Do not read `docs/` wholesale — open a document when it is actually needed.
-3. Ask for the session focus if it was not given.
-4. Close with `playbooks/checkpoint.md`.
-```
-
-### `ai-sandbox/CHECKPOINT-<owner>.md`
-
-```markdown
-# <PROJECT_NAME> — Checkpoint · <owner>
-
-**Updated:** <DATE> · **Limit: 150 lines**
-
-> **This file belongs to one person.** Rename it `CHECKPOINT-<your-token>.md` and declare the
-> token in `AGENTS.md`. Other `CHECKPOINT-*.md` files are read-only to you.
->
-> Only what is **in progress and not yet settled** in `docs/`.
-> This file is **rewritten**, not appended. Delete what is no longer true — do not strike it out.
-> An entry unchanged for 3+ weeks is a conclusion, not a process: promote it.
-> Write each entry so someone who missed the session could act on it — in three months,
-> that someone is you.
-
----
-
-## Current state
-
-| Item | Value | Source |
-|------|-------|--------|
-| | | |
-
----
-
-## In progress
-
-### Gap 1 — <name> (priority: high | medium | low)
-
-<What is unresolved, and what closing it depends on.>
-
----
-
-## Promotion candidates
-
-<Entries that look ready to move into `docs/`. Empty is a healthy state.>
-
----
-
-## Out of scope for this session
-
-<Things a session should not drift into.>
-```
-
-### `ai-sandbox/OPEN_QUESTIONS.md`
-
-```markdown
-# <PROJECT_NAME> — Open Questions
-
-**Updated:** <DATE>
-
-> **Open questions only.** An answered question is **deleted** from this file — the answer
-> goes into the session record and, if durable, into `docs/`. Status `Resolved` is not used
-> here; keeping resolved entries turns the register into a landfill nobody reads.
-
-**Priority:** 🔴 high · 🟡 medium · 🟢 low
-
-> **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
-> claimed this* — the signal the field exists to carry. If solo-era entries are left
-> blank, that meaning is destroyed the day a second person joins.
-
----
-
-## Q<N> · <short title> 🔴
-
-**Raised:** <DATE> · **Owner:** <owner>
-**Source:** <where the gap surfaced — a document, a source ID, a session>
-**Question:** <what is unknown>
-**Why it matters:** <what decision it blocks>
-**Progress:** <what has been established so far, or "none">
-```
-
-### `ai-sandbox/ASSUMPTIONS.md`
-
-```markdown
-# <PROJECT_NAME> — Assumption Register
-
-**Updated:** <DATE>
-
-> What the method **bets on, and where it could be wrong**. Not "what I understood about the
-> project" — that belongs in `docs/`. The test: *if this turned out false, what breaks?*
->
-> Type: `CONFIRMED` (verified) · `INFERRED` (derived logically) · `ASSUMED` (plausible, unverified)
->
-> **`CONFIRMED` is no longer an assumption.** It moves to `docs/` and is deleted from here,
-> which is what keeps this register bounded.
-
-> **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
-> claimed this* — the signal the field exists to carry. If solo-era entries are left
-> blank, that meaning is destroyed the day a second person joins.
-
----
-
-## A<N> · <statement> — `ASSUMED`
-
-**Raised:** <DATE> · **Owner:** <owner>
-**Basis:** <what it rests on — source ID, reasoning, or convention>
-**If false:** <what breaks, and how badly>
-**What would settle it:** <the check that would confirm or kill it>
-```
-
-### `ai-sandbox/SOURCES.md`
-
-See §9 for the discipline. Template:
-
-```markdown
-# <PROJECT_NAME> — Source Register
-
-**Updated:** <DATE>
-
-> Every fact in `docs/` that came from outside is traceable to an ID here.
-> Cite as `[S-latency-spec §3.2]`.
->
-> **IDs are slugs, not numbers.** A slug names the **document's identity** — `S-arch-spec-v2`,
-> `S-kickoff-call-0412` — not the claim you wanted from it. Once assigned it is **never
-> changed**: renaming breaks every citation silently, because a stale citation still looks valid.
->
-> **Sensitivity governs storage.** `committable` → the file lives in `sources/`.
-> `reference-only` → the artifact is **never** placed in the repository; only the pointer is.
-> Default is `reference-only`. Committing is a deliberate exception.
-
-## Never commit
-
-Credentials · tokens · connection strings · PII · raw extracted data · customer names ·
-anything whose sensitivity has not been established.
-
----
-
-| ID | Type | Title | Sensitivity | Date read | Status |
-|----|------|-------|-------------|-----------|--------|
-| `S-<slug>` | | | | | |
-
----
-
-## S-<slug> · <title>
-
-**Type:** PDF | Confluence | transcript | conversation | dataset doc
-**Origin:** <URL, SharePoint path, or `sources/<file>`>
-**Source date:** <when the source itself was written>
-**Date read:** <when it was ingested — matters for mutable sources>
-**Sensitivity:** committable | reference-only
-**Status:** ingested | partial | superseded by S-<slug>
-**Answers:** <which questions this source can settle>
-**Notes:** <caveats, contested claims, sections worth revisiting>
-```
-
-### `ai-sandbox/sessions/LOG.md`
-
-```markdown
-# <PROJECT_NAME> — Session Log
-
-Append only. One row per session. **Do not read in full** — find the row by topic or date,
-then open the session file.
-
-| Date | Topic | Outcome | Link |
-|------|-------|---------|------|
-```
-
-### `ai-sandbox/sessions/<date>-<slug>.md`
-
-```markdown
-# <DATE> · <topic>
-
-**Status:** closed
-
----
-
-## Objective
-
-<What this session set out to do.>
-
-## Reasoning
-
-<How the thinking went, including paths tried and abandoned. This file is the only
-place holding full detail — everything else is a summary of it.>
-
-## Decisions
-
-<What was settled, and what moved into `docs/`.>
-
-## Found along the way
-
-<Discoveries incidental to the objective. Often the most valuable part.>
-
-## Next
-
-<What the following session should pick up.>
-```
-
-### `ai-sandbox/experiments/LOG.md`
-
-```markdown
-# <PROJECT_NAME> — Experiment Log
-
-Append only. One row per experiment. A negative result is a complete result.
-
-| ID | Date | Question | Verdict | Link |
-|----|------|----------|---------|------|
-```
-
-### `ai-sandbox/experiments/EXP-<YYYY-MM-DD>-<slug>.md`
-
-```markdown
-# EXP-<YYYY-MM-DD>-<slug>
-
-**Date:** <DATE> · **Status:** complete | aborted
-**Question:** <the single question this run answers>
-
----
-
-## Reproducibility
-
-| Field | Value |
-|-------|-------|
-| Git SHA | `<sha>` |
-| `uv.lock` | `<hash>` or "unchanged since EXP-<YYYY-MM-DD>-<slug>" |
-| Entry point | `src/experiments/<file>.py` |
-| Data source | `<catalog.schema.table>` |
-| Snapshot date | <date the data was read — upstream tables mutate> |
-| Filters / slice | <row and column selection> |
-| Cluster / runtime | <DBR version, node type, count> |
-| Run duration | <time> |
-
-## Setup
-
-<What was varied, what was held fixed, and the baseline compared against.>
-
-## Result
-
-<The numbers, with uncertainty. State the metric and its definition.>
-
-## Verdict
-
-**supports | contradicts | inconclusive** — <one line>
-
-## What this changes
-
-<Which open question it touches, which assumption it moves, what it proposes for `docs/`.>
-
-## Threats to this result
-
-<Leakage, sample size, confounds, anything that would make it not replicate.>
-```
-
-### `docs/decisions/ADR-NNN-<slug>.md`
-
-```markdown
-# ADR-<NNN> · <title>
-
-**Date:** <DATE> · **Status:** accepted | superseded by ADR-<NNN>
-
-## Context
-
-<The situation forcing a choice. What made this contested.>
-
-## Decision
-
-<What was chosen.>
-
-## Alternatives considered
-
-| Option | Why not |
-|--------|---------|
-| | |
-
-## Consequences
-
-<What this commits the project to, including the costs accepted.>
-```
-
-### `docs/techniques/<name>.md`
-
-```markdown
-# <Technique>
-
-*Status: under evaluation | evaluated — adopted | evaluated — rejected*
-*Role: <what job it would do in the method>*
-
-## What it is
-
-<Intuitive picture first, then the technical definition.>
-
-## What needed checking
-
-<Checklist agreed **before** evaluation started.>
-- [ ] <criterion>
-
-## Mechanics
-
-## Requirements
-
-<Data, compute, latency, licensing.>
-
-## Evidence
-
-<Experiment IDs and source IDs supporting the assessment.>
-
-## Risks and failure modes
-
-## Conclusion
-
-**Adopted | Adopted with caveats | Rejected** — <why, in one paragraph>
-```
-
----
+**The skeleton is normative. This section does not reproduce it.**
+
+Every file listed below exists, filled and commented, in `templates/rnd-project/`. Copy from
+there. Earlier drafts of this handbook embedded copies of each template; within a day the two had
+diverged in four files and the skeleton had grown four more that the handbook never mentioned —
+a system whose central claim is that two copies drift, reproducing that failure in its own
+delivery. The copies are gone.
+
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Auto-loaded entry point: project description, rules, owner token, playbook list |
+| `ai-sandbox/INDEX.md` | Session entry point: routing rule, artifact list, current focus |
+| `ai-sandbox/CHECKPOINT-<owner>.md` | One per person; in-flight reasoning, rewritten, ≤150 lines |
+| `ai-sandbox/OPEN_QUESTIONS.md` | Active questions only; deleted when answered |
+| `ai-sandbox/ASSUMPTIONS.md` | What the method bets on |
+| `ai-sandbox/SOURCES.md` | Source register: IDs, provenance, sensitivity |
+| `ai-sandbox/DATA_ENVIRONMENT.md` | Databricks access, tables, data traps, uv recipes |
+| `ai-sandbox/RATIONALE.md` | Why each rule exists; failure-mode table |
+| `ai-sandbox/ASSISTANT_PROFILE.md` | Optional; how to pitch explanations. `@`-import it or it does nothing |
+| `ai-sandbox/playbooks/*.md` | The five procedures — see §7 |
+| `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record |
+| `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record |
+| `docs/problem.md` | Problem statement, success criteria, stakeholders |
+| `docs/method.md` | The method as it currently stands |
+| `docs/constraints.md` | Scope, compute, data, delivery limits |
+| `docs/glossary.md` | Terms used with a specific meaning here |
+| `docs/techniques/_TEMPLATE.md` | Evaluation of a candidate technique, including rejected ones |
+| `docs/decisions/_TEMPLATE.md` | ADR: context, decision, alternatives, consequences |
+| `gitignore.template` | Rename to `.gitignore` — enforces the never-commit list |
+| `check.sh` · `.githooks/pre-commit` | Mechanical checks; secret scan — see §12 |
+
+Three fields are worth explaining rather than just copying, because their shape is not obvious:
+
+**`SOURCES.md` — sensitivity is decided at ingestion, defaulting to `reference-only`.** It is the
+only decision in the system a later edit cannot undo. See §9.
+
+**Experiment records — snapshot date, not just table name.** Upstream Databricks tables are
+mutable, so a table name alone does not identify the data a result came from. See §8.
+
+**`OPEN_QUESTIONS.md` / `ASSUMPTIONS.md` — `Owner:` is always filled in, even alone.** Blank must
+mean *unclaimed*; if solo-era entries are left blank, that meaning is destroyed the day a second
+person joins.
 
 ## 7. Playbooks
 
-Each is a file in `ai-sandbox/playbooks/`. Copy the content below into the corresponding file.
+**Also normative in the skeleton, for the same reason as §6.** The five procedures live in
+`ai-sandbox/playbooks/`. What follows is what each is *for* and the one decision inside it that
+is easy to get wrong — not its text.
 
-### `session-start.md`
+Copilot CLI has no user-defined slash commands, so a playbook is invoked by asking for it:
 
-```markdown
-# Playbook — Open a session
-
-## Read, in this order
-
-1. `ai-sandbox/INDEX.md` — current focus
-2. `ai-sandbox/CHECKPOINT-<owner>.md` — what is in progress. If other `CHECKPOINT-*.md`
-   files exist, skim them too: they are colleagues' in-flight work, read-only to you
-3. `ai-sandbox/OPEN_QUESTIONS.md` — active questions
-
-**Do not** read `docs/` in full, and do not read `sessions/LOG.md` in full. Open a
-specific document when the discussion actually needs it. The point of the index is to
-avoid loading the whole knowledge base into every session.
-
-## Report back, ~10 lines maximum
-
-- where the last session stopped
-- what is currently in progress
-- the 2–3 highest-priority open questions
-- a proposed focus for this session
-
-Then **stop and wait** for confirmation or redirection. Do not start work unprompted.
-
-## Staleness checks
-
-- **Stalled entry.** If a `CHECKPOINT-<owner>.md` entry has not changed in 3+ weeks (check
-  `sessions/LOG.md`), flag it as a promotion candidate: it is a conclusion, not a process.
-- **Aging numbers.** If the checkpoint holds figures marked unverified and the session
-  touches them, offer to re-check against the data before reasoning on top of them.
-- **Mutable sources.** If a claim in play cites a Confluence page read more than a few
-  months ago, flag that the page may have changed.
+```
+Follow ai-sandbox/playbooks/checkpoint.md
 ```
 
-### `checkpoint.md`
-
-```markdown
-# Playbook — Close a session
-
-Run at the end of a session, or at any point a reliable save is wanted.
-Follow the steps **in order**.
-
-## 1. Write the session file
-
-`ai-sandbox/sessions/YYYY-MM-DD-<slug>.md`, slug in lowercase with hyphens.
-
-Contents: objective, how the reasoning went, decisions, incidental findings, what is next.
-Full detail belongs here — this file is its only home. Several sessions in one day get a
-numeric suffix (`-2`).
-
-**Once written, this file is immutable.** Errors in it are corrected in the *next* session,
-not edited retroactively.
-
-## 2. Decide what graduates to `docs/`
-
-Review the session's output for conclusions that have stopped moving. **List the candidates
-for the user and wait for agreement** — `docs/` is never modified without it. On agreement,
-follow `promote.md`.
-
-Test: still true in a month → `docs/`. Might still turn over → checkpoint.
-
-## 3. Rewrite `CHECKPOINT-<owner>.md`
-
-**Rewrite the whole file. Do not append.** Write only `CHECKPOINT-<owner>.md` — the file
-named by the owner token in `AGENTS.md`. Other people's checkpoints are never edited.
-
-- Delete everything no longer true. Do not strike through or mark "outdated" — delete.
-  Previous versions are in git and in the session file.
-- Delete everything promoted in step 2.
-- Keep only what is unresolved.
-- Check the limit: `wc -l ai-sandbox/CHECKPOINT-<owner>.md` ≤ 150.
-
-**If it exceeds 150 lines**, something needs promoting — that is not a signal to shorten
-the wording. Find the most settled part and move it to `docs/`. Compressing prose to fit
-the cap is the exact failure this system exists to prevent.
-
-## 4. Update the registers
-
-`OPEN_QUESTIONS.md` — **delete** answered questions (do not mark them resolved); add
-questions raised this session.
-
-`ASSUMPTIONS.md` — an assumption that became `CONFIRMED` is promoted to `docs/` and
-**deleted** here; one proven false is deleted, with its consequence recorded in the
-checkpoint as a gap; add new assumptions surfaced this session.
-
-`SOURCES.md` — add any source consulted this session that is not yet registered.
-
-## 5. Update the log and index
-
-- `sessions/LOG.md` — one row: date, topic, outcome, link to the session file. The outcome
-  names **what was resolved**, not just what was worked on: this row is the only cue a later
-  reader gets that a deleted question ever had an answer.
-- `experiments/LOG.md` — a row for each experiment run this session.
-- `INDEX.md` — update the date and "Current focus". Leave the rest alone
-  unless the structure genuinely changed: this file loads into every session and must
-  stay small and stable.
-
-## 6. Propose a commit
-
-Conventional Commits. Show the message and **wait for confirmation — do not commit
-unprompted.**
-
-## Checklist
-
-- [ ] Session file written
-- [ ] Promotions agreed and applied
-- [ ] `CHECKPOINT-<owner>.md` rewritten, ≤150 lines
-- [ ] Registers updated, resolved entries deleted
-- [ ] `LOG.md` and `INDEX.md` updated
-- [ ] Commit proposed
-```
-
-### `promote.md`
-
-```markdown
-# Playbook — Promote a conclusion into `docs/`
-
-Moves a matured conclusion from working memory into the permanent knowledge base.
-Governing rule: **`docs/` reflects current understanding.** Outdated sections are
-rewritten, never left standing beside newer ones.
-
-## 1. Pick the destination
-
-| What is moving | Where |
-|----------------|-------|
-| Problem framing, success criteria | `docs/problem.md` |
-| How the method works | `docs/method.md` |
-| A contested choice and its rationale | `docs/decisions/ADR-NNN-<slug>.md` |
-| Assessment of a candidate technique | `docs/techniques/<name>.md` |
-| Scope, compute, data, delivery limit | `docs/constraints.md` |
-| A term used with a specific meaning | `docs/glossary.md` |
-
-If it fits nowhere, it is probably not ready. Leave it in the checkpoint.
-
-## 2. Find what it replaces
-
-**Mandatory.** Search `docs/` for existing statements on the topic before writing anything.
-A new conclusion almost always refines or overturns something already recorded.
-
-One conclusion often touches several files. Update all of them in a single commit —
-leaving one behind puts the knowledge base into a self-contradictory state, which is worse
-than not having recorded the conclusion at all.
-
-## 3. Rewrite in place
-
-- Rewrite the outdated section. **Do not add a new section beside it.**
-- No "previously X, now Y" phrasing. `docs/` describes the present; history lives in git,
-  `sessions/`, and `decisions/`.
-- Match the surrounding style.
-- Every number carries a date and a source ID.
-- Claims from external material cite their source: `[S-latency-spec §3.2]`.
-
-## 4. Sync the open questions
-
-If this closes a question, delete it from `OPEN_QUESTIONS.md` and clear any corresponding
-checkbox in the `docs/` file it came from.
-
-## 5. Delete the working copy
-
-Remove what moved from `CHECKPOINT-<owner>.md` / `ASSUMPTIONS.md`. Duplication between `docs/` and
-`ai-sandbox/` is precisely what this system is built to prevent: two copies drift, and then
-neither is trustworthy.
-
-## 6. Report
-
-List the files changed and what changed in each, then propose a commit. Do not commit
-without confirmation.
-
-`docs/` changes are **reviewed before they land**. Working alone that is a deliberate pass over
-the diff; with colleagues it is a pull request. The check that matters is step 2 — that every
-file the conclusion touches was updated, not just the obvious one.
-
-## When **not** to promote
-
-- The conclusion rests on unverified numbers — verify first.
-- It was floated for consideration, without the user's agreement.
-- It could still turn over next session. Leave it in the checkpoint.
-```
-
-### `ingest-source.md`
-
-```markdown
-# Playbook — Ingest a source
-
-For a PDF, Confluence page, call transcript, or any external material entering the project.
-
-## 1. Register before reading
-
-Choose a slug and add the entry to `SOURCES.md`. Record type, origin, source date,
-**date read**, sensitivity, and status.
-
-The slug names the **document's identity**, not the claim you wanted from it:
-`S-arch-spec-v2`, `S-kickoff-call-0412`, `S-latency-spec`. There is no counter to look up,
-and two people ingesting concurrently collide only when it is genuinely the same document —
-which is a merge, not a conflict.
-
-**A slug, once assigned, is never changed.** It will eventually look inaccurate. Rename it
-and every citation breaks silently, because a stale citation still looks perfectly valid.
-Live with the imperfect name.
-
-**Decide sensitivity first.** Default is `reference-only` — the artifact stays out of the
-repository and only the pointer is stored. Only mark `committable` when it is established
-that the material may live in the repo; then place it in `sources/`. If sensitivity is
-unclear, it is `reference-only`. This is the one decision in the system that a later edit
-cannot undo: once committed, the content is in git history.
-
-## 2. State what it is expected to answer
-
-Before extracting anything, write down which open questions this source might settle. This
-prevents ingestion becoming an end in itself, and makes it obvious when a source turns out
-not to contain what was hoped.
-
-## 3. Extract, with citations
-
-Pull out claims relevant to the project. Each carries a locator — page, section, heading,
-or transcript timestamp — so `[S-latency-spec §3.2]` resolves to something.
-
-Separate:
-
-- **stated in the source** — quote or close paraphrase
-- **inferred from it** — the interpretation, marked as such
-- **contradicts existing knowledge** — flag loudly; this is the highest-value outcome
-
-## 4. Route the output
-
-- Settles an open question → follow `promote.md`; delete the question.
-- Interesting but unresolved → `CHECKPOINT-<owner>.md`.
-- Something the method now relies on → `ASSUMPTIONS.md`.
-- Raises new questions → `OPEN_QUESTIONS.md`, citing the source ID.
-
-## Source-type caveats
-
-| Type | Caveat |
-|------|--------|
-| Confluence | **Mutable.** Record the date read; the page can change or be deleted underneath a claim. Re-verify anything load-bearing. |
-| Call transcript | Speech is imprecise and often speculative. Distinguish a decision from thinking aloud. Attribute claims to speakers when it matters. |
-| PDF / report | Check its own date and provenance — a report may itself cite something stale. |
-| Conversation with an AI | Not a source. Reasoning to be verified, and it is recorded in `sessions/`, not `SOURCES.md`. |
-```
-
-### `run-experiment.md`
-
-```markdown
-# Playbook — Run and record an experiment
-
-## 1. State the question first
-
-One sentence, written before the run: what would this result change? An experiment without
-a stated question cannot fail, and therefore teaches nothing.
-
-State the expected outcome too. A result only surprises if there was a prior.
-
-## 2. Fix the reproducibility triple
-
-Before running, record: git SHA, `uv.lock` state, and the data source **with its snapshot
-date**. Upstream Databricks tables are mutable — a table name alone does not identify the
-data. See `DATA_ENVIRONMENT.md`.
-
-Commit the analysis code before running it. A result tied to uncommitted code is not
-reproducible.
-
-## 3. Run
-
-Keep the entry point a script in `src/experiments/`, not an ad-hoc notebook cell.
-Notebooks are for exploration; anything producing a recorded result needs a file that
-can be re-run.
-
-## 4. Write the record
-
-`ai-sandbox/experiments/EXP-<YYYY-MM-DD>-<slug>.md`, using the template. Immutable once written.
-
-Fill in **Threats to this result** honestly — leakage, sample size, confounds. This section
-is what stops a result from being over-claimed six months later by someone who has forgotten
-its caveats, including you.
-
-## 5. Give a verdict
-
-**supports · contradicts · inconclusive.** "Inconclusive" is a legitimate and common outcome;
-recording it prevents the experiment being re-run identically later.
-
-**A negative result is a complete result.** Record it with the same care as a positive one
-and keep it on file. Negative findings are the ones most reliably lost, and re-running a
-known-failed approach is a standard way to lose a week.
-
-## 6. Route it
-
-- Adds a row to `experiments/LOG.md`.
-- Changes what the method does → `promote.md` into `docs/method.md` or `docs/techniques/`.
-- Settles an assumption → update `ASSUMPTIONS.md` (confirmed ones move to `docs/` and are deleted).
-- Raises questions → `OPEN_QUESTIONS.md`.
-```
-
----
+| Playbook | Purpose | The part that is easy to get wrong |
+|----------|---------|-----------------------------------|
+| `session-start.md` | Load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. |
+| `checkpoint.md` | Close a session: freeze the record, promote, rewrite state | Step 3's cap means **promote something**, never shorten the prose. |
+| `promote.md` | Move a matured conclusion into `docs/` | Step 2 — find *every* file the conclusion touches. Updating one and missing another leaves `docs/` self-contradictory, which is worse than not recording it. |
+| `ingest-source.md` | Take in a PDF, Confluence page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
+| `run-experiment.md` | Run and record an analysis | The question is written **before** the run. An experiment with no stated question cannot fail, and so teaches nothing. |
+
+### Why playbooks rather than custom agents
+
+Copilot CLI supports custom agents (`.github/agents/<name>.agent.md`, invoked via `/agent`, in
+natural language, or `copilot --agent <name> --prompt "…"`). Deliberately unused for these.
+
+A custom agent is an *isolated* worker with its own context. `checkpoint` and `promote` edit
+across the whole repository and must confirm with the user before touching `docs/` — isolation
+works against both. Agents suit one job here: ingesting a large PDF, where the reading should not
+land in the main session's context.
+
+Playbooks are also tool-agnostic. Under Claude Code the same files can be wrapped as skills — a
+three-line `SKILL.md` that says *follow `ai-sandbox/playbooks/<name>.md`* — giving discoverable
+one-word invocation with the playbook remaining the single source of truth. The wrapper must
+never restate the procedure, or §6's failure returns in a new place.
 
 ## 8. Experiment discipline
 
@@ -1111,64 +480,28 @@ re-verified rather than trusted. `session-start.md` includes this check.
 
 ## 10. Data environment
 
-`ai-sandbox/DATA_ENVIRONMENT.md` records what makes a run repeatable — and nothing that must
-stay secret.
+`ai-sandbox/DATA_ENVIRONMENT.md` in the skeleton records how to obtain data and run analyses:
+workspace and auth *mechanism* (never values), tables in use with grain and refresh, known data
+traps, `uv` commands, and verified run recipes.
 
-```markdown
-# <PROJECT_NAME> — Data Environment
+**No credentials, ever.** Describe where a secret comes from — an environment variable name, a
+CLI profile, a keyring entry — never what it is.
 
-**Updated:** <DATE>
+### Why the data-traps section matters most
 
-> How to obtain data and run analyses. **No credentials here** — describe where they come
-> from, never what they are.
+It is the only part that cannot be re-derived from the code. A column whose nulls mean "not
+applicable" rather than "unknown" produces a plausible, wrong answer silently, every time, until
+somebody notices. The same goes for duplicated keys, a backfill that rewrote history, and
+timezone conventions that differ from what a column name implies.
 
-## Access
+Write each trap down the moment it is found. It has no other home in the repository, and the
+second person bitten by it is usually the first person, a year later.
 
-- Workspace: <name or non-sensitive identifier>
-- Authentication: <mechanism — e.g. env var name, CLI profile, keyring entry. Never the value.>
-- Required permissions: <what to request, and from whom>
+### Why the snapshot date is mandatory
 
-## Tables in use
-
-| Table | Contents | Grain | Refresh | Notes |
-|-------|----------|-------|---------|-------|
-| `catalog.schema.table` | | one row per … | daily 03:00 UTC | |
-
-**Every table here is mutable.** Any recorded result cites the table *and* the snapshot date.
-
-## Known data traps
-
-<Nulls that mean something specific, duplicated keys, a backfill that changed history,
-timezone conventions, columns that are not what their names suggest. This section pays for
-itself the second time someone is bitten.>
-
-## Python environment
-
-Managed with `uv`.
-
-```bash
-uv sync                                   # create/refresh the environment from uv.lock
-uv run python src/experiments/<file>.py   # run inside it
-uv add <package>                          # add a dependency, updating uv.lock
-```
-
-`uv.lock` is committed. An experiment record cites its state — that is what makes a result
-reproducible when library versions have since moved.
-
-## Run recipes
-
-<Verified commands for common tasks: pulling a slice, running a baseline, exporting results.
-Each one that works is one less thing to rediscover.>
-```
-
-### Why the data traps section matters most
-
-It is the part that cannot be re-derived from the code. A column whose nulls mean "not
-applicable" rather than "unknown" will produce a plausible, wrong answer, silently, every time,
-until someone notices. Write these down the moment they are found — that is knowledge with no
-other home in the repository.
-
----
+Every table listed there is mutable. An experiment record cites the table *and* the date it was
+read, because the table name alone does not identify the data that produced a result. `uv.lock`
+is committed for the same reason on the code side.
 
 ## 11. Bootstrapping an existing project
 
@@ -1208,69 +541,55 @@ naturally as sessions run; forcing entries produces filler that trains everyone 
 
 ---
 
-## 12. Failure modes
+## 12. Failure modes and mechanical checks
 
-What rot looks like, and what it actually means. Check against this every few sessions.
+**The failure-mode table lives in `ai-sandbox/RATIONALE.md`, inside the project** — not here.
 
-| Symptom | Real cause | Correct response |
-|---------|-----------|------------------|
-| `CHECKPOINT-<owner>.md` over 150 lines | Something in it has settled | **Promote.** Do not compress. |
-| An entry unchanged for 3+ weeks | It is a conclusion, not a process | Promote |
-| The assistant reads only head and tail of a file | That file mixes state with history | Split it — this is the failure §1 describes |
-| The same fact in `docs/` and `ai-sandbox/` | A promotion copied instead of moved | Delete the sandbox copy |
-| `OPEN_QUESTIONS.md` full of `Resolved` entries | Statuses used instead of deletion | Delete them |
-| A number in `docs/` with no date or source | Provenance discipline lapsed | Re-verify or remove it |
-| Sessions re-deriving the same conclusion | It never made it into `docs/` | Promote it now |
-| A claim nobody can trace | Source was never registered | Register it retroactively, or drop the claim |
-| An experiment that cannot be re-run | Reproducibility triple not captured | Treat its result as unverified |
-| A rule in an instruction file having no effect | Nothing imports the file | Reachable from `AGENTS.md`, or it does not exist |
+That placement is deliberate. This handbook is a textbook: read once, by the person setting the
+system up, in whatever repository it was copied from. The failure-mode table is operational — it
+is consulted while working, by whoever notices something rotting, and it must therefore exist in
+the live project rather than in the template it came from. `RATIONALE.md` also carries one
+paragraph per rule in `AGENTS.md` explaining what that rule prevents, for the same reason: rules
+that ship as bare imperatives get "helpfully" violated.
 
-The last one deserves emphasis: it was found by accident in the project this system came from,
-where a file defining how the assistant should communicate sat in the repository for five
-sessions with nothing loading it. It looked correct. It never ran. **A silent failure of
-instruction loading is invisible from inside the session** — the only way to catch it is to ask
-the assistant to state a rule that lives exclusively in the imported file.
+### What is checked mechanically
 
----
+Prose rules aimed at a probabilistic executor decay. Two scripts ship in the skeleton, with
+deliberately different severity:
+
+| Artifact | Checks | Mode |
+|----------|--------|------|
+| `check.sh` | Checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates | **Always exits 0.** Advisory output only |
+| `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
+
+They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
+version strings read as undated numbers, for instance — and a noisy check sharing an exit code
+with the secret scan is a check that gets disabled after its first irritating run. The one rule
+whose violation cannot be repaired by editing a file must not be hostage to that.
+
+Hooks do not survive a clone. Installation is one line, and it belongs in the setup steps where
+it will actually be run:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+If the project has CI, run the secret scan there too — it is the only layer nobody can forget to
+install.
 
 ## 13. Assistant profile (optional)
 
-If explanations land consistently too shallow or too deep, add a profile file and import it
-from `AGENTS.md` — otherwise it does nothing (§12).
+If explanations land consistently too shallow or too deep, fill in
+`ai-sandbox/ASSISTANT_PROFILE.md` and **`@`-import it from `AGENTS.md`**.
 
-```markdown
-# Assistant profile — <PROJECT_NAME>
+Unlike `RATIONALE.md`, this one *is* behavioural instruction — it shapes every session, so it
+belongs in the imported class (§5). An un-imported profile is the exact silent failure §12
+describes: it sits in the repository looking correct and never runs.
 
-## Who I am
-
-<Role and depth in the relevant fields. Be specific about the boundary: which areas
-are hands-on experience, and which are new territory. Generic seniority labels do not
-calibrate anything.>
-
-## How to work with me
-
-- Build on my reasoning rather than listing alternatives.
-- Be explicit about uncertainty — say plainly when something is speculative or contested.
-- Use structure where it helps: comparisons, trade-off tables, scenario analysis.
-- Flag the most important insight in each batch, and why it matters.
-- Skip generic points unless they are a step toward something sharper.
-
-## How to explain
-
-- Concrete picture or analogy first, technical definition second.
-- Define terms on first use.
-- Always connect to the practical consequence for the decision at hand.
-- Mark whether something is **worth understanding properly** or **safe to treat as a
-  black box for now**.
-
-## Collaboration
-
-- This is a back-and-forth, not a one-shot answer.
-- After each exchange, suggest 2–3 concrete directions to explore next.
-- Push-back or confusion is a signal to re-explain or re-angle — not to abandon the idea.
-```
-
----
+The template covers who you are and where your expertise stops, how to pitch explanations,
+whether to flag something as worth understanding properly or safe to treat as a black box, and
+the request to be explicit about uncertainty. Be specific about the boundary of your knowledge —
+generic seniority labels calibrate nothing.
 
 ## 14. Working with colleagues
 
