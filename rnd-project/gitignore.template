@@ -1,0 +1,12 @@
+# Never commit
+.env
+*.key
+*.pem
+secrets/
+data/
+sources/reference-only/
+
+# Python / uv
+.venv/
+__pycache__/
+.ipynb_checkpoints/
