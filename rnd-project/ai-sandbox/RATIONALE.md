@@ -73,8 +73,17 @@ does. Test each entry: *could someone who missed the session act on this?*
 ### Every number entering `docs/` carries a date and a source
 
 An undated number cannot be re-verified and cannot be known to be stale. In practice it gets
-trusted forever. Legitimate bases: a source ID (`S-…`), an experiment ID (`EXP-…`), or a session
-file for a conclusion reached by reasoning.
+trusted forever.
+
+Legitimate bases, recorded in `docs/CLAIMS.md`: `EXP-…` (measured), `S-…` (external source),
+`sessions/…` (reasoned in a session), `ADR-…` (a decision rather than a discovery). The third
+matters most in practice — reasoning in session is the main way knowledge is produced here, and
+without a legitimate label for it an assistant will either invent a source or leave the number
+bare. Naming a claim as reasoned rather than measured is information, not an admission.
+
+The basis also preserves what promotion otherwise destroys: `ASSUMPTIONS.md` separates `ASSUMED`
+from `INFERRED`, but once a claim reaches `docs/` a measured result and a hunch from one call
+transcript read identically authoritative.
 
 ### Never commit credentials, tokens, PII, or raw extracted data
 
@@ -102,6 +111,9 @@ automates the mechanical half.
 | A claim nobody can trace | Source was never registered | Register it retroactively, or drop the claim |
 | An experiment that cannot be re-run | Reproducibility fields not captured | Treat its result as unverified |
 | A session file left `Status: open` | The session was interrupted | Freeze as `abandoned`; do not backfill |
+| `docs/CLAIMS.md` disagrees with `docs/` | The index was updated separately, or not at all | Re-sync; it belongs in the same change as the promotion |
+| A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |
+| An intake file past its dismantling date | Bootstrapping never finished | Highest-priority item, not furniture |
 | A rule in `AGENTS.md` having no effect | Nothing imports the file it lives in | Reachable from `AGENTS.md`, or it does not exist |
 
 ### The last one is invisible when it fails

@@ -43,7 +43,7 @@ table before any file format.
 
 | What it is | Where it goes | Write mode |
 |------------|---------------|-----------|
-| Settled conclusion about the method | `docs/` | edit in place |
+| Settled conclusion about the method | `docs/` + a row in `docs/CLAIMS.md` | edit in place |
 | In-flight reasoning, not yet resolved | `ai-sandbox/CHECKPOINT-<owner>.md` | **rewrite**, ≤150 lines |
 | What happened in a session | `ai-sandbox/sessions/<date>-<slug>.md` | create once, **immutable** |
 | What an analysis run produced | `ai-sandbox/experiments/EXP-<YYYY-MM-DD>-<slug>.md` | create once, **immutable** |
@@ -329,6 +329,7 @@ delivery. The copies are gone.
 | `ai-sandbox/playbooks/*.md` | The five procedures — see §7 |
 | `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record |
 | `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record |
+| `docs/CLAIMS.md` | Index of every claim in `docs/`: shorthand, file, date, basis |
 | `docs/problem.md` | Problem statement, success criteria, stakeholders |
 | `docs/method.md` | The method as it currently stands |
 | `docs/constraints.md` | Scope, compute, data, delivery limits |
@@ -526,9 +527,22 @@ priority order.
 this cannot be stated crisply, that is the most valuable finding of the day — record the
 ambiguity in `OPEN_QUESTIONS.md`.
 
-**5. Capture current understanding into `CHECKPOINT-<owner>.md`.** Everything currently believed but
-not written down. Do not attempt to distil it into `docs/` yet — it has not been tested by a
-session, and premature promotion puts unstable claims in the permanent base.
+**5. Capture current understanding into an intake file.** Everything currently believed but not
+written down. Do not attempt to distil it into `docs/` yet — it has not been tested by a session,
+and premature promotion puts unstable claims in the permanent base.
+
+**This will exceed 150 lines, and that is expected.** Write it to
+`ai-sandbox/CHECKPOINT-<owner>-intake.md`, which is **exempt from the cap** and carries a
+dismantling date in its header — four to six weeks out.
+
+The exemption exists because the three rules otherwise deadlock: this step says capture
+everything, §3 caps the checkpoint at 150 lines, and this step also forbids promoting yet, which
+is the cap's only prescribed remedy. On a real project the intake is 300+ lines on day one.
+
+The intake file is drained, not archived: each session moves what has proven durable into `docs/`
+and what is still live into the real checkpoint. When it empties, delete it. If the dismantling
+date passes and it is still full, that is the signal that bootstrapping never finished — treat it
+as the highest-priority item, not as furniture.
 
 **6. Backfill the session log.** If the project has git history, reconstruct one row per
 significant past episode from the commits. Approximate rows are worth more than an empty log.
