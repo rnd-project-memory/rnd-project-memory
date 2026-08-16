@@ -24,11 +24,16 @@ data analysis against Azure Databricks. Analysis code is Python, managed with `u
 - `CHECKPOINT-<owner>.md` is rewritten, never appended, and capped at 150 lines. Over the cap
   means something needs promoting to `docs/` — not that the prose needs shortening.
 - Write every entry for a reader who missed the session. In three months that reader is me.
-- Files in `sessions/` and `experiments/` are immutable once written. Corrections go
-  into the next one.
-- Answered questions and confirmed assumptions are **deleted** from their registers,
-  not marked resolved — and the `LOG.md` row names what was resolved, so the answer
-  stays discoverable.
+- The session file is created at the **start** of a session (`Status: open`) and appended
+  to as it runs; `checkpoint.md` closes it. Immutable once closed. An `open` file from any
+  earlier session was interrupted — freeze it as `abandoned`, do not backfill.
+- Experiment records are immutable once written. Corrections go into the next one.
+- Register entries are **deleted**, never marked resolved — whether answered or gone
+  obsolete. The `LOG.md` row names the outcome, which is what keeps the deletion
+  discoverable.
+- Every claim promoted into `docs/` gets a row in `docs/CLAIMS.md` with its basis
+  (`EXP-…`, `S-…`, `sessions/…`, or `ADR-…`), written in the same change.
+- Search before concluding something is unknown: `rg -i "<topic>" ai-sandbox/*/LOG.md docs/`.
 - Every number that enters `docs/` carries a date and a source.
 - Never commit credentials, tokens, PII, or raw extracted data. See `ai-sandbox/SOURCES.md`.
 

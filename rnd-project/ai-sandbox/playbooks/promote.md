@@ -19,8 +19,18 @@ If it fits nowhere, it is probably not ready. Leave it in the checkpoint.
 
 ## 2. Find what it replaces
 
-**Mandatory.** Search `docs/` for existing statements on the topic before writing anything.
-A new conclusion almost always refines or overturns something already recorded.
+**Mandatory.** Search before writing anything. A new conclusion almost always refines or
+overturns something already recorded, and this is the step whose failure puts `docs/` into a
+self-contradictory state.
+
+```bash
+rg -i "<key term>" docs/ docs/CLAIMS.md
+rg -i "<key term>" ai-sandbox/sessions/LOG.md ai-sandbox/experiments/LOG.md
+```
+
+`docs/CLAIMS.md` is the index built for exactly this: one line per claim, with the file it
+lives in. Start there — scanning it is bounded, while scanning `docs/` grows with the project
+and quietly degrades as it does.
 
 One conclusion often touches several files. Update all of them in a single commit —
 leaving one behind puts the knowledge base into a self-contradictory state, which is worse
@@ -32,8 +42,17 @@ than not having recorded the conclusion at all.
 - No "previously X, now Y" phrasing. `docs/` describes the present; history lives in git,
   `sessions/`, and `decisions/`.
 - Match the surrounding style.
-- Every number carries a date and a source ID.
+- Every number carries a date and a basis.
 - Claims from external material cite their source: `[S-latency-spec §3.2]`.
+
+**Update `docs/CLAIMS.md` in the same change** — one row per claim: shorthand, file, date,
+basis. Not afterwards, not as separate housekeeping: an index maintained by good intentions
+goes stale, and step 2 above has started trusting it.
+
+Basis is exactly one of `EXP-<date>-<slug>` (measured), `S-<slug> §<loc>` (external source),
+`sessions/<file>` (reasoned in session — the honest label when there is no measurement and no
+external source), or `ADR-<nnn>` (a decision, not a discovery). A claim with no basis does not
+belong in `docs/`.
 
 ## 4. Sync the open questions
 

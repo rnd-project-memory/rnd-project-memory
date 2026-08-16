@@ -2,9 +2,23 @@
 
 **Updated:** <DATE>
 
-> **Open questions only.** An answered question is **deleted** from this file — the answer
-> goes into the session record and, if durable, into `docs/`. Status `Resolved` is not used
-> here; keeping resolved entries turns the register into a landfill nobody reads.
+> **Open questions only.** A question leaves this file in one of two ways, and both are
+> deletions — status `Resolved` is never used, because a register of resolved entries is one
+> nobody reads.
+>
+> **Answered** — the answer goes into the session record and, if durable, into `docs/`.
+>
+> **Obsolete** — it stopped mattering: the scope moved, the branch died, or the question was
+> wrongly posed. Delete it with a `LOG.md` row reading *"dropped: no longer blocks anything"*
+> and one clause of why. Projects abandon questions more often than they answer them, and
+> without this exit the register fills with zombie 🟢 entries — the same landfill, built from
+> dead questions instead of resolved ones.
+>
+> Either way the `LOG.md` row is what keeps the deletion discoverable.
+
+**IDs are slugs, not numbers** — `Q-latency-budget`, not `Q3`. Deleting resolved entries
+would pit and reuse a numbered sequence, so `Q3` cited in an old session file would later
+resolve to a different question. A slug, once assigned, is never changed.
 
 **Priority:** 🔴 high · 🟡 medium · 🟢 low
 
@@ -14,7 +28,7 @@
 
 ---
 
-## Q<N> · <short title> 🔴
+## Q-<slug> · <short title> 🔴
 
 **Raised:** <DATE> · **Owner:** <owner>
 **Source:** <where the gap surfaced — a document, a source ID, a session>
