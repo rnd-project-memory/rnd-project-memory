@@ -32,6 +32,14 @@ data analysis against Azure Databricks. Analysis code is Python, managed with `u
 - Every number that enters `docs/` carries a date and a source.
 - Never commit credentials, tokens, PII, or raw extracted data. See `ai-sandbox/SOURCES.md`.
 
+## Why these rules
+
+Each rule above has a stated failure mode in `ai-sandbox/RATIONALE.md`, together with the
+failure-mode table for auditing the system. **Read it on demand — do not import it.** It is
+reference material, not behavioural instruction, and loading it every session wastes context.
+
+Consult it when a rule looks arbitrary or you are about to make an exception.
+
 ## Procedures
 
 Ask to follow one of these by path:

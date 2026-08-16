@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# BLOCKING. The one rule a later edit cannot repair: once a secret is committed
+# it is in git history on every clone. Install: git config core.hooksPath .githooks
+set -u
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+fail=0
+
+# Data and credential files that should never be staged
+while IFS= read -r f; do
+  case "$f" in
+    *.csv|*.parquet|*.pkl|*.pickle|*.xlsx|*.feather|*.h5|.env|.env.*|*.key|*.pem|*.p12|*.pfx)
+      echo "BLOCKED: $f — data or credential file; see ai-sandbox/SOURCES.md"; fail=1;;
+  esac
+done <<< "$staged"
+
+# Credential-shaped content
+pat='(aws_secret_access_key|BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-|gh[pousr]_[A-Za-z0-9]{20,}|dapi[a-f0-9]{32}|AccountKey=|password\s*=\s*["\x27][^"\x27]{6,})'
+if git diff --cached -U0 | grep -nEi "$pat" >/dev/null 2>&1; then
+  echo "BLOCKED: credential-shaped string in the staged diff:"
+  git diff --cached -U0 | grep -nEi "$pat" | head -5 | sed 's/^/  /'
+  fail=1
+fi
+
+command -v gitleaks >/dev/null 2>&1 && { gitleaks protect --staged --no-banner || fail=1; }
+
+[ "$fail" -eq 1 ] && { echo; echo "Override only if you are certain: git commit --no-verify"; exit 1; }
+exit 0
