@@ -7,15 +7,18 @@
 
 ## Reproducibility
 
+A field marked `n/a` is as informative as a filled one; a blank cannot be told from an
+oversight. `DATA_ENVIRONMENT.md` states what this project's stack requires here.
+
 | Field | Value |
 |-------|-------|
 | Git SHA | `<sha>` |
-| `uv.lock` | `<hash>` or "unchanged since EXP-<YYYY-MM-DD>-<slug>" |
-| Entry point | `src/experiments/<file>.py` |
-| Data source | `<catalog.schema.table>` |
-| Snapshot date | <date the data was read — upstream tables mutate> |
+| Environment lock | `<lockfile hash>`, "unchanged since EXP-<YYYY-MM-DD>-<slug>", or `n/a` |
+| Entry point | `<path to the committed script or query>` |
+| Data source | `<identifier in the form this project uses — see DATA_ENVIRONMENT.md>` |
+| Snapshot date | <when the data was read, or "immutable source"> |
 | Filters / slice | <row and column selection> |
-| Cluster / runtime | <DBR version, node type, count> |
+| Runtime / compute | <what identifies the execution environment: version, machine type, count> |
 | Run duration | <time> |
 
 ## Setup

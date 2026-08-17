@@ -28,7 +28,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
 | `ASSUMPTIONS.md` | What the method bets on | edit |
 | `SOURCES.md` | Source register with IDs | append |
-| `DATA_ENVIRONMENT.md` | Databricks, uv, run recipes | edit |
+| `DATA_ENVIRONMENT.md` | How to obtain data and run analyses | edit |
 | `RATIONALE.md` | Why each rule exists; failure modes | read on demand |
 | `sessions/LOG.md` | One row per session | append only |
 | `experiments/LOG.md` | One row per experiment | append only |

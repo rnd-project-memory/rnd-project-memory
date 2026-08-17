@@ -450,22 +450,15 @@ credentials · tokens · connection strings · workspace URLs with embedded secr
 customer or client names where confidentiality applies · raw extracted data · anything whose
 sensitivity has not been established
 
-Back this with `.gitignore`:
+Back this with two artifacts that **ship in the skeleton and are deliberately not reproduced
+here** (§6): `gitignore.template`, renamed to `.gitignore`, and `.githooks/pre-commit`, installed
+with `git config core.hooksPath .githooks`.
 
-```gitignore
-# Never commit
-.env
-*.key
-*.pem
-secrets/
-data/
-sources/reference-only/
-
-# Python / uv
-.venv/
-__pycache__/
-.ipynb_checkpoints/
-```
+> An earlier draft of this section carried its own copy of the ignore list. It had drifted ten
+> lines from the skeleton, seven of them the extracted-data extensions — so the handbook's copy
+> failed to stop the very thing this section forbids, while the skeleton's stopped it. That is
+> §6's failure occurring inside the section about the one rule a later edit cannot repair, which
+> is the strongest argument available for why §6 says what it says.
 
 This is the one rule in the system where a mistake is not repaired by editing a file: once
 committed, the content lives in git history, and removing it means rewriting history on every

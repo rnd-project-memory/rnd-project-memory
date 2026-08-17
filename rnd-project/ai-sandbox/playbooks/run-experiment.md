@@ -7,20 +7,26 @@ a stated question cannot fail, and therefore teaches nothing.
 
 State the expected outcome too. A result only surprises if there was a prior.
 
-## 2. Fix the reproducibility triple
+## 2. Fix reproducibility before running
 
-Before running, record: git SHA, `uv.lock` state, and the data source **with its snapshot
-date**. Upstream Databricks tables are mutable — a table name alone does not identify the
-data. See `DATA_ENVIRONMENT.md`.
+Record what it would take to re-run this exactly. `DATA_ENVIRONMENT.md` lists the fields this
+project's stack requires; every project records at least the git SHA, the environment's locked
+state, and the data source **with its snapshot date**.
+
+A source that can change underneath you is not identified by its name alone — that is what the
+snapshot date is for. Where a field genuinely does not apply, write that it does not apply
+rather than leaving it blank: a later reader cannot otherwise distinguish "not applicable"
+from "nobody filled this in".
 
 Commit the analysis code before running it. A result tied to uncommitted code is not
 reproducible.
 
 ## 3. Run
 
-Keep the entry point a script in `src/experiments/`, not an ad-hoc notebook cell.
-Notebooks are for exploration; anything producing a recorded result needs a file that
-can be re-run.
+Keep the entry point a committed file that can be re-run — not an ad-hoc interactive session
+such as a notebook cell, a REPL, or a query editor. Those are for exploration; anything
+producing a recorded result needs a file. `DATA_ENVIRONMENT.md` names where those files live
+and how they are run.
 
 ## 4. Write the record
 

@@ -22,7 +22,7 @@ data/
 # sanction the directory.
 sources/reference-only/
 
-# Python / uv
+# Python / uv — delete this block if the project is not Python
 .venv/
 __pycache__/
 .ipynb_checkpoints/
