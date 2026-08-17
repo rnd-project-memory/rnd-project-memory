@@ -7,7 +7,8 @@ Confluence pages, call transcripts, brainstorming, and data analysis.
 **Audience:** an AI assistant (GitHub Copilot CLI) setting this up in a project repository, and
 the human working with it.
 
-**Read this in order.** Sections 1–3 are the whole idea; everything after is mechanism.
+**Read this in order.** Sections 1–3 are the whole idea; everything after is mechanism. §15 is
+about upgrading a project that already runs the system — safe to skip until you have one.
 
 ---
 
@@ -182,13 +183,13 @@ ai-sandbox/                    ← working memory between sessions
   OPEN_QUESTIONS.md            ← active questions only
   ASSUMPTIONS.md               ← what the method bets on
   SOURCES.md                   ← source register
-  DATA_ENVIRONMENT.md          ← Databricks access, tables, uv setup, run recipes
+  DATA_ENVIRONMENT.md          ← how to obtain data and run analyses; the profile layer (§15)
   playbooks/                   ← procedures: session-start, checkpoint, promote,
                                  ingest-source, run-experiment
   sessions/LOG.md + <date>-<slug>.md
   experiments/LOG.md + EXP-<YYYY-MM-DD>-<slug>.md
 
-src/                           ← Python, managed by uv
+src/                           ← analysis code, in whatever the project uses
 sources/                       ← committable source material only (§9)
 ```
 
@@ -330,10 +331,11 @@ delivery. The copies are gone.
 | `ai-sandbox/OPEN_QUESTIONS.md` | Active questions only; deleted when answered |
 | `ai-sandbox/ASSUMPTIONS.md` | What the method bets on |
 | `ai-sandbox/SOURCES.md` | Source register: IDs, provenance, sensitivity |
-| `ai-sandbox/DATA_ENVIRONMENT.md` | Databricks access, tables, data traps, uv recipes |
+| `ai-sandbox/DATA_ENVIRONMENT.md` | Access, tables, data traps, run recipes. **The profile layer** — the one file that names the stack (§15). Omit it if the project has no data environment |
 | `ai-sandbox/RATIONALE.md` | Why each rule exists; failure-mode table |
 | `ai-sandbox/ASSISTANT_PROFILE.md` | Optional; how to pitch explanations. `@`-import it or it does nothing |
-| `ai-sandbox/playbooks/*.md` | The five procedures — see §7 |
+| `ai-sandbox/playbooks/*.md` | The six procedures — see §7 |
+| `MANIFEST` · `.template-version` | Which files upstream owns, and which release you took — see §15 |
 | `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record |
 | `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record |
 | `docs/CLAIMS.md` | Index of every claim in `docs/`: shorthand, file, date, basis |
@@ -351,8 +353,10 @@ Three fields are worth explaining rather than just copying, because their shape 
 **`SOURCES.md` — sensitivity is decided at ingestion, defaulting to `reference-only`.** It is the
 only decision in the system a later edit cannot undo. See §9.
 
-**Experiment records — snapshot date, not just table name.** Upstream Databricks tables are
-mutable, so a table name alone does not identify the data a result came from. See §8.
+**Experiment records — snapshot date, not just the source's name.** A source that can change
+underneath you is not identified by its name alone. Where a field does not apply, write `n/a`
+rather than leaving it blank: a later reader cannot otherwise tell "not applicable" from "nobody
+filled this in". See §8.
 
 **`OPEN_QUESTIONS.md` / `ASSUMPTIONS.md` — `Owner:` is always filled in, even alone.** Blank must
 mean *unclaimed*; if solo-era entries are left blank, that meaning is destroyed the day a second
@@ -360,7 +364,7 @@ person joins.
 
 ## 7. Playbooks
 
-**Also normative in the skeleton, for the same reason as §6.** The five procedures live in
+**Also normative in the skeleton, for the same reason as §6.** The six procedures live in
 `ai-sandbox/playbooks/`. What follows is what each is *for* and the one decision inside it that
 is easy to get wrong — not its text.
 
@@ -375,8 +379,9 @@ Follow ai-sandbox/playbooks/checkpoint.md
 | `session-start.md` | Load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. |
 | `checkpoint.md` | Close a session: freeze the record, promote, rewrite state | Step 3's cap means **promote something**, never shorten the prose. |
 | `promote.md` | Move a matured conclusion into `docs/` | Step 2 — find *every* file the conclusion touches. Updating one and missing another leaves `docs/` self-contradictory, which is worse than not recording it. |
-| `ingest-source.md` | Take in a PDF, Confluence page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
+| `ingest-source.md` | Take in a PDF, wiki page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
 | `run-experiment.md` | Run and record an analysis | The question is written **before** the run. An experiment with no stated question cannot fail, and so teaches nothing. |
+| `upgrade-template.md` | Raise the project to a later template release | It diffs `RULES.md` and reports every changed rule. A rule delivered by file replacement arrives silently; this step is the only thing that makes it visible (§15). |
 
 ### Why playbooks rather than custom agents
 
@@ -410,12 +415,20 @@ record of the data as it was.
 |-------|--------------------|
 | Question | An experiment without a question cannot fail |
 | Git SHA | The code as it was, not as it is now |
-| `uv.lock` | Library versions change results silently |
-| Table **+ snapshot date** | Upstream tables mutate; the name alone identifies nothing |
-| Cluster / runtime | Runtime and Spark versions change numerical behaviour |
+| Environment lock | Library versions change results silently |
+| Data source **+ snapshot date** | A source that can change underneath you is not identified by its name alone |
+| Runtime / compute | Runtime versions change numerical behaviour |
 | Result + uncertainty | A point estimate with no spread cannot be compared |
 | Verdict | Forces a conclusion while the context is fresh |
 | Threats | What would make it not replicate |
+
+`DATA_ENVIRONMENT.md` states what these mean for the project's own stack — which lockfile, which
+identifier form for a data source, what identifies a runtime. The playbook and the record template
+name the fields; the profile supplies their shape (§15).
+
+**A field marked `n/a` is as informative as a filled one.** A blank cannot be distinguished from
+an oversight, and some of these genuinely do not apply — an experiment that runs no code has no
+environment lock, and an immutable source has no snapshot date. Say so rather than leaving a gap.
 
 ### Graduating a result into `docs/`
 
@@ -481,9 +494,23 @@ re-verified rather than trusted. `session-start.md` includes this check.
 
 ## 10. Data environment
 
-`ai-sandbox/DATA_ENVIRONMENT.md` in the skeleton records how to obtain data and run analyses:
-workspace and auth *mechanism* (never values), tables in use with grain and refresh, known data
-traps, `uv` commands, and verified run recipes.
+`ai-sandbox/DATA_ENVIRONMENT.md` records how to obtain data and run analyses: workspace and auth
+*mechanism* (never values), data sources in use with grain and refresh, known data traps,
+environment commands, and verified run recipes.
+
+**This is the profile layer, and it is the only file that names the stack.** Everywhere else the
+system states the principle and keeps the stack as a named example — the experiment record asks
+for "the environment's locked state", not for `uv.lock`. Concentrating the stack in one file is
+what lets a project on a different one substitute a single file instead of editing eleven. §15
+covers the layer this belongs to.
+
+Stripping the stack out of *this* file was tried and fails: remove the product names and nothing
+concrete remains, because a known data trap cannot be stated abstractly. So it stays concrete and
+ships in variants.
+
+**A project with no data environment omits the file entirely.** Shipping one full of instructions
+for a stack the project does not have is worse than shipping nothing: it instructs, and the
+instruction is false.
 
 **No credentials, ever.** Describe where a secret comes from — an environment variable name, a
 CLI profile, a keyring entry — never what it is.
@@ -500,16 +527,23 @@ second person bitten by it is usually the first person, a year later.
 
 ### Why the snapshot date is mandatory
 
-Every table listed there is mutable. An experiment record cites the table *and* the date it was
-read, because the table name alone does not identify the data that produced a result. `uv.lock`
-is committed for the same reason on the code side.
+Any source that can change underneath you is mutable in the way that matters. An experiment record
+cites the source *and* the date it was read, because the name alone does not identify the data
+that produced a result. The environment lockfile is committed for the same reason on the code
+side. Where a source genuinely cannot change, record that instead of leaving the field blank.
 
 ## 11. Bootstrapping an existing project
 
 For a project already underway with material piled up. Roughly one working session.
 
-**1. Create the structure.** Directories and files from §4 and §6, all empty. Add `.gitignore`
-from §9 first, before any source material is anywhere near the repo.
+**1. Copy the structure.** Take the files `MANIFEST` lists out of `skeleton/` — **not the whole
+directory.** `skeleton/README.md` is installation instructions and would replace the project's
+own; anything else that already exists is merged, not overwritten. Rename `gitignore.template` to
+`.gitignore` and install the hooks *before* any source material is anywhere near the repository,
+because that is the one guard a later edit cannot supply retroactively.
+
+Record which release you took in `.template-version`. Without it nothing can tell you whether an
+upgrade applies, and §15 has nothing to work from.
 
 **2. Write `AGENTS.md`.** The project description only — **do not write the working rules.** They
 ship in `ai-sandbox/RULES.md`, which `AGENTS.md` imports and which an upgrade replaces wholesale;
@@ -584,6 +618,30 @@ They are separate on purpose. `check.sh` includes heuristics that will produce f
 version strings read as undated numbers, for instance — and a noisy check sharing an exit code
 with the secret scan is a check that gets disabled after its first irritating run. The one rule
 whose violation cannot be repaired by editing a file must not be hostage to that.
+
+### The failure mode both scripts share
+
+**A check that scans the repository will find the repository's own instructions.** The registers
+explain in their preambles that `Resolved` must never be used; the playbooks cite `[S-latency-spec
+§3.2]` as an example; `sessions/_TEMPLATE.md` ships with `Status: open` because that is the shape
+a new session is created from; and the secret scan's own pattern list is, necessarily, a list of
+credential shapes.
+
+Every one of those was reported as a finding before being fixed. They share one cause — a check
+reading instruction as content — and the fixes are all exclusions: skip blockquote lines, skip
+`<placeholder>` lines, skip `playbooks/`, skip `_TEMPLATE.md`, and require a credential *value*
+rather than a credential's *name*.
+
+This matters more for the hook than for `check.sh`, and the reason is behavioural rather than
+technical. An advisory check that cries wolf is ignored. A **blocking** check that cries wolf is
+answered with `git commit --no-verify`, and once that becomes reflex the only irreversible guard
+in the system is dead while still appearing installed. Precision in the pattern list is therefore
+not tidiness; it is what keeps the check alive.
+
+A corollary for anyone extending it: **a profile may add patterns to the hook's list but must
+never supply the list.** An absent or unsubstituted pattern file leaves an empty expression, an
+empty expression matches every line, and every commit blocks on clean content — which produces
+exactly the `--no-verify` reflex above.
 
 Hooks do not survive a clone. Installation is one line, and it belongs in the setup steps where
 it will actually be run:
@@ -671,6 +729,132 @@ paid on every session rather than only when a conflict occurs.
 
 ---
 
+## 15. Versions and upgrading
+
+Everything above describes adopting the system once. This section is about what happens when the
+template moves on and your project has not.
+
+### Why this is not the usual upgrade problem
+
+A library is upgraded by taking the new version. This template is **meant to be edited**: you fill
+in `problem.md`, write your checkpoint, keep your own `SOURCES.md`. Divergence from upstream is the
+intended end state, not a defect.
+
+So merging a new version in would conflict in nearly every file, because nearly every file has
+legitimately changed. And an upgrade that requires resolving conflicts across a whole tree does not
+get performed — which is the same, in practice, as having no upgrade path at all.
+
+The way out is to stop asking "what changed upstream?" and ask **"who owns this file?"**
+
+### Four layers
+
+| Layer | Owner | On upgrade |
+|-------|-------|-----------|
+| **Mechanism** | upstream | replaced wholesale |
+| **Profile** | upstream, or your organisation | substituted, never merged |
+| **Scaffold** | upstream wrote the starting shape; you own it from your first edit | never touched again |
+| **Content** | you | upstream never reads or writes it |
+
+Mechanism is the playbooks, `RULES.md`, `RATIONALE.md`, the `_TEMPLATE.md` files, `check.sh`, the
+hook. Profile is `DATA_ENVIRONMENT.md` (§10). Scaffold is `AGENTS.md`, `problem.md`, the registers
+and the logs. Content is your sessions, experiments, ADRs and checkpoints.
+
+`MANIFEST`, in the template repository, records which file is which. It is the table above in a
+form a script can read.
+
+**A scaffold file is never upgraded, and that is deliberate.** Once you have written your
+`problem.md`, a revised heading structure from upstream is not an improvement — it is an unwanted
+rewrite of your document. The same goes for the register preambles: a preamble one version old is
+the *previous* version of a rule that was acceptable when it shipped. It does not misdirect. Where
+a rule genuinely must reach you, it arrives through `RULES.md`, which is mechanism.
+
+### Taking a version, and knowing which you took
+
+Adoption and upgrade are both a copy of the paths `MANIFEST` lists. No fork, no submodule, no
+subtree — **no git relationship of any kind** between your project and the template.
+
+That is what makes your copy self-contained: it keeps working if the upstream repository is
+renamed, moved, or deleted. It also means there is no mechanism for pushing changes back, which is
+intentional.
+
+Record what you took:
+
+```
+.template-version
+v1.0.0  skeleton @ 1c3dde0  applied 2026-08-17
+```
+
+**Being behind is the normal resting state of a vendored dependency, not breakage.** A project on
+v1.0.0 works exactly as well as it did the day it adopted it. There is nothing to keep in sync —
+only a version to raise deliberately, when you want something a later release has.
+
+### What a version number tells you
+
+The bump says what raising it will cost you.
+
+| Bump | What changed | What you do |
+|------|--------------|-------------|
+| MAJOR | a routing rule changed; a file moved or was renamed; a register's schema changed; a rule change that leaves your existing entries non-conforming | run the migration |
+| MINOR | a new optional playbook, file, or check; a new or strengthened rule that leaves existing entries valid | replace mechanism, read the named rule changes |
+| PATCH | wording; a rationale expanded without changing what the rule requires | replace, do nothing |
+
+For a rule change the discriminator is **not how big the rule is but whether your existing entries
+still conform.** *"Search the logs before concluding something is unknown"* binds future behaviour
+only — MINOR. *"Checkpoints are per owner"* leaves your `CHECKPOINT.md` misnamed — MAJOR, and the
+migration renames it.
+
+### Migrations are prose, not scripts
+
+A MAJOR release carries a section in `MIGRATIONS.md`, written as instructions **to an assistant**.
+The reason is that the material being migrated is prose, and the steps that matter most are
+exceptions:
+
+```markdown
+## v1 → v2: checkpoints became per-owner
+
+3. Find references to the old name: `rg -n 'CHECKPOINT\.md'` — including playbooks and
+   session files. Session files are immutable: do NOT edit them; the mismatch is expected.
+```
+
+A script would "fix" the immutable session files, violate the system's central rule, and report
+success. An assistant understands the exception. That is the whole argument for the format, and it
+is also its risk: a half-applied migration is worse than none, because the repository then claims a
+version it does not structurally have.
+
+The release notes and the `MIGRATIONS.md` section are the same text. One source, not two.
+
+### The one thing that arrives silently
+
+Because the rules live in `RULES.md` and `RULES.md` is mechanism, a rule change reaches you as a
+**file replacement**. You copy a file and are now bound by a rule nobody read. A version number
+cannot fix that: MINOR tells you to read the notes only if the notes say something.
+
+Two obligations therefore attach to that file:
+
+- **Upstream's:** any release whose diff touches `RULES.md` names each changed rule in its notes,
+  one line per rule, including at PATCH. A release that touches `RULES.md` and says nothing about
+  rules is a defect in the release.
+- **Yours:** `upgrade-template.md` diffs the incoming `RULES.md` against the installed one and
+  reports every changed rule, whatever the notes claimed. Upstream's obligation is process and
+  nothing enforces it; this step is what makes a forgotten note recoverable.
+
+### If you are running this inside an organisation
+
+The template is public and MIT-licensed, and that is not incidental: **a public repository without
+a licence grants no rights**, so copying it into company work would be infringement rather than
+adoption. If your employer has an intake process for external open-source material, run it once
+against the licence and everything after is routine.
+
+An internal copy — if you want one, for a company-specific profile or because your environment
+cannot reach the public repository — is an ordinary consumer under this section: vendored
+mechanism plus your own `DATA_ENVIRONMENT.md`. **Not a fork.** A fork wires a relationship in the
+direction you do not want, one mistyped remote away from pushing internal content outward, whereas
+a copy has nowhere to push. Improvements travel back by hand, retyped as an abstract rule, which
+forces the genericisation to be a deliberate step rather than something a diff review is trusted
+to catch.
+
+---
+
 ## Origin
 
 This system was derived from a working single-author project that ran it across a series of
@@ -679,8 +863,20 @@ GitHub Copilot CLI in place of Claude Code. The rules that look pedantic — del
 mark resolved, promote rather than compress, freeze rather than edit — are the ones that were
 learned from watching the alternatives fail.
 
+That project was CGS, a personal repository, and the history is preserved in this one. It shows a
+discontinuity rather than a straight line: the first commit carries generic templates brought
+*from* a work project, and the next deletes all of them and builds the current system in their
+place. Everything from that second commit is new work. The commits before the split resolve in
+CGS, not here — the extraction rewrote every tree, so they arrived with their dates and messages
+and new hashes.
+
 **The single-author case is the tested one.** The structure is built for concurrent contributors
 because that costs the solo case nothing and removes a later migration — but the multi-user
 behaviour is reasoned from the design, not observed. The merge properties are certain; the claim
 that terse notes degrade for a reader who was not there is a prediction, well supported by how
 badly it degrades for the same author six months on.
+
+**The delivery half is younger and less tested than the memory half.** Sections 1–14 have been
+run; §15 has not. No project has yet lived through an upgrade, so every claim about what a
+migration costs is reasoning rather than observation. The template repository upgrades itself
+first, deliberately, so that the first thing to break belongs to whoever wrote it.

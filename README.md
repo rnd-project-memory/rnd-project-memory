@@ -28,9 +28,14 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-In use, and changing. The system has been run against a real single-author project; the
-multi-user behaviour is reasoned from the design rather than observed. Sections of the handbook
-still describe an earlier shape of the versioning and ownership model and are being reconciled.
+`v1.0.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+single-author project. The delivery half (§15: ownership layers, versioning, migrations) is
+designed and **unexercised**: no project has yet lived through an upgrade, so every claim about
+what one costs is reasoning rather than observation.
+
+This repository runs the system on itself and upgrades itself first, deliberately, so that the
+first thing to break belongs to whoever wrote it. Multi-user behaviour is likewise reasoned from
+the design rather than observed.
 
 ## Licence
 
