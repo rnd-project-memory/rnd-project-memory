@@ -1,8 +1,8 @@
 # <PROJECT_NAME> — Why the rules are what they are
 
 **Read on demand, not every session.** Nothing imports this file and nothing should: it is
-reference material, like `docs/`, not behavioural instruction. `AGENTS.md` carries the rules;
-this file carries the reason each one exists and what breaks without it.
+reference material, like `docs/`, not behavioural instruction. `ai-sandbox/RULES.md` carries the
+rules; this file carries the reason each one exists and what breaks without it.
 
 Consult it when a rule feels arbitrary, when you are tempted to make an exception, or when
 auditing the system for rot.
@@ -19,7 +19,7 @@ assistant.
 
 ---
 
-## The rules in `AGENTS.md`, and why
+## The rules in `RULES.md`, and why
 
 ### `docs/` holds settled conclusions only; changes are reviewed before they land
 
@@ -114,7 +114,7 @@ automates the mechanical half.
 | `docs/CLAIMS.md` disagrees with `docs/` | The index was updated separately, or not at all | Re-sync; it belongs in the same change as the promotion |
 | A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |
 | An intake file past its dismantling date | Bootstrapping never finished | Highest-priority item, not furniture |
-| A rule in `AGENTS.md` having no effect | Nothing imports the file it lives in | Reachable from `AGENTS.md`, or it does not exist |
+| A rule having no effect | Nothing imports the file it lives in — `RULES.md` is one `@` line away from silence | Reachable from `AGENTS.md`, or it does not exist |
 
 ### The last one is invisible when it fails
 

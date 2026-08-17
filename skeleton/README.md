@@ -22,9 +22,11 @@ the handbook wins** — fix the skeleton, not the handbook.
 4. Pick an **owner token** (your initials), declare it in `AGENTS.md`, and rename
    `ai-sandbox/CHECKPOINT-owner.md` to `CHECKPOINT-<token>.md`.
 5. Delete `sources/` and `src/` if the project already has its own.
-6. Verify instruction loading: in a fresh Copilot CLI session, ask it to state a rule
-   that appears only in `ai-sandbox/INDEX.md`. If it cannot, the `@` import in
-   `AGENTS.md` is not resolving and every rule below it is inert.
+6. Verify instruction loading: in a fresh Copilot CLI session, ask it to state a rule that
+   appears only in `ai-sandbox/RULES.md`, then one that appears only in `ai-sandbox/INDEX.md`.
+   If either fails, that `@` import in `AGENTS.md` is not resolving and every rule in the file
+   is inert. `RULES.md` is the one that matters most — it holds every behavioural rule, and its
+   silence looks exactly like correctness.
 7. Follow `RND_PROJECT_MEMORY.md` §11 to bootstrap from existing material.
 
 Files named `_TEMPLATE.md` are copied per entry, not filled in place.

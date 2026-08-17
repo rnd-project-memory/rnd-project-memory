@@ -161,8 +161,9 @@ line. Only the rewritten file needed splitting.
 ## 4. Directory structure
 
 ```
-AGENTS.md                      ← auto-loaded entry point; @imports the index
+AGENTS.md                      ← auto-loaded entry point; @imports the rules and the index
 .gitignore                     ← enforces the never-commit list (§9)
+.template-version              ← which release of the template this project is running
 
 docs/                          ← permanent knowledge base: settled conclusions only
   problem.md                   ← problem statement, success criteria, stakeholders
@@ -173,6 +174,8 @@ docs/                          ← permanent knowledge base: settled conclusions
   decisions/ADR-NNN-<slug>.md  ← decision records
 
 ai-sandbox/                    ← working memory between sessions
+  RULES.md                     ← the behavioural rules; upstream's, replaced on upgrade
+  RATIONALE.md                 ← why each rule exists; read on demand, never imported
   INDEX.md                     ← entry point; current focus
   CHECKPOINT-<owner>.md        ← in-flight reasoning; one per person, ≤150 lines
   CHECKPOINT.md                ← optional: shared in-flight state, if any
@@ -265,10 +268,14 @@ Because Copilot CLI also reads `CLAUDE.md`, a project set up this way works unch
 move to Claude Code. Keep the content in `AGENTS.md`.
 
 **Two classes of file, and only one must be imported.** *Behavioural instruction* shapes what the
-assistant does every session and must be reachable from `AGENTS.md`. *On-demand reference* —
+assistant does every session and must be reachable from `AGENTS.md`: that is `ai-sandbox/RULES.md`,
+`ai-sandbox/INDEX.md`, and `ASSISTANT_PROFILE.md` if you fill it in. *On-demand reference* —
 `docs/`, `LOG.md`, the playbooks, `RATIONALE.md` — is opened when needed and would only waste
 context if loaded every time. Do not `@`-import the second class; the rule below applies to the
 first.
+
+`RULES.md` is the highest-stakes member of that first class: it holds every behavioural rule, so
+a failed import silently removes all of them at once while the repository still looks correct.
 
 > **Critical, and invisible when it fails:** an instruction file that nothing imports has no
 > effect. It will look correct in the repository and be silently absent from every session. If a
@@ -316,7 +323,8 @@ delivery. The copies are gone.
 
 | File | Purpose |
 |------|---------|
-| `AGENTS.md` | Auto-loaded entry point: project description, rules, owner token, playbook list |
+| `AGENTS.md` | Auto-loaded entry point: project description, owner token, `@` imports. Yours — never overwritten |
+| `ai-sandbox/RULES.md` | The behavioural rules and the playbook list. Upstream's — replaced on upgrade |
 | `ai-sandbox/INDEX.md` | Session entry point: routing rule, artifact list, current focus |
 | `ai-sandbox/CHECKPOINT-<owner>.md` | One per person; in-flight reasoning, rewritten, ≤150 lines |
 | `ai-sandbox/OPEN_QUESTIONS.md` | Active questions only; deleted when answered |
@@ -503,12 +511,16 @@ For a project already underway with material piled up. Roughly one working sessi
 **1. Create the structure.** Directories and files from §4 and §6, all empty. Add `.gitignore`
 from §9 first, before any source material is anywhere near the repo.
 
-**2. Write `AGENTS.md`.** Project description and working rules. Pick an **owner token** — your
-initials are fine — and declare it there; your checkpoint is `CHECKPOINT-<token>.md`. Working
-alone that is one file, and it means a second contributor later costs nothing to add.
+**2. Write `AGENTS.md`.** The project description only — **do not write the working rules.** They
+ship in `ai-sandbox/RULES.md`, which `AGENTS.md` imports and which an upgrade replaces wholesale;
+rules typed into `AGENTS.md` are outside that mechanism and drift silently from the version
+everything else assumes. Pick an **owner token** — your initials are fine — and declare it in
+`AGENTS.md`; your checkpoint is `CHECKPOINT-<token>.md`. Working alone that is one file, and it
+means a second contributor later costs nothing to add.
 
-Verify the import works: in a fresh session, ask the assistant to state a rule that appears only
-in `INDEX.md`. If it cannot, the import is not loading and every rule below it is inert.
+Verify the imports work: in a fresh session, ask the assistant to state a rule that appears only
+in `RULES.md`, then one that appears only in `INDEX.md`. If either fails, that import is not
+loading and every rule in the file is inert.
 
 **3. Register sources before reading them.** List all existing material — PDFs, Confluence
 pages, transcripts — into `SOURCES.md` with IDs and sensitivity. Registering is fast;
@@ -555,7 +567,7 @@ That placement is deliberate. This handbook is a textbook: read once, by the per
 system up, in whatever repository it was copied from. The failure-mode table is operational — it
 is consulted while working, by whoever notices something rotting, and it must therefore exist in
 the live project rather than in the template it came from. `RATIONALE.md` also carries one
-paragraph per rule in `AGENTS.md` explaining what that rule prevents, for the same reason: rules
+paragraph per rule in `RULES.md` explaining what that rule prevents, for the same reason: rules
 that ship as bare imperatives get "helpfully" violated.
 
 ### What is checked mechanically
