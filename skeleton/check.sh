@@ -43,8 +43,12 @@ for f in "$SB"/sessions/*.md; do
 done
 
 n "Sessions left open"
-grep -ln 'Status:.*open' "$SB"/sessions/*.md 2>/dev/null \
-  | sed 's/^/  still open (freeze as abandoned if interrupted): /' || echo "  none"
+# _TEMPLATE.md ships with Status: open — it is the shape a new session is created from,
+# not a session that was interrupted.
+open=$(grep -ln 'Status:.*open' "$SB"/sessions/*.md 2>/dev/null | grep -v '_TEMPLATE\.md$')
+if [ -n "$open" ]; then
+  echo "$open" | sed 's/^/  still open (freeze as abandoned if interrupted): /'
+else echo "  none"; fi
 
 n "docs/ changed without CLAIMS.md"
 if git diff --cached --name-only 2>/dev/null | grep -q '^docs/'; then

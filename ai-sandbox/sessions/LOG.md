@@ -1,0 +1,26 @@
+# rnd-project-memory — Session Log
+
+Append only. One row per session.
+
+**Do not read this file in full — search it.** That is what it is for:
+
+```bash
+rg -i "<topic>" ai-sandbox/sessions/LOG.md
+rg '#<tag>'     ai-sandbox/sessions/LOG.md
+```
+
+A hit gives you a session file; open that, not this log.
+
+**Outcome names what was resolved**, not just what was worked on. Answered questions are
+deleted from `OPEN_QUESTIONS.md`, so this row is the only cue a later reader gets that the
+question ever had an answer.
+
+**Tags:** reuse an existing tag if one fits — a topic spelled three ways over six months is
+what makes search fail. `check.sh` prints tag frequencies; a singleton usually means a second
+spelling of something already here.
+
+| Date | Topic | Tags | Outcome | Link |
+|------|-------|------|---------|------|
+| 2026-08-17 | Extracting the template into its own repository | `#template` `#versioning` `#distribution` `#licensing` | Six ADRs accepted: separate repo, ownership layers, vendored distribution, prose migrations, public licensed upstream, self-hosting. Found the core carrying the author's work stack; found the missing licence. | [2026-08-17-template-extraction.md](2026-08-17-template-extraction.md) |
+| 2026-08-17 | Auditing file ownership across the skeleton | `#template` `#ownership` `#manifest` | ADR-002 rewritten to four layers with fenced preambles; `A-profile-separable` settled by inverting extraction into concentration, replaced by `A-profile-indirection`; `MANIFEST` drafted. Found two skeleton defects: the README overwrites the adopting project's, and two `check.sh` checks misfire. | [2026-08-17-ownership-audit-2.md](2026-08-17-ownership-audit-2.md) |
+| 2026-08-17 | Testing the profile remedies, and what they cost | `#template` `#ownership` `#versioning` | Three experiments. Fencing withdrawn and the preamble files reclassified as scaffold; the secret-scan list must not be profile-supplied; `A-profile-indirection` confirmed and retired, `A-misdirection-criterion` raised. Step 4 kept but reduced; ADR-004's rule-change gap closed; `Q-upstream-identity` and `Q-handbook-version` answered. Scope fell from twenty files to six. | [2026-08-17-profile-experiments-3.md](2026-08-17-profile-experiments-3.md) |
