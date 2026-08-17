@@ -31,13 +31,20 @@ If there are no MAJORs between them, there is no migration — only the file rep
 ## 3. Check for edits to files you do not own
 
 ```bash
-./check.sh          # the manifest-hash block reports mechanism files that differ
+./check.sh          # "Mechanism files against their released hashes" is the block to read
 ```
 
-A mechanism file that differs from its released version means someone edited a file upstream owns,
-and step 4 is about to discard that edit. **Stop and show the user the diff.** The change either
-belongs in `AGENTS.md`, or it is worth proposing upstream, or it was a mistake — all three need a
-person, and none of them survive being silently overwritten.
+It compares against `.template-hashes`, which shipped with the release you are on — no network and
+no copy of the template required.
+
+A mechanism file that differs means someone edited a file upstream owns, and step 4 is about to
+discard that edit. **Stop and show the user the diff.** The change either belongs in `AGENTS.md`,
+or it is worth proposing upstream, or it was a mistake — all three need a person, and none of them
+survive being silently overwritten.
+
+If the block reports *no* `.template-hashes`, the project predates this check. Compare by hand
+against the release it claims before going further; that comparison is what caught the first real
+discrepancy this system ever had.
 
 ## 4. Replace the mechanism layer
 

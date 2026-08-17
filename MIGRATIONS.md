@@ -26,6 +26,26 @@ Each section states:
 
 Release notes and the section here are the same text. One source, not two.
 
+## Cutting a release
+
+1. Settle the tree first. **Tag when the artefact is finished, not when it looks finished** — the
+   `v1.0.0` tag was cut mid-session, two fixes landed after it, and the root memory then claimed a
+   version it did not have for a full session.
+2. Regenerate the hash list that consumers check against:
+
+   ```bash
+   grep '^mechanism' MANIFEST | awk '{print $2}' | while read -r p; do
+     [ -f "skeleton/$p" ] && (cd skeleton && sha256sum "$p")
+   done > skeleton/.template-hashes
+   ```
+
+   Paths are relative to a consumer's repository root, which is what `skeleton/` becomes. The file
+   does not list itself.
+3. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
+   line per rule, at any bump level. If it does not, say so explicitly: "no rule changes" is
+   information, and its absence is indistinguishable from an oversight.
+4. Add the section here if the bump is MAJOR.
+
 ## Partial application
 
 A migration interrupted halfway leaves the repository in a state that claims one version and has
