@@ -335,7 +335,7 @@ delivery. The copies are gone.
 | `ai-sandbox/RATIONALE.md` | Why each rule exists; failure-mode table |
 | `ai-sandbox/ASSISTANT_PROFILE.md` | Optional; how to pitch explanations. `@`-import it or it does nothing |
 | `ai-sandbox/playbooks/*.md` | The six procedures — see §7 |
-| `MANIFEST` · `.template-version` | Which files upstream owns, and which release you took — see §15 |
+| `MANIFEST` · `.template-version` · `.template-hashes` | Which files upstream owns, which release you took, and what those files hashed to when it shipped — see §15 |
 | `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record |
 | `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record |
 | `docs/CLAIMS.md` | Index of every claim in `docs/`: shorthand, file, date, basis |
@@ -611,7 +611,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | Checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates | **Always exits 0.** Advisory output only |
+| `check.sh` | Mechanism files against their released hashes · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
@@ -777,12 +777,16 @@ That is what makes your copy self-contained: it keeps working if the upstream re
 renamed, moved, or deleted. It also means there is no mechanism for pushing changes back, which is
 intentional.
 
-Record what you took:
+Two files come out of that. You write the first; the release supplies the second:
 
 ```
-.template-version
-v1.0.0  skeleton @ 1c3dde0  applied 2026-08-17
+.template-version    v1.1.0  skeleton @ 8aee1f4  applied 2026-08-17
+.template-hashes     the sha256 of every mechanism file as it shipped
 ```
+
+`.template-hashes` is what lets `check.sh` tell you, before an upgrade, that someone has edited a
+file upstream owns — offline, with no copy of the template anywhere. That warning is worth more
+before the replacement than after it, and it is the only moment the information is actionable.
 
 **Being behind is the normal resting state of a vendored dependency, not breakage.** A project on
 v1.0.0 works exactly as well as it did the day it adopted it. There is nothing to keep in sync —

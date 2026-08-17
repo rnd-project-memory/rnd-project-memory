@@ -12,6 +12,10 @@
 #   content    project-generated; upstream never reads or writes it
 #   norcopy    belongs to the template repository; never copied into a project
 #
+# .template-hashes ships with a release and carries the sha256 of every mechanism entry below,
+# with paths relative to a consumer's repository root. It is deliberately absent from this list:
+# a file cannot carry its own hash. MIGRATIONS.md "Cutting a release" regenerates it.
+#
 # There is no region scope. An earlier draft fenced upstream preambles inside nine files and
 # scoped manifest entries to those regions; that was withdrawn — markers serve a tool, and this
 # design builds no tool. Rule changes reach projects through ai-sandbox/RULES.md, which is
