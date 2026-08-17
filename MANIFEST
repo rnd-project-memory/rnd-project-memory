@@ -1,0 +1,81 @@
+# MANIFEST — file ownership for rnd-project-memory
+#
+# Draft, 2026-08-17. Derived by reading all 32 files of templates/rnd-project, then revised
+# after EXP-2026-08-17-pattern-list-extraction and EXP-2026-08-17-misdirection-recheck.
+# See ownership-findings.md for the audit and the experiment records for the corrections.
+#
+# Format: <layer> <path>
+#
+#   mechanism  upstream owns it; replaced wholesale on upgrade
+#   profile    stack-specific; substituted (but see the note on pre-commit below)
+#   scaffold   copied at bootstrap only; upstream revisions never propagate
+#   content    project-generated; upstream never reads or writes it
+#   norcopy    belongs to the template repository; never copied into a project
+#
+# There is no region scope. An earlier draft fenced upstream preambles inside nine files and
+# scoped manifest entries to those regions; that was withdrawn — markers serve a tool, and this
+# design builds no tool. Rule changes reach projects through ai-sandbox/RULES.md, which is
+# mechanism and replaced whole; preamble revisions ride on prose migrations.
+
+# ─── never copied into an adopting project ───────────────────────────────────
+norcopy    README.md
+norcopy    ../RND_PROJECT_MEMORY.md
+
+# ─── mechanism: replaced wholesale on upgrade ────────────────────────────────
+mechanism  check.sh
+mechanism  gitignore.template
+mechanism  ai-sandbox/RULES.md
+mechanism  ai-sandbox/RATIONALE.md
+mechanism  ai-sandbox/playbooks/session-start.md
+mechanism  ai-sandbox/playbooks/checkpoint.md
+mechanism  ai-sandbox/playbooks/promote.md
+mechanism  ai-sandbox/playbooks/ingest-source.md
+mechanism  ai-sandbox/playbooks/run-experiment.md
+mechanism  ai-sandbox/playbooks/upgrade-template.md
+mechanism  ai-sandbox/sessions/_TEMPLATE.md
+mechanism  ai-sandbox/experiments/_TEMPLATE.md
+mechanism  docs/decisions/_TEMPLATE.md
+mechanism  docs/techniques/_TEMPLATE.md
+
+# mechanism, with one exception to the profile's substitution semantics:
+# a profile APPENDS credential patterns here, it never replaces the list. An absent or
+# unsubstituted pattern source leaves an empty regex, which matches every line, blocks every
+# commit on clean content, and trains the user into --no-verify. The inline core cannot go
+# missing, and this is the one check whose failure a later edit cannot repair.
+mechanism  .githooks/pre-commit
+
+# ─── profile: substituted per stack ──────────────────────────────────────────
+profile    ai-sandbox/DATA_ENVIRONMENT.md
+
+# ─── scaffold: seeded once, the project's own thereafter ─────────────────────
+# The nine register and index files below carry an upstream preamble above project entries.
+# They are scaffold rather than mechanism because a stale preamble does not misdirect: the
+# failure mode is missing a newly added rule, not following a false one, and rules that must
+# reach existing projects live in RULES.md. See EXP-2026-08-17-misdirection-recheck.
+scaffold   AGENTS.md
+scaffold   ai-sandbox/INDEX.md
+scaffold   ai-sandbox/CHECKPOINT-owner.md
+scaffold   ai-sandbox/OPEN_QUESTIONS.md
+scaffold   ai-sandbox/ASSUMPTIONS.md
+scaffold   ai-sandbox/SOURCES.md
+scaffold   ai-sandbox/sessions/LOG.md
+scaffold   ai-sandbox/experiments/LOG.md
+scaffold   docs/CLAIMS.md
+
+# starting shapes for documents the project writes
+scaffold   ai-sandbox/ASSISTANT_PROFILE.md
+scaffold   docs/problem.md
+scaffold   docs/method.md
+scaffold   docs/constraints.md
+scaffold   docs/glossary.md
+scaffold   src/README.md
+scaffold   sources/README.md
+
+# ─── content: project-generated, upstream never touches ──────────────────────
+content    ai-sandbox/sessions/*.md
+content    ai-sandbox/experiments/EXP-*.md
+content    ai-sandbox/CHECKPOINT-*.md
+content    docs/decisions/ADR-*.md
+content    docs/techniques/*.md
+content    sources/**
+content    src/**
