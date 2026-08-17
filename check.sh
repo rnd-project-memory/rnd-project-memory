@@ -8,6 +8,24 @@ cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" || exit 0
 SB=ai-sandbox
 n() { printf '\n\033[1m%s\033[0m\n' "$1"; }
 
+n "Mechanism files against their released hashes"
+# .template-hashes ships with each release and lists every file upstream owns. Comparing
+# against it needs no network and no copy of the template — which is the whole point of
+# vendoring. A difference is not an error: it means an upgrade is about to discard someone's
+# edit, and that is worth a person's attention *before* the upgrade rather than after.
+if [ -f .template-hashes ]; then
+  drift=$(sha256sum -c --quiet .template-hashes 2>&1)
+  if [ -z "$drift" ]; then
+    echo "  ok    all match $(awk '{print $1}' .template-version 2>/dev/null)"
+  else
+    echo "$drift" | sed 's/^/  /'
+    echo "  ↑ upstream owns these. An upgrade replaces them wholesale and the edit is lost."
+    echo "    Move it to AGENTS.md, propose it upstream, or revert it."
+  fi
+else
+  echo "  none  no .template-hashes — adopted before this check existed, or not from a release"
+fi
+
 n "Checkpoint size (limit 150)"
 for f in "$SB"/CHECKPOINT-*.md; do
   [ -e "$f" ] || continue
