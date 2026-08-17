@@ -33,6 +33,17 @@ What remains is one large reconciliation and two artefacts.
 
 ---
 
+## The first upgrade found a defect, and it was ours
+
+`.template-version` claimed `v1.0.0` while the tree held `v1.0.0` plus two fixes: the tag was cut
+mid-session and `check.sh` and `pre-commit` changed in the next commit. Nothing noticed for the
+length of a session; `upgrade-template.md` step 3 caught it on its first run.
+
+Resolved by the upgrade to `v1.1.0` — all fifteen mechanism entries now match the tag. The lesson
+is one line: **tag when the artefact is finished, not when it looks finished.**
+
+---
+
 ## Landed during the bootstrap, worth not rediscovering
 
 Running the checks against real content found **two more false positives of the family fixed
@@ -59,21 +70,14 @@ Handbook §12 describes both scripts and has not been updated for either fix.
 
 ## In progress
 
-### Gap 1 — step 7 artefacts, and §15 describes two that do not exist (priority: high)
+### Gap 1 — the manifest-hash check has no implementation (priority: medium)
 
-The handbook reconciliation is **done**: 881 lines, §15 "Versions and upgrading" written, §4, §6,
-§7, §8, §10, §11, §12 and Origin brought into line. §12 gained a subsection on the failure both
-scripts share, which is where the five false positives are now recorded as a design lesson rather
-than as incidents.
+ADR-003 says `check.sh` "gains an advisory check that manifest-owned files match their released
+hashes", and `upgrade-template.md` step 3 tells the reader to run it. It does not exist. During the
+first upgrade that step was run by hand with a shell loop — and that loop is what caught the
+version discrepancy, so this is not hypothetical value.
 
-But §15 now documents `MIGRATIONS.md` and `playbooks/upgrade-template.md`, and **neither exists**.
-The handbook is authoritative where it disagrees with the skeleton, so this is currently a
-promise rather than a description. `§7`'s table also lists `upgrade-template.md` as the sixth
-playbook.
-
-`upgrade-template.md` has one required step, recorded in ADR-004 and now in §15, that is easy to
-omit: diff the incoming `RULES.md` and report every changed rule, because a rule delivered by file
-replacement arrives silently.
+Both documents currently describe a check nobody can run. Either build it or reword both.
 
 ### Gap 2 — sample IDs in the skeleton's `docs/` (priority: low)
 

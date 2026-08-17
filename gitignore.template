@@ -1,0 +1,28 @@
+# Never commit — see ai-sandbox/SOURCES.md
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+data/
+
+# Extracted data, in any of its usual shapes
+*.csv
+*.parquet
+*.pkl
+*.pickle
+*.xlsx
+*.feather
+*.h5
+
+# Backstop only. reference-only sources are NEVER placed in the repository
+# (ai-sandbox/SOURCES.md); this line exists to catch the mistake, not to
+# sanction the directory.
+sources/reference-only/
+
+# Python / uv — delete this block if the project is not Python
+.venv/
+__pycache__/
+.ipynb_checkpoints/
