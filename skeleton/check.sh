@@ -14,7 +14,9 @@ n "Mechanism files against their released hashes"
 # vendoring. A difference is not an error: it means an upgrade is about to discard someone's
 # edit, and that is worth a person's attention *before* the upgrade rather than after.
 if [ -f .template-hashes ]; then
-  drift=$(sha256sum -c --quiet .template-hashes 2>&1)
+  # stderr carries only a summary line that repeats what the FAILED lines already say, and
+  # noise is what gets a check ignored. stdout alone reports both a changed file and a missing one.
+  drift=$(sha256sum -c --quiet .template-hashes 2>/dev/null)
   if [ -z "$drift" ]; then
     echo "  ok    all match $(awk '{print $1}' .template-version 2>/dev/null)"
   else
