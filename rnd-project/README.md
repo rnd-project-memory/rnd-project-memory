@@ -6,7 +6,11 @@ the handbook wins** — fix the skeleton, not the handbook.
 
 ## Use
 
-1. Copy the contents of this directory into the project repository root.
+1. Copy the contents of this directory into the project repository root — **except this
+   `README.md`**, which is installation instructions rather than part of the system and would
+   replace the project's own. Nothing else here is meant to overwrite an existing file either:
+   where one already exists, merge. `AGENTS.md` is the case that matters — the project's own
+   content stays, and the `@` import plus the working rules are added to it.
 2. Rename `gitignore.template` to `.gitignore`, then install the hooks — one line, and
    it is the only protection for the rule no later edit can repair:
    ```bash

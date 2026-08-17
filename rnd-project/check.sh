@@ -17,16 +17,24 @@ for f in "$SB"/CHECKPOINT-*.md; do
 done
 
 n "Dangling citations"
-for id in $(grep -rhoE '\[S-[a-z0-9-]+' docs/ "$SB" 2>/dev/null | tr -d '[' | sort -u); do
+# Blockquote preambles, <placeholder> examples and the playbooks all carry sample IDs.
+# Those are instruction, not content: scanning them makes the template report itself.
+skip_examples() { grep -vE '^[[:space:]]*[<>]'; }
+
+for id in $(grep -rhE --exclude-dir=playbooks '\[S-[a-z0-9-]+' docs/ "$SB" 2>/dev/null \
+            | skip_examples | grep -oE '\[S-[a-z0-9-]+' | tr -d '[' | sort -u); do
   grep -q "^## $id " "$SB/SOURCES.md" 2>/dev/null || echo "  $id cited but not in SOURCES.md"
 done
-for id in $(grep -rhoE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/null | sort -u); do
+for id in $(grep -rhE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/null \
+            | skip_examples | grep -oE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' | sort -u); do
   ls "$SB"/experiments/"$id".md >/dev/null 2>&1 || echo "  $id cited but no record file"
 done
 
 n "Registers: resolved entries should be deleted, not marked"
-grep -rn 'Resolved\|RESOLVED\|~~' "$SB"/OPEN_QUESTIONS.md "$SB"/ASSUMPTIONS.md 2>/dev/null \
-  | sed 's/^/  /' || echo "  clean"
+# Same exclusion: each register's own preamble explains that `Resolved` must never be used.
+hits=$(grep -rn 'Resolved\|RESOLVED\|~~' "$SB"/OPEN_QUESTIONS.md "$SB"/ASSUMPTIONS.md 2>/dev/null \
+       | grep -vE ':[0-9]+:[[:space:]]*>')
+if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
 
 n "Session files without a LOG.md row"
 for f in "$SB"/sessions/*.md; do
