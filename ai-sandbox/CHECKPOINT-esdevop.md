@@ -59,35 +59,23 @@ Handbook §12 describes both scripts and has not been updated for either fix.
 
 ## In progress
 
-### Gap 1 — the handbook still describes an earlier design (priority: high)
+### Gap 1 — step 7 artefacts, and §15 describes two that do not exist (priority: high)
 
-`RND_PROJECT_MEMORY.md` is 682 lines. The parts touched by the rules split and by the embedded
-`.gitignore` are fixed. What remains:
+The handbook reconciliation is **done**: 881 lines, §15 "Versions and upgrading" written, §4, §6,
+§7, §8, §10, §11, §12 and Origin brought into line. §12 gained a subsection on the failure both
+scripts share, which is where the five false positives are now recorded as a design lesson rather
+than as incidents.
 
-| | Sections | Size |
-|---|---|---|
-| Intact, no change needed | §1–3, §12–14 | — |
-| Edits in place | §4, §6, §7, §8, §10, §11, Origin | ~30 lines across 7 sections |
-| Missing entirely | ADR-002/003/004/005 have no representation | new §15, ~70–90 lines |
+But §15 now documents `MIGRATIONS.md` and `playbooks/upgrade-template.md`, and **neither exists**.
+The handbook is authoritative where it disagrees with the skeleton, so this is currently a
+promise rather than a description. `§7`'s table also lists `upgrade-template.md` as the sixth
+playbook.
 
-Specifics worth not rediscovering: §7 still says "the five procedures" and will be six once
-`upgrade-template.md` exists; §8's mandatory-fields table still names `uv.lock` and
-`Cluster / runtime` and lacks the `n/a`-over-blank rule; §10 describes `DATA_ENVIRONMENT.md` as
-the project's own notes rather than the substituted profile layer; §11 has no `.template-version`
-and no MANIFEST-driven copy.
+`upgrade-template.md` has one required step, recorded in ADR-004 and now in §15, that is easy to
+omit: diff the incoming `RULES.md` and report every changed rule, because a rule delivered by file
+replacement arrives silently.
 
-`skeleton/README.md` says the handbook wins where the two disagree, so every unreconciled section
-is a live instruction to do the wrong thing. This is the largest remaining piece and the easiest
-to defer.
-
-### Gap 2 — step 7 artefacts (priority: medium)
-
-`MANIFEST` has landed. `MIGRATIONS.md` and `playbooks/upgrade-template.md` have not.
-`upgrade-template.md` has one required step recorded in ADR-004 that is easy to omit: diff the
-incoming `RULES.md` and report every changed rule, because a rule delivered by file replacement
-arrives silently.
-
-### Gap 3 — sample IDs in the skeleton's `docs/` (priority: low)
+### Gap 2 — sample IDs in the skeleton's `docs/` (priority: low)
 
 `skeleton/docs/method.md` line 19 carries `[EXP-2026-05-04-ablation-c, …]` inside a
 `<placeholder>`. `check.sh` no longer reports it, but a project that fills in `method.md` without
