@@ -39,3 +39,4 @@ Ask to follow one of these by path:
 | `ai-sandbox/playbooks/promote.md` | Moving a conclusion into `docs/` |
 | `ai-sandbox/playbooks/ingest-source.md` | Adding a PDF, wiki page, or transcript |
 | `ai-sandbox/playbooks/run-experiment.md` | Running and recording an analysis |
+| `ai-sandbox/playbooks/upgrade-template.md` | Raising the project to a later template release |
