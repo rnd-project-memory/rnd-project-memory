@@ -14,11 +14,16 @@
 
 ## Where the work stands
 
-The design is recorded as ADR-001…006, and this repository now runs the system it defines. Steps
-1–6 of the extraction sequence are done: the repository exists, is public under MIT, the skeleton
-is tagged `v1.0.0`, and this memory layer is vendored from it and seeded.
+The design is recorded as ADR-001…006, and this repository runs the system it defines. **The
+extraction sequence is complete.** The repository is public under MIT, the skeleton is at
+`v1.2.0`, the handbook describes what exists rather than what was intended, and this memory layer
+is vendored from `v1.2.0` — reached through the upgrade playbook twice, not by hand.
 
-What remains is one large reconciliation and two artefacts.
+Everything ADR-002 through ADR-004 promised now exists and has been exercised at least once:
+`MANIFEST`, `MIGRATIONS.md`, `upgrade-template.md`, `.template-version`, `.template-hashes` and
+the check that reads it.
+
+What remains is one cosmetic item and one question that cannot be answered here.
 
 ## Current state
 
@@ -70,16 +75,7 @@ Handbook §12 describes both scripts and has not been updated for either fix.
 
 ## In progress
 
-### Gap 1 — the manifest-hash check has no implementation (priority: medium)
-
-ADR-003 says `check.sh` "gains an advisory check that manifest-owned files match their released
-hashes", and `upgrade-template.md` step 3 tells the reader to run it. It does not exist. During the
-first upgrade that step was run by hand with a shell loop — and that loop is what caught the
-version discrepancy, so this is not hypothetical value.
-
-Both documents currently describe a check nobody can run. Either build it or reword both.
-
-### Gap 2 — sample IDs in the skeleton's `docs/` (priority: low)
+### Gap 1 — sample IDs in the skeleton's `docs/` (priority: low)
 
 `skeleton/docs/method.md` line 19 carries `[EXP-2026-05-04-ablation-c, …]` inside a
 `<placeholder>`. `check.sh` no longer reports it, but a project that fills in `method.md` without
