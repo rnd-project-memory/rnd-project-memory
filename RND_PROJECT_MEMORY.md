@@ -309,8 +309,7 @@ Keep write and network operations prompted.
 
 **The skeleton is normative. This section does not reproduce it.**
 
-Every file listed below exists, filled and commented, in `templates/rnd-project/`. Copy from
-there. Earlier drafts of this handbook embedded copies of each template; within a day the two had
+Every file listed below exists, filled and commented, in `skeleton/`. Copy from there. Earlier drafts of this handbook embedded copies of each template; within a day the two had
 diverged in four files and the skeleton had grown four more that the handbook never mentioned —
 a system whose central claim is that two copies drift, reproducing that failure in its own
 delivery. The copies are gone.

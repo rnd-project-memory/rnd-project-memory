@@ -1,0 +1,6 @@
+# This repository's own working files.
+# The skeleton ships its own ignore list for adopting projects — skeleton/gitignore.template.
+
+.DS_Store
+*.swp
+scratch/
