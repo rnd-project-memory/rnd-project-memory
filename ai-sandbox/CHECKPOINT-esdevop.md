@@ -1,6 +1,6 @@
 # rnd-project-memory — Checkpoint · esdevop
 
-**Updated:** 2026-08-17 · **Limit: 150 lines**
+**Updated:** 2026-08-19 · **Limit: 150 lines**
 
 > **This file belongs to one person.** Other `CHECKPOINT-*.md` files are read-only to you.
 >
@@ -23,18 +23,18 @@ Everything ADR-002 through ADR-004 promised now exists and has been exercised at
 `MANIFEST`, `MIGRATIONS.md`, `upgrade-template.md`, `.template-version`, `.template-hashes` and
 the check that reads it.
 
-What remains is one cosmetic item and one question that cannot be answered here.
+What remains is one cosmetic item and two questions that cannot be answered here.
 
 ## Current state
 
 | Item | Value | Source |
 |------|-------|--------|
-| Skeleton files | 32, all audited | `sessions/…-ownership-audit-2.md` |
+| Skeleton | `v1.2.0`, 34 files | `.template-hashes` |
+| Root memory vendored from | `v1.2.0`, skeleton @ `b00b3b8` | `.template-version` |
+| Upgrades run through the playbook | 2 (`v1.0.0`→`v1.1.0`→`v1.2.0`) | `sessions/LOG.md` |
 | Files needing a true profile | 1 (`DATA_ENVIRONMENT.md`) | `EXP-…-misdirection-recheck` |
-| Files needing nothing structural | 9 register files, `scaffold` | same |
-| Root memory vendored from | `v1.0.0`, skeleton @ `1c3dde0` | `.template-version` |
+| Handbook | 885 lines, fully reconciled incl. §15 | `sessions/…-profile-experiments-3.md` |
 | Experiments run | 3, all recorded | `experiments/LOG.md` |
-| Handbook sections reconciled | the `AGENTS`/`RULES` set and §9; the rest outstanding | Gap 1 |
 
 ---
 
@@ -69,7 +69,8 @@ check is answered with `--no-verify`, after which it is dead while still appeari
 prediction arrived from the other direction than expected, and using `--no-verify` here would have
 proved it.
 
-Handbook §12 describes both scripts and has not been updated for either fix.
+Handbook §12 now carries all five as a design lesson — *a check that scans the repository will
+find the repository's own instructions* — rather than as a list of incidents.
 
 ---
 
@@ -93,5 +94,5 @@ None. Everything settled so far is already in `docs/decisions/`.
 
 Building the enterprise copy before a colleague needs it. Designing the company profile beyond
 ADR-005's note that it is a `DATA_ENVIRONMENT.md` variant plus a secret-scan pattern extension.
-Answering `Q-enterprise-access` or `Q-contribution-flow` from first principles — both need
+Answering `Q-oss-intake` or `Q-contribution-flow` from first principles — both need
 information from outside this repository.
