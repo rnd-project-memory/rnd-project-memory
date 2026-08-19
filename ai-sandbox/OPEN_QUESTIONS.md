@@ -1,6 +1,6 @@
 # rnd-project-memory — Open Questions
 
-**Updated:** 2026-08-17
+**Updated:** 2026-08-19
 
 > **Open questions only.** A question leaves this file in one of two ways, and both are
 > deletions — status `Resolved` is never used, because a register of resolved entries is one
@@ -48,19 +48,17 @@ directly and cheaply against crafted staged content, without a project. The rest
 be validated before first real use at work, which makes the first work project a deliberate pilot
 rather than an adoption.
 
-## Q-enterprise-access · What does the employer's GitHub actually permit? 🟡
+## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Source:** ADR-005
-**Question:** Can the enterprise environment reach public GitHub at all, can it fork across the
-boundary, and is there an intake process for external open-source material?
-**Why it matters:** ADR-005 routes around the answer deliberately, so nothing is blocked today.
-But it decides how a colleague physically obtains the template — self-service clone versus a
-manual carry-in — and whether an intake review must happen before the first colleague adopts it.
-**Progress:** GitHub Enterprise Server cannot fork from github.com at all — separate instances.
-Enterprise Cloud with Managed Users very likely blocks it, as EMU accounts are isolated from
-public GitHub. Enterprise Cloud without EMU may permit it subject to organisation policy.
-Unverified against the actual configuration.
+**Raised:** 2026-08-19 · **Owner:** esdevop
+**Source:** ADR-005; the remaining part of the retired `Q-enterprise-access`
+**Question:** Is there a process for taking external open-source material into company work, and
+does an MIT-licensed documentation template need to pass it?
+**Why it matters:** Blocks nothing today and nothing for the author, who can already clone. It
+decides only whether a *colleague* needs a review before adopting, and running it once makes every
+later adoption routine.
+**Progress:** The licence exists and is MIT, which is what such a process asks for first. Not a
+question to answer from inside this repository.
 
 ## Q-contribution-flow · How do colleague improvements reach upstream? 🟢
 

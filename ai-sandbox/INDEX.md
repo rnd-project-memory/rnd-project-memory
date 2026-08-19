@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-**Updated:** 2026-08-17
+**Updated:** 2026-08-19
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -44,12 +44,15 @@ template's own rule says content that instructs falsely is worse than content th
 
 ## Current focus
 
-Bootstrapping finished; the design is recorded as ADR-001…006 and the memory is seeded. The next
-substantive work is the remainder of the handbook reconciliation — `RND_PROJECT_MEMORY.md` still
-has no representation for ADR-002/003/004/005, which is a new §15 of roughly 70–90 lines. After
-that, `MANIFEST`, `MIGRATIONS.md` and `playbooks/upgrade-template.md` (step 7).
+The extraction sequence is complete: the repository is public under MIT, the skeleton is at
+`v1.2.0`, the handbook describes what exists rather than what was intended, and the root memory
+has been raised through `upgrade-template.md` twice. Everything ADR-002…004 promised now exists
+and has run at least once.
 
-Blocked on nothing. `Q-enterprise-access` and `Q-contribution-flow` need answers from outside this
+No substantive work is queued. The open items are one cosmetic defect in `skeleton/docs/method.md`
+and the components only a real work project can exercise.
+
+Blocked on nothing. `Q-oss-intake` and `Q-contribution-flow` need answers from outside this
 repository and block nothing today.
 
 ---
