@@ -58,9 +58,133 @@ structure and re-run the migration from the version the structure implies.
 
 ---
 
-## No migrations yet
+## v1.2.0 → v2.0.0
 
-`v1.0.0` is the first release. `v1.1.0` added a playbook and changed no structure.
+**This is the first real migration** — every release before it either changed no structure or
+was itself the tooling that makes migrations possible at all. Read every step; nothing here is
+skippable within the section even though it is a single MAJOR.
 
-This file exists before it is needed on purpose: the format is easier to agree when nothing is at
-stake than in the moment a real migration is due.
+### Reason
+
+Six independent bases justify MAJOR on their own (see the design notes for the full case); they
+ship together as one section rather than six because `MIGRATIONS.md`'s own contract requires
+every intermediate MAJOR to be executed in full, and six MAJORs between two points would mean
+six sequential migrations for what is, structurally, one coherent change.
+
+1. **Ownership axis.** `CHECKPOINT-<owner>.md` is renamed to `CHECKPOINT-<thread-slug>.md`.
+   Ownership becomes a `Held by:` field in the header, not part of the filename. A project with
+   one person and several concurrently-paused threads was producing, under the owner axis, the
+   exact silently-diverging pair of files this design exists to prevent — just one level down,
+   inside a single person's own work.
+2. **Trap routing.** Data and tool traps move out of `DATA_ENVIRONMENT.md`'s "Known data traps"
+   section into the new `ai-sandbox/CAVEATS.yaml`. A project's traps are no longer where the old
+   structure said they were.
+3. **Evidence requirement.** An experiment record that cites a file now makes that file real —
+   in the repository, or the record says why not and names a substitute (typically a
+   `results/*.json` summary). Records that cite only a gitignored path with nothing standing in
+   for it stop conforming.
+4. **`DATA_ENVIRONMENT.md` schema.** `Access` becomes a repeated block, one per source, each
+   carrying a `Status:` field. `Tables in use` becomes a pointer to a generated catalog plus a
+   short curated working set, not a hand-maintained table.
+5. **`INDEX.md` meaning change.** The single "current focus" / one-checkpoint framing is
+   replaced by a `## Threads` table. Any existing row describing "current focus" in terms of one
+   person's state stops matching the new structure.
+6. **Registry genre.** A register (`ASSUMPTIONS.md`, `OPEN_QUESTIONS.md`, or a project's own) that
+   has gone months without a deletion is not broken — it has become a journal, and now has to say
+   so explicitly rather than keep the registry label while behaving like something else.
+
+Alongside these, a larger set of MINOR additions ships in the same release: `PUBLICATIONS.md`,
+`CAVEATS.yaml`, `CONFIGURATIONS.md`, `STALENESS_LOG.md` (new files), verification fields on
+experiment and session records, scope and basis fields on claims and assumptions, and advisory
+`check.sh` checks. These do not invalidate any existing entry and need no per-entry migration —
+only the file replacement in step 4 below, same as any MINOR.
+
+### Steps
+
+1. **Rename the checkpoint(s).** For each `ai-sandbox/CHECKPOINT-<old-owner>.md`, decide what it
+   actually holds:
+   - If it is one coherent live thread, rename it to `ai-sandbox/CHECKPOINT-<thread-slug>.md`
+     (name it for the work, not the person) and rewrite its header to the new shape: `Held by:
+     <owner token> · since <date>`, `Status: active | paused`, `Plan:` (only if a plan file
+     exists), `Resume from:`, `Do not do until re-verified:`. Move any personal reasoning
+     ("what I tried", "what I suspect") out into the current session's record — the new
+     checkpoint holds thread facts only.
+   - If it covers more than one independent thread, split it into one `CHECKPOINT-<slug>.md`
+     per thread — this is the situation the rename exists to fix, so do not force multiple
+     threads back into one file to make the rename mechanical.
+   - If, once personal reasoning and already-promoted content are removed, nothing is left in
+     progress, do not create a new checkpoint at all: promote what's settled (`promote.md`), file
+     one `OPEN_QUESTIONS.md` entry for anything still hanging, and delete the old file. A thread
+     checkpoint that would open empty should not open.
+2. **Move traps.** Cut `DATA_ENVIRONMENT.md`'s "Known data traps" section into
+   `ai-sandbox/CAVEATS.yaml`, one entry per trap, using the new file's field shape (`id`,
+   `subject`, `kind`, `severity`, `what`, `found`, `basis`). Replace the section in
+   `DATA_ENVIRONMENT.md` with the one-line pointer. Existing prose severity language ("this will
+   silently break X") maps directly to `severity: critical`.
+3. **Restructure `DATA_ENVIRONMENT.md`.** Split the existing flat `Access` section into one block
+   per source, in the new field order, and add `Status:` (`alive` by default unless something is
+   actually known to be winding down). Replace the hand-written `Tables in use` list with the new
+   four-line pointer shape if the project has a generation script; if it does not, keep the table
+   but apply the new inclusion criterion (a decision depends on the row, not merely "queried
+   once") and drop rows that fail it.
+4. **Replace the mechanism layer.** Copy every path `MANIFEST` marks `mechanism` from the new
+   skeleton, wholesale, as in any release (`upgrade-template.md` step 4). This alone brings in
+   the new `RULES.md` bullets, the rewritten `checkpoint.md` and `session-start.md`, and the new
+   `sessions/_TEMPLATE.md` / `experiments/_TEMPLATE.md` fields.
+5. **Seed the new scaffold files.** `CAVEATS.yaml` (populated in step 2), `PUBLICATIONS.md`,
+   `CONFIGURATIONS.md`, `STALENESS_LOG.md`, `ai-sandbox/playbooks/local/` (just `_TEMPLATE.md` if
+   the project has no procedures of its own yet), `ai-sandbox/results/README.md`. A project with
+   nothing to put in one of these yet seeds it empty — an empty `PUBLICATIONS.md` is not a gap,
+   the same way an empty `SOURCES.md` already isn't.
+6. **Update `INDEX.md`.** Rename the checkpoint row, add the `## Threads` table (one row per
+   surviving `CHECKPOINT-<thread>.md`: thread, held by, status, since), and update "What a new
+   session does" step 1 to read the thread table before picking a checkpoint.
+7. **Check registry genre.** For `ASSUMPTIONS.md`, `OPEN_QUESTIONS.md`, and any project-specific
+   register: if it has gone materially longer than three months without a deletion, decide
+   whether it is actually a journal now and, if so, say so in its own preamble and split off a
+   separate current-state file — do not silently leave the registry framing in place.
+8. **Sweep existing entries for the new optional fields — do not backfill them.** `Does not
+   license:`, `Verified by:`, `Configuration:` and friends are additive; existing rows and
+   records stay valid without them (see Exceptions). Only fill them going forward.
+
+### Exceptions
+
+- **Session and experiment records are immutable.** A reference to `CHECKPOINT-<old-owner>.md`
+  inside an already-closed session file is **not** rewritten to the new thread-based name — that
+  mismatch is the historical record working correctly, not a stale citation to fix.
+- **No retroactive backfill of new fields.** `Does not license:` in `ASSUMPTIONS.md`/`CLAIMS.md`,
+  `Verified by:` / `How verified:` / the run-ID row in existing experiment records, and
+  `Configuration:` / `Participants:` / `Signed off:` in existing session records are not added to
+  entries that predate this release. They are MINOR-grade additions; an existing entry without
+  them remains valid, exactly as `MIGRATIONS.md`'s own contract treats any additive field.
+- **A thread's synthesis is not reconstructed.** Step 1's checkpoint split or closure may lose
+  the value of having several sessions' state held together in one place — that has no other
+  home in this design (see `RATIONALE.md`, "negative knowledge needs a home") and is an accepted,
+  bounded cost of the rename, not a defect to work around during migration.
+- **`docs/CLAIMS.md`'s new `Does not license` column** is additive to the table; existing rows
+  get a blank cell, not a retroactively inferred value.
+
+### Verification
+
+- `./check.sh` run before step 1 and again after step 8. Every finding present only in the
+  "after" run should trace to something this migration actually changed (a renamed checkpoint
+  file, a newly-seeded empty register) — anything else is the migration's fault until shown
+  otherwise.
+- No file named `CHECKPOINT-<old-owner>.md` remains, except inside `sessions/*.md` /
+  `experiments/*.md` citations, which stay as-is per Exceptions.
+- `ai-sandbox/CAVEATS.yaml` has at least as many entries as `DATA_ENVIRONMENT.md`'s old traps
+  section had traps.
+- `INDEX.md`'s `## Threads` table has one row per surviving `CHECKPOINT-*.md` file, and no
+  checkpoint file exists without a matching row (or vice versa).
+- `sha256sum -c .template-hashes` reports every `mechanism` file matching, confirming step 4 was
+  applied wholesale rather than merged.
+
+---
+
+## No migrations before this
+
+`v1.0.0` is the first release. `v1.1.0` added a playbook and changed no structure. `v1.2.0` added
+a check and changed no structure it needed a migration for.
+
+This file existed before it was needed on purpose: the format was easier to agree on when
+nothing was at stake than in the moment a real migration was due.

@@ -19,8 +19,10 @@ the handbook wins** — fix the skeleton, not the handbook.
    If the project has CI, run the same secret scan there: it is the one layer nobody can
    forget to install.
 3. Replace every `<PROJECT_NAME>` and `<PLACEHOLDER>`.
-4. Pick an **owner token** (your initials), declare it in `AGENTS.md`, and rename
-   `ai-sandbox/CHECKPOINT-owner.md` to `CHECKPOINT-<token>.md`.
+4. Pick an **owner token** (your initials) and declare it in `AGENTS.md`. It identifies who can
+   hold a thread — it no longer names a file. Rename `ai-sandbox/CHECKPOINT-thread.md` to
+   `CHECKPOINT-<what-you're-working-on>.md` for your first thread, and set `Held by: <token>` in
+   its header.
 5. Delete `sources/` and `src/` if the project already has its own.
 6. Verify instruction loading: in a fresh Copilot CLI session, ask it to state a rule that
    appears only in `ai-sandbox/RULES.md`, then one that appears only in `ai-sandbox/INDEX.md`.
@@ -47,13 +49,14 @@ system is in this directory.
 
 ## Working with colleagues
 
-Nothing to change. The structure is already concurrency-safe: checkpoints are per owner, no
-identifier uses a shared counter, and every other file is append-only or edited in localised
-spots. A second contributor picks their own owner token, creates their own checkpoint, and
-starts — no renaming, no migration.
+Nothing to change. The structure is already concurrency-safe: checkpoints are per thread and
+only their holder writes them, no identifier uses a shared counter, and every other file is
+append-only or edited in localised spots. A second contributor picks their own owner token and
+either takes over an unattended thread (an event, logged — see `RULES.md`) or opens a new one.
 
-Only two things change, and neither touches a file:
+Only one thing changes, and it doesn't touch a file:
 
 - `docs/` review becomes a pull request rather than a self-review pass.
-- Pull before closing a session — `checkpoint.md` step 5 touches shared `LOG.md` and `INDEX.md`,
-  and two assistants running at once have nothing coordinating them.
+
+`session-start.md`'s step 0 already pulls before reading anything, specifically so two people
+writing the same thread's checkpoint diverge visibly before work starts, not silently after.

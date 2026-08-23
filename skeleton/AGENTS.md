@@ -21,10 +21,11 @@ which is the one file that describes it in detail.>
 
 ## Owner token
 
-`<owner>` — my checkpoint is `ai-sandbox/CHECKPOINT-<owner>.md`.
+`<owner>` — the value that appears in `Held by:` on any thread checkpoint I currently hold.
 
-Pick your initials, rename `CHECKPOINT-owner.md` to match, and declare it here. This is the one
-value the rules refer to and cannot supply themselves.
+Pick your initials and declare them here. A thread's checkpoint is named for what is being
+worked on (`CHECKPOINT-<thread-slug>.md`), not for this token — the token only identifies who
+currently holds it. This is the one value the rules refer to and cannot supply themselves.
 
 ## Commits
 

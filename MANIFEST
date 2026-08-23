@@ -38,6 +38,7 @@ mechanism  ai-sandbox/playbooks/run-experiment.md
 mechanism  ai-sandbox/playbooks/upgrade-template.md
 mechanism  ai-sandbox/sessions/_TEMPLATE.md
 mechanism  ai-sandbox/experiments/_TEMPLATE.md
+mechanism  ai-sandbox/playbooks/local/_TEMPLATE.md
 mechanism  docs/decisions/_TEMPLATE.md
 mechanism  docs/techniques/_TEMPLATE.md
 
@@ -52,19 +53,26 @@ mechanism  .githooks/pre-commit
 profile    ai-sandbox/DATA_ENVIRONMENT.md
 
 # ─── scaffold: seeded once, the project's own thereafter ─────────────────────
-# The nine register and index files below carry an upstream preamble above project entries.
-# They are scaffold rather than mechanism because a stale preamble does not misdirect: the
-# failure mode is missing a newly added rule, not following a false one, and rules that must
-# reach existing projects live in RULES.md. See EXP-2026-08-17-misdirection-recheck.
+# The register and index files below carry an upstream preamble above project entries. They
+# are scaffold rather than mechanism because a stale preamble does not misdirect: the failure
+# mode is missing a newly added rule, not following a false one, and rules that must reach
+# existing projects live in RULES.md. See EXP-2026-08-17-misdirection-recheck.
 scaffold   AGENTS.md
 scaffold   ai-sandbox/INDEX.md
-scaffold   ai-sandbox/CHECKPOINT-owner.md
+scaffold   ai-sandbox/CHECKPOINT-thread.md
 scaffold   ai-sandbox/OPEN_QUESTIONS.md
 scaffold   ai-sandbox/ASSUMPTIONS.md
 scaffold   ai-sandbox/SOURCES.md
+scaffold   ai-sandbox/CAVEATS.yaml
+scaffold   ai-sandbox/PUBLICATIONS.md
+scaffold   ai-sandbox/CONFIGURATIONS.md
 scaffold   ai-sandbox/sessions/LOG.md
 scaffold   ai-sandbox/experiments/LOG.md
 scaffold   docs/CLAIMS.md
+
+# Temporary by design — exists only until the 3-week staleness threshold is validated against
+# real data, then deleted along with the answer. See its own header and RATIONALE.md.
+scaffold   ai-sandbox/STALENESS_LOG.md
 
 # starting shapes for documents the project writes
 scaffold   ai-sandbox/ASSISTANT_PROFILE.md
@@ -74,11 +82,15 @@ scaffold   docs/constraints.md
 scaffold   docs/glossary.md
 scaffold   src/README.md
 scaffold   sources/README.md
+scaffold   ai-sandbox/results/README.md
 
 # ─── content: project-generated, upstream never touches ──────────────────────
 content    ai-sandbox/sessions/*.md
 content    ai-sandbox/experiments/EXP-*.md
 content    ai-sandbox/CHECKPOINT-*.md
+content    ai-sandbox/env/*.md
+content    ai-sandbox/results/*.json
+content    ai-sandbox/playbooks/local/*.md
 content    docs/decisions/ADR-*.md
 content    docs/techniques/*.md
 content    sources/**

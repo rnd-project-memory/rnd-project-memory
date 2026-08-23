@@ -1,6 +1,9 @@
 # <DATE> · <topic>
 
 **Status:** open
+**Configuration:** <name from `CONFIGURATIONS.md`>
+**Participants:** <role — model · effort, one per participant with a verification role>
+**Signed off:** <human name, or "no">
 
 > `open` means **this session, right now**. Append to this file as the session runs —
 > a decision reached is a decision written down, not something to reconstruct at the end.
@@ -8,6 +11,11 @@
 >
 > Any `open` file that is **not** the current session is an interrupted one. Freeze it as
 > `abandoned` exactly as it stands; never backfill from memory.
+>
+> **Participants matters only when the configuration has a check step** — independence is a
+> property of the pair doing the checking, not something the configuration's name alone
+> recovers. Review by a model of the same family as the author does not count as independent
+> and does not license `Signed off:` on its own.
 
 ---
 

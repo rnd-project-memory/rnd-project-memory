@@ -44,14 +44,21 @@ Prefer the strongest basis available; if a claim rests on several, list them.
 
 ## Review triggers
 
-- **`sessions/…` basis and the claim now matters** — worth an experiment. This is how the index
-  surfaces what to measure next.
+- **`sessions/…` basis and the claim now matters** — name the specific experiment that would
+  settle it **at the point you notice this**, not as a reminder to figure out later. A
+  confidence adjective degrades quietly; a named check either exists or it doesn't.
 - **`S-…` basis from a mutable source** (Confluence) read long ago — re-verify.
-- **Superseded** — mark the row `superseded by <shorthand>`; leave it, do not delete. Unlike
-  register entries, a claim's history is what tells you the question was already considered.
+- **Superseded** — mark the row `superseded by <shorthand>`; leave it, do not delete.
+
+**This file is deliberately a journal for superseded rows, not a pure registry** — the one
+place in this system where history is kept on purpose rather than deleted (`P-024` does not
+apply here): a claim's history is what tells you the question was already considered. Every
+other register in this system follows the opposite rule; if one of them starts accumulating
+rows the way this file does, it has quietly become a journal too and needs the same declaration
+this file already carries — not a silent drift.
 
 ---
 
-| Claim | File | Date | Basis |
-|-------|------|------|-------|
-| <shorthand, ~8 words> | `docs/method.md` | <DATE> | `EXP-…` \| `S-…` \| `sessions/…` \| `ADR-…` |
+| Claim | File | Date | Basis | Does not license |
+|-------|------|------|-------|-------------------|
+| <shorthand, ~8 words> | `docs/method.md` | <DATE> | `EXP-…` \| `S-…` \| `sessions/…` \| `ADR-…` | <optional — blank means no narrower scope to flag> |

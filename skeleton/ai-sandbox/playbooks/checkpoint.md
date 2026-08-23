@@ -29,20 +29,57 @@ follow `promote.md`.
 
 Test: still true in a month → `docs/`. Might still turn over → checkpoint.
 
-## 3. Rewrite `CHECKPOINT-<owner>.md`
+## 3. Update the thread checkpoint(s)
 
-**Rewrite the whole file. Do not append.** Write only `CHECKPOINT-<owner>.md` — the file
-named by the owner token in `AGENTS.md`. Other people's checkpoints are never edited.
+**A thread's checkpoint exists only while something produced is not yet promoted and not yet
+closed.** For each thread this session touched, decide first whether there is anything left to
+write down at all: if everything is already promoted (step 2) or already lives in
+`CAVEATS.yaml` or a playbook, there is nothing to open a checkpoint for.
+
+If there is something left, decide whether this is a **new** thread or a continuation of one
+that already has a file:
+
+- **New thread** — name it for what is being worked on, not who is doing it
+  (`CHECKPOINT-<thread-slug>.md`). Set `Held by:` to your token.
+- **Continuing** — write only `CHECKPOINT-<thread-slug>.md` for a thread you hold. Other
+  people's threads are read-only to you; taking one over is an event (see `RULES.md`), not a
+  silent edit here.
+
+### Rewriting (thread continues)
+
+**Rewrite the whole file. Do not append.**
 
 - Delete everything no longer true. Do not strike through or mark "outdated" — delete.
   Previous versions are in git and in the session file.
 - Delete everything promoted in step 2.
-- Keep only what is unresolved.
-- Check the limit: `wc -l ai-sandbox/CHECKPOINT-<owner>.md` ≤ 150.
+- Keep only what is unresolved, and keep personal reasoning **out** — what was tried, what
+  didn't make sense, what is suspected belongs in the session file, not here.
+- Update `Resume from:` and `Do not do until re-verified:` to reflect exactly where this session
+  left the thread — not what was done, the state of the break itself.
+- **If the thread has a `Plan:` file**, do not restate it here. No task identifiers (`T-###`)
+  in this header — state for a planned thread lives in the plan (contract), run artefacts (what
+  happened, read from disk, not from the plan's table — the table is intent, the directory is
+  fact), and this header (distrust and prohibitions only, since artefacts can't express those).
+- Check the limit: `wc -l ai-sandbox/CHECKPOINT-<thread-slug>.md` ≤ 150.
 
 **If it exceeds 150 lines**, something needs promoting — that is not a signal to shorten
 the wording. Find the most settled part and move it to `docs/`. Compressing prose to fit
-the cap is the exact failure this system exists to prevent.
+the cap is the exact failure this system exists to prevent. This only holds together with
+step 2's evidence rule: raw numbers belong in `ai-sandbox/results/`, not copied into the
+checkpoint as proof.
+
+### Closing (nothing is left in progress on this thread)
+
+Split what remains to **both** addresses at once — never a choice between them:
+
+- Settled parts → `docs/`, via `promote.md`.
+- Anything still hanging → **one** `OPEN_QUESTIONS.md` entry, not a restatement of the whole
+  thread.
+- Delete the checkpoint file.
+
+This loses nothing for facts — each already had a single-purpose home to move to. It does lose
+the value of holding several sessions' state together in one place; that synthesis has no other
+home, and closing accepts it as a real, bounded cost rather than solving it.
 
 ## 4. Update the registers
 
@@ -67,9 +104,9 @@ checkpoint as a gap; add new assumptions surfaced this session.
   names **what was resolved**, not just what was worked on: this row is the only cue a later
   reader gets that a deleted question ever had an answer.
 - `experiments/LOG.md` — a row for each experiment run this session.
-- `INDEX.md` — update the date and "Current focus". Leave the rest alone
-  unless the structure genuinely changed: this file loads into every session and must
-  stay small and stable.
+- `INDEX.md` — update the date, the `## Threads` table (add, update, or remove the rows this
+  session touched), and "Current focus". Leave the rest alone unless the structure genuinely
+  changed: this file loads into every session and must stay small and stable.
 
 ## 6. Propose a commit
 
@@ -80,7 +117,7 @@ unprompted.**
 
 - [ ] Session file written
 - [ ] Promotions agreed and applied
-- [ ] `CHECKPOINT-<owner>.md` rewritten, ≤150 lines
+- [ ] Thread checkpoint(s) rewritten (≤150 lines) or closed to `docs/` + one `OPEN_QUESTIONS.md` entry
 - [ ] Registers updated, resolved entries deleted
-- [ ] `LOG.md` and `INDEX.md` updated
+- [ ] `LOG.md` and `INDEX.md` (incl. thread table) updated
 - [ ] Commit proposed
