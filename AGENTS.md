@@ -38,7 +38,9 @@ have would misdirect.
 
 ## Owner token
 
-`esdevop` — my checkpoint is `ai-sandbox/CHECKPOINT-esdevop.md`.
+`esdevop` — the value that appears in `Held by:` on any thread checkpoint I currently hold.
+A thread's checkpoint is named for what is being worked on
+(`ai-sandbox/CHECKPOINT-<thread-slug>.md`), not for this token.
 
 ## Commits
 

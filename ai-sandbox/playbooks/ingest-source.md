@@ -53,4 +53,5 @@ Separate:
 | Confluence | **Mutable.** Record the date read; the page can change or be deleted underneath a claim. Re-verify anything load-bearing. |
 | Call transcript | Speech is imprecise and often speculative. Distinguish a decision from thinking aloud. Attribute claims to speakers when it matters. |
 | PDF / report | Check its own date and provenance — a report may itself cite something stale. |
+| Internal dated note | A source only if written **at the moment of assertion**, not reconstructed later. Register as an ordinary `S-…` with author and date. As strong as evidence that something was said — it licenses nothing about the data itself (see `Does not license:` in `ASSUMPTIONS.md`). The boundary with `sessions/…`: a note carries knowledge brought *into* the project; a session file carries knowledge *produced* in it — the test is whether the claim existed before the session, not who wrote it down. |
 | Conversation with an AI | Not a source. Reasoning to be verified, and it is recorded in `sessions/`, not `SOURCES.md`. |

@@ -1,6 +1,6 @@
 # rnd-project-memory — Method
 
-**Updated:** 2026-08-17
+**Updated:** 2026-08-23
 
 > Current best understanding of how the template is built, versioned and delivered. **No history
 > here** — no "we used to think". Rationale for contested choices lives in `decisions/`; evidence
@@ -57,6 +57,8 @@ its own memory at the root, vendored from a released tag.
 | Consumers vendor a pinned copy; upstream never merges | `ADR-003` |
 | A rule change is MAJOR only if existing entries stop conforming | `ADR-004` |
 | Handbook and skeleton share one tag | `ADR-004` |
+| A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `ADR-007` |
+| Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `ADR-007` |
 
 ## Known limitations
 
