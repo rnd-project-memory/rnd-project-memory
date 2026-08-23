@@ -84,5 +84,44 @@ n "Heuristic: numbers in docs/ with no nearby date (expect false positives)"
 grep -rnE '[0-9]+(\.[0-9]+)?\s*(%|ms|GB|k)\b' docs/ 2>/dev/null \
   | grep -vE '[0-9]{4}-[0-9]{2}-[0-9]{2}|S-[a-z]|EXP-' | head -10 | sed 's/^/  /' || echo "  none"
 
+n "Unverified experiments"
+# P-112: a conclusion resting on one of these does not promote to docs/ until this changes.
+found=0
+for f in "$SB"/experiments/EXP-*.md; do
+  [ -e "$f" ] || continue
+  grep -q 'Verified by:.*not verified' "$f" || continue
+  found=1
+  d=$(grep -m1 -oE '\*\*Date:\*\* [0-9]{4}-[0-9]{2}-[0-9]{2}' "$f" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+  if [ -n "$d" ] && age=$(( ( $(date +%s) - $(date -d "$d" +%s 2>/dev/null || echo 0) ) / 86400 )) 2>/dev/null; then
+    echo "  $f: not verified, ${age}d"
+  else
+    echo "  $f: not verified"
+  fi
+done
+[ "$found" -eq 0 ] && echo "  none"
+
+n "Stale publications"
+# Exclude the template's own field-vocabulary line ("current | stale — <if stale, ...>"): a
+# placeholder enumerating the legal values is not a filled-in entry. Same failure family as the
+# other checks' skip_examples — a check that scans the file finds the file's own instructions.
+stale=""
+[ -f "$SB/PUBLICATIONS.md" ] && stale=$(grep 'Status:.*stale' "$SB/PUBLICATIONS.md" | grep -v '<')
+if [ -n "$stale" ]; then
+  grep -B3 'Status:.*stale' "$SB/PUBLICATIONS.md" | grep -v '<' | grep -E '^## |Status:' | sed 's/^/  /'
+else
+  echo "  none"
+fi
+
+n "Field value distribution (P-130 — diagnostic only, no threshold)"
+# A dictionary field that stays healthy shows a spread across its declared values. Values
+# appended by hand beyond the dictionary mean the field is being asked two questions at once;
+# one value dominating almost everything means it is asking the wrong one. Either way this is
+# a prompt to look, not a failure.
+if [ -f "$SB/CAVEATS.yaml" ]; then
+  echo "  CAVEATS.yaml severity:"
+  grep -oE '^\s*severity:\s*\S+' "$SB/CAVEATS.yaml" 2>/dev/null | awk '{print $2}' \
+    | sort | uniq -c | sort -rn | sed 's/^/    /'
+fi
+
 printf '\n\033[2madvisory only — nothing here blocks a commit\033[0m\n'
 exit 0

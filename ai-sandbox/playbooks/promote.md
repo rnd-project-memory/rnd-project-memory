@@ -76,6 +76,7 @@ file the conclusion touches was updated, not just the obvious one.
 
 ## When **not** to promote
 
-- The conclusion rests on unverified numbers — verify first.
+- The conclusion rests on an experiment whose `Verified by:` field still reads `not verified` —
+  verify first.
 - It was floated for consideration, without the user's agreement.
 - It could still turn over next session. Leave it in the checkpoint.

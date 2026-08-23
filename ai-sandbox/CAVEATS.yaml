@@ -1,0 +1,25 @@
+# rnd-project-memory — Caveats register
+#
+# Empty, and legitimately so: this project has no data environment (see AGENTS.md) and no
+# traps to find. Populated the day a real data or tool trap is found — an empty register here
+# is not a gap, the same way SOURCES.md being empty isn't.
+#
+# Data and tool traps: things that produce a plausible, wrong answer without an error.
+# Search by `subject` before touching what it names — this file is found, not read start to end.
+#
+# Append-only. Never regenerated, and NOT subject to the delete-on-resolve rule the rest of this
+# system follows (P-024 in the design notes): a trap does not stop being true when it is
+# "closed", only its data moves. Fix it in place with `corrected:` / `superseded_by:`, never
+# delete the entry.
+#
+# Fields:
+#   id        C-<slug>. Assigned once, never renamed.
+#   subject   The lookup key: a table, a column, a script path.
+#   kind      Free text — e.g. `table`, `tool`. No fixed dictionary on purpose.
+#   severity  critical | moderate | minor. `critical` means fails silently, not "important".
+#   what      What actually happens, in prose.
+#   found     Date discovered.
+#   basis     EXP-… / sessions/… / S-… — or `—` if genuinely none exists.
+#   status    (optional) confirmed | inferred | unverified-by-design.
+#   verify    (optional) Required when status is `inferred`: the check that would settle it.
+#   corrected / superseded_by  (optional) How this was addressed, without deleting the record.

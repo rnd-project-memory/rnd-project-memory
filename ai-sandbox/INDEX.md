@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-**Updated:** 2026-08-19
+**Updated:** 2026-08-23
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -15,7 +15,7 @@ artefact, never as working notes — see `AGENTS.md`.
 | What | Where |
 |------|-------|
 | Settled conclusion | `docs/` |
-| In-flight reasoning | `CHECKPOINT-esdevop.md` |
+| In-flight reasoning | `CHECKPOINT-<thread>.md` (one per thread, see below) |
 | What happened in a session | `sessions/<date>-<slug>.md` |
 | What an experiment produced | `experiments/EXP-<YYYY-MM-DD>-<slug>.md` |
 | Where a fact came from | `SOURCES.md` |
@@ -28,10 +28,13 @@ artefact, never as working notes — see `AGENTS.md`.
 
 | File | Contents | Write mode |
 |------|----------|-----------|
-| `CHECKPOINT-esdevop.md` | Current unresolved state | rewrite, ≤150 lines |
+| `CHECKPOINT-<thread>.md` | Current unresolved state, one per thread | rewrite, ≤150 lines, holder only |
 | `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
 | `ASSUMPTIONS.md` | What the design bets on | edit |
 | `SOURCES.md` | Source register with IDs — empty; this project reasons rather than cites | append |
+| `CAVEATS.yaml` | Data/tool traps — empty; no data environment here | append, corrected in place |
+| `PUBLICATIONS.md` | What was published externally — empty; nothing published externally | edit |
+| `CONFIGURATIONS.md` | Named session configurations | edit |
 | `RULES.md` | The behavioural rules — upstream's, replaced on upgrade | do not edit |
 | `RATIONALE.md` | Why each rule exists; failure modes | read on demand |
 | `sessions/LOG.md` | One row per session | append only |
@@ -42,24 +45,33 @@ template's own rule says content that instructs falsely is worse than content th
 
 ---
 
+## Threads
+
+| Thread | Held by | Status | Since |
+|--------|---------|--------|-------|
+| *(none open)* | | | |
+
+The last thread (`CHECKPOINT-esdevop.md`, template-completion work) closed on 2026-08-23 when
+`v2.0.0` shipped — see `sessions/2026-08-23-skeleton-v2-thread-checkpoints.md` and
+`docs/decisions/ADR-007-threads-and-negative-knowledge.md`.
+
+---
+
 ## Current focus
 
-The extraction sequence is complete: the repository is public under MIT, the skeleton is at
-`v1.2.0`, the handbook describes what exists rather than what was intended, and the root memory
-has been raised through `upgrade-template.md` twice. Everything ADR-002…004 promised now exists
-and has run at least once.
+`v2.0.0` has shipped: the skeleton implements all 30 techniques from the design review
+(`P-101`–`P-130`), and this root memory has been raised through `upgrade-template.md` for the
+third time — the first time carrying a real structural migration rather than a file swap.
 
-No substantive work is queued. The open items are one cosmetic defect in `skeleton/docs/method.md`
-and the components only a real work project can exercise.
-
-Blocked on nothing. `Q-oss-intake` and `Q-contribution-flow` need answers from outside this
-repository and block nothing today.
+No substantive work is queued. `Q-oss-intake` and `Q-contribution-flow` need answers from outside
+this repository and block nothing today.
 
 ---
 
 ## What a new session does
 
-1. Read this file, then `CHECKPOINT-esdevop.md`, then `OPEN_QUESTIONS.md`.
+1. Read this file — including the thread table — then the `CHECKPOINT-<thread>.md` file(s)
+   relevant to today's focus, then `OPEN_QUESTIONS.md`.
 2. Do not read `docs/` wholesale — open a document when it is actually needed.
 3. Ask for the session focus if it was not given.
 4. Close with `playbooks/checkpoint.md`.
