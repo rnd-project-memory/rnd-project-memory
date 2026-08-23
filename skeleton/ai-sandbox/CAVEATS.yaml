@@ -1,0 +1,36 @@
+# <PROJECT_NAME> — Caveats register
+#
+# Data and tool traps: things that produce a plausible, wrong answer without an error.
+# Search by `subject` before touching what it names — this file is found, not read start to end.
+#
+# Append-only. Never regenerated, and NOT subject to the delete-on-resolve rule the rest of this
+# system follows (P-024): a trap does not stop being true when it is "closed", only its data
+# moves. Fix it in place with `corrected:` / `superseded_by:`, never delete the entry.
+#
+# Fields:
+#   id        C-<slug>. Assigned once, never renamed (same reason as S-<slug> and EXP-<slug>).
+#   subject   The lookup key: a table, a column, a script path. What you'd grep for.
+#   kind      Free text — e.g. `table`, `tool`. Deliberately no fixed dictionary: a trap in the
+#             project's own instrument (kind: tool) behaves exactly like a data trap and belongs
+#             in the same list, not a separate section.
+#   severity  critical | moderate | minor. `critical` means one thing only: fails silently — no
+#             error, no empty-result warning, just a wrong answer that looks fine. Not "important",
+#             not "frequent".
+#   what      What actually happens, in prose.
+#   found     Date discovered.
+#   basis     EXP-… / sessions/… / S-… — or `—` if genuinely none exists. Never point at the
+#             nearest similar entry when there isn't one; `—` is a legitimate value.
+#   status    (optional) confirmed | inferred | unverified-by-design.
+#   verify    (optional) Required when status is `inferred`: the name of the specific check that
+#             would settle it — not a confidence word. Legitimately absent when
+#             unverified-by-design (there is nothing to check by construction).
+#   corrected / superseded_by  (optional) How this was addressed, without deleting the record.
+
+- id: C-<slug>
+  subject: <table, column, or script path>
+  kind: table
+  severity: critical
+  what: >
+    <what happens, and why it looks fine until it doesn't>
+  found: <DATE>
+  basis: <EXP-… | sessions/… | S-… | —>

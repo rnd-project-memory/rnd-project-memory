@@ -45,12 +45,14 @@ table before any file format.
 | What it is | Where it goes | Write mode |
 |------------|---------------|-----------|
 | Settled conclusion about the method | `docs/` + a row in `docs/CLAIMS.md` | edit in place |
-| In-flight reasoning, not yet resolved | `ai-sandbox/CHECKPOINT-<owner>.md` | **rewrite**, ≤150 lines |
+| In-flight reasoning on one thread of work, not yet resolved | `ai-sandbox/CHECKPOINT-<thread>.md` | **rewrite**, ≤150 lines, holder only |
 | What happened in a session | `ai-sandbox/sessions/<date>-<slug>.md` | create once, **immutable** |
 | What an analysis run produced | `ai-sandbox/experiments/EXP-<YYYY-MM-DD>-<slug>.md` | create once, **immutable** |
 | Where a fact came from | `ai-sandbox/SOURCES.md` | append; edit status only |
+| A data or tool trap — a plausible, silently wrong answer | `ai-sandbox/CAVEATS.yaml` | append; corrected in place, never deleted |
 | A question with no answer yet | `ai-sandbox/OPEN_QUESTIONS.md` | add; **delete** when answered |
 | Something the method bets on | `ai-sandbox/ASSUMPTIONS.md` | add; **delete** when confirmed |
+| Something published externally, drifting from `docs/` | `ai-sandbox/PUBLICATIONS.md` | add; `stale` is a legitimate resting status |
 | Executable logic | `src/` | git |
 
 ### The one sentence that matters
@@ -65,8 +67,17 @@ exact failure this whole structure exists to prevent.
 
 > Will this still be true in a month?
 
-Yes → `docs/`. Still might turn over → `CHECKPOINT-<owner>.md`. It is a record of an event rather than a
-claim → `sessions/` or `experiments/`.
+Yes → `docs/`. Still might turn over → `CHECKPOINT-<thread>.md`. It is a record of an event rather
+than a claim → `sessions/` or `experiments/`.
+
+### A second kind of gap this table doesn't fill by itself
+
+The routing rule above answers *where does a positive fact go*. It has nothing to say about
+**distrust, a scope limit, or a legitimate absence of reference** — "don't trust this yet",
+"this claim covers X but not Y", "no source exists for this". Left unrouted, all three end up as
+prose wherever the writer happened to be, which is exactly how a checkpoint's most important
+line — what not to do until something is re-verified — ends up buried in paragraph six of forty.
+§3 gives each of these its own field rather than leaving them to find their own way into prose.
 
 ---
 
@@ -74,7 +85,7 @@ claim → `sessions/` or `experiments/`.
 
 Every file in this system has a declared write mode. Violating it is how the system rots.
 
-### Rewrite, one file per owner — `CHECKPOINT-<owner>.md`
+### Rewrite, one file per thread — `CHECKPOINT-<thread>.md`
 
 Replaced wholesale each time, never appended to. Anything no longer true is **deleted**, not
 struck through and not annotated "outdated". The previous version is in git and in the session file.
@@ -82,19 +93,41 @@ struck through and not annotated "outdated". The previous version is in git and 
 *Prevents:* current and stale statements interleaving with no marker of which governs. Once that
 happens the reader — human or model — cannot trust any line without checking all of them.
 
-**The file is per owner, not per project** — `CHECKPOINT-mk.md`, declared in `AGENTS.md`.
-Working alone this means exactly one file, and costs nothing.
+**The file is per thread of work, not per person.** Ownership lives in a header field, `Held
+by:` — deliberately not `Owner:`, because it names a temporary state, not a possession — with one
+rule enforcing it: only the holder writes, everyone else reads, and taking a thread over is a
+logged event, not a silent edit of the field. Naming the axis after the person instead of the
+work looks equivalent for exactly one case — one person, one thread at a time — and stops holding
+the moment either condition fails: a solo author running several agents in parallel produces
+several threads pausing and resuming independently (a delivery, a data catalog, a stakeholder
+question, unrelated to each other), and an owner-named file forces all of it into one document.
+That is the same silently-diverging-copies failure a per-owner file was built to prevent, arrived
+at from the opposite direction: two *threads* sharing a file, rather than two *people* sharing one.
 
-*Prevents:* the worst possible git merge. Wholesale rewrite changes nearly every line, so two
-people rewriting concurrently conflict across the entire file, and the only resolutions on offer
-are "take mine" or "take theirs" — both silently discarding a colleague's session. One file per
-owner removes the shared write entirely. It also means adding a second person later is a no-op:
-they create their own file and nothing else moves. Retrofitting this onto an established
-project means renaming a file referenced from the index and every playbook, usually discovered
-*via* the conflict that already ate someone's work.
+*Prevents:* the worst possible git merge, same as before — wholesale rewrite changes nearly every
+line, so two concurrent rewrites of the same thread conflict across the whole file, and the only
+resolutions on offer silently discard someone's work. One file per thread removes the shared
+write. Adding a second person is still a no-op: they either open a new thread or take over an
+existing one — nothing is renamed, nothing else moves.
 
-If genuinely shared in-flight state exists, add one short `CHECKPOINT.md` alongside, owned by
-whoever coordinates. Most projects never need it.
+### A thread's checkpoint exists only while something is unpromoted and unclosed
+
+Not "while paused" — a thread that runs six sessions with no visible pause and is still not
+finished needs a checkpoint exactly as much as one that stalls, and a pause-triggered rule misses
+it. **A thread opens a checkpoint when a session ends and something produced has nowhere else to
+live yet**; if everything is already in `docs/`, `CAVEATS.yaml`, or a playbook, there is nothing
+to open.
+
+**Closing splits the remainder to two addresses at once, never a choice between them:** settled
+parts move to `docs/` via the promotion playbook, anything still hanging becomes one
+`OPEN_QUESTIONS.md` entry, and the file is deleted. This loses nothing for facts — each already
+has a single-purpose home to move to — but it does lose the value of holding several sessions'
+state together in one place, which has no other home. That is an accepted, bounded cost, not
+something the design claims to solve.
+
+*Prevents, on both ends:* a checkpoint that opens for every session regardless of whether it left
+anything unresolved (the filter stops filtering), and a checkpoint that is never explicitly closed
+and simply accumulates as a dead file nobody deletes.
 
 ### Hard cap — each checkpoint ≤ 150 lines
 
@@ -103,11 +136,55 @@ whoever coordinates. Most projects never need it.
 *Prevents:* the lossy re-summarising described in §1. Compression is a decision about what to
 forget, made by whoever is least equipped to know what will matter in six months. If the file is
 over 150 lines, find the most settled part and move it out. Rewording to fit is the precise
-mistake this system is built to stop.
+mistake this system is built to stop. This only holds together alongside the evidence rule in §8:
+raw numbers a conclusion rests on belong in `ai-sandbox/results/`, not copied into the checkpoint
+as proof — that is the difference between a checkpoint that stays thin and one that hits 700 lines
+carrying its own appendix of hashes and weight tables.
 
-The cap is **per file**, so each person gets their own budget. One shared budget across two
-in-flight threads either overflows constantly — firing spurious promotion pressure when it
-merely holds two people's work — or lets one thread crowd out the other.
+The cap is **per file**, so each thread gets its own budget. One shared budget across two
+in-flight threads either overflows constantly — firing spurious promotion pressure when it merely
+holds two unrelated threads' work — or lets one thread crowd out the other.
+
+### A thread with its own plan file stays thin a different way
+
+Once a thread has a plan — tasks, dependencies, gates, in its own file — the checkpoint does not
+restate it. State for a planned thread lives in three places, jointly, and none of them
+duplicates another: the plan (contract — what was agreed, unchanged once written), run artefacts
+(what actually happened — a manifest per task, a decision per gate, produced by execution and
+never typed by hand; a missing artefact means *not yet certified*, not *assume it passed*), and
+the checkpoint header (what artefacts structurally cannot express — see "Negative knowledge",
+below). The checkpoint holds only `Resume from:` and `Do not do until re-verified:`, plus a
+pointer to the plan. Task identifiers do not appear in the header; if they start showing up there,
+the pointer discipline has broken and needs a mechanical check, not a reminder — the table in the
+plan states intent and can drift, the artefact directory only ever states fact, so status is read
+from the directory, never the table.
+
+### Negative knowledge needs a home as much as positive knowledge does
+
+Distrust ("don't believe this yet"), a scope limit ("this claim covers X but not Y"), and a
+legitimate absence ("no reference exists for this") are knowledge, but none of them has an
+obvious default home the way a measured fact or a settled decision does. Left homeless, all three
+leak into prose — a warning not to trust a task's self-report ends up as one sentence buried deep
+in a checkpoint instead of a field anyone can find, and losing that kind of note is worse than
+losing a positive fact: a lost fact costs re-deriving it, a lost prohibition costs repeating the
+mistake it existed to prevent, silently, because nothing else errors.
+
+Three forms, each with a field: a checkpoint's `Do not do until re-verified:` line (distrust), a
+`Does not license:` line on a claim or assumption (scope), and a mandatory pointer field that
+legitimately accepts `—` rather than being filled with the nearest similar ID (absence). All three
+follow the same rule of form — **written as a prohibition or the name of a specific check, never
+as a confidence adjective.** Adjectives degrade silently: a `High` written in one month still
+reads `High` five months later whether or not anything still justifies it, while a named
+prohibition or check either still holds or it doesn't.
+
+### No personal reasoning in the thread checkpoint
+
+What was tried, what didn't make sense, what is suspected but not yet checked — that belongs in
+the session file, not the checkpoint. The checkpoint holds facts about the thread: where it
+stands, what not to trust yet, what not to do until that changes. This is what keeps a thread
+having *one* state rather than one state per person who has touched it — read against a real
+example, the split turns out to cost almost nothing: most of what looks like it needs personal
+framing is already a fact about the thread once separated from the individual's train of thought.
 
 ### Written for someone who was not there
 
@@ -127,6 +204,20 @@ back to the earlier one.
 
 *Prevents:* a rewritten history that agrees with present belief. The value of a record is that it
 captures what was believed at the time, including what turned out wrong.
+
+**An experiment record that cites a file makes that file real** — in the repository, or the
+record says why not and names what stands in as evidence instead (typically a small
+`ai-sandbox/results/*.json` summary: counts, hashes, shares — reproducible without the raw,
+possibly gitignored, data behind it). And **a conclusion resting on an experiment marked `not
+verified` does not move to `docs/`** — the one rule in this section that is a hard requirement
+rather than a guideline, because the verdict a record's own author reaches (`supports` /
+`contradicts` / `inconclusive`) and whether anyone independently checked it are different
+questions, and only the second one licenses promoting the result.
+
+*Prevents:* a conclusion in `docs/` that traces to nothing anyone can re-open, and a self-report
+treated with the same weight as an independently reproduced result. In one project that produced
+this design, independent recount found a real, previously unnoticed bug in roughly half the tasks
+it checked — a number self-report alone would never have surfaced.
 
 ### Append-only — `sessions/LOG.md`, `experiments/LOG.md`
 
@@ -150,12 +241,26 @@ session file they have no reason to open — and again, that reader is usually y
 Entries carry a **`Raised:` date**. What rots a register worked alone is not unowned items but
 *undisclosed age*: nothing otherwise shows that a question has been open for four months.
 
+**One register is deliberately exempt: `ai-sandbox/CAVEATS.yaml`.** A data or tool trap does not
+stop being true when it is "addressed" — the data moved, or the tool changed — so an entry is
+corrected in place or marked superseded, never deleted. Found by searching for its `subject` (a
+table, a column, a script path), not read start to end.
+
+**If a register goes materially longer than usual with no deletions at all, it has not failed —
+it has quietly become a journal.** `docs/CLAIMS.md` is built this way on purpose: superseded rows
+are kept, not deleted, because a claim's history is what shows the question was already
+considered, and the file says so in its own preamble. The failure is a register that has drifted
+the same way without saying so: the checkpoint or promotion playbook keeps asking for deletions
+nobody is making, while a separate current-state view gets built alongside it informally — which
+*looks* like two homes for one fact without being one. The fix is a declaration, not a cleanup:
+resume deleting, or name the file a journal explicitly and give current state its own place.
+
 ### Shared singletons — the registers
 
-`OPEN_QUESTIONS.md`, `ASSUMPTIONS.md`, `SOURCES.md`, and `DATA_ENVIRONMENT.md` stay single shared
-files even with several contributors. Their edits are localised — a new entry at the tail, a
-status change on one line — so concurrent changes merge cleanly or conflict on one resolvable
-line. Only the rewritten file needed splitting.
+`OPEN_QUESTIONS.md`, `ASSUMPTIONS.md`, `SOURCES.md`, `CAVEATS.yaml`, `PUBLICATIONS.md`, and
+`DATA_ENVIRONMENT.md` stay single shared files even with several contributors. Their edits are
+localised — a new entry at the tail, a status change on one line — so concurrent changes merge
+cleanly or conflict on one resolvable line. Only the rewritten file needed splitting.
 
 ---
 
@@ -177,15 +282,21 @@ docs/                          ← permanent knowledge base: settled conclusions
 ai-sandbox/                    ← working memory between sessions
   RULES.md                     ← the behavioural rules; upstream's, replaced on upgrade
   RATIONALE.md                 ← why each rule exists; read on demand, never imported
-  INDEX.md                     ← entry point; current focus
-  CHECKPOINT-<owner>.md        ← in-flight reasoning; one per person, ≤150 lines
-  CHECKPOINT.md                ← optional: shared in-flight state, if any
+  INDEX.md                     ← entry point; current focus, thread table
+  CHECKPOINT-<thread>.md       ← in-flight reasoning; one per thread, ≤150 lines, holder-only write
   OPEN_QUESTIONS.md            ← active questions only
   ASSUMPTIONS.md               ← what the method bets on
   SOURCES.md                   ← source register
+  CAVEATS.yaml                 ← data/tool traps, found by subject; never deleted, only corrected
+  PUBLICATIONS.md              ← what was published externally, and whether it has drifted
+  CONFIGURATIONS.md            ← named session configurations and what basis each licenses
+  STALENESS_LOG.md             ← temporary: one row per staleness decision, until the threshold is validated
   DATA_ENVIRONMENT.md          ← how to obtain data and run analyses; the profile layer (§15)
+  env/<source>.md              ← optional: one source's own file, once it outgrows DATA_ENVIRONMENT.md
+  results/<what>__<timestamp>.json  ← evidence cited from experiment records; immutable once written
   playbooks/                   ← procedures: session-start, checkpoint, promote,
-                                 ingest-source, run-experiment
+                                 ingest-source, run-experiment, upgrade-template
+    local/                     ← the project's own procedures — content, not mechanism (§7)
   sessions/LOG.md + <date>-<slug>.md
   experiments/LOG.md + EXP-<YYYY-MM-DD>-<slug>.md
 
@@ -326,18 +437,23 @@ delivery. The copies are gone.
 |------|---------|
 | `AGENTS.md` | Auto-loaded entry point: project description, owner token, `@` imports. Yours — never overwritten |
 | `ai-sandbox/RULES.md` | The behavioural rules and the playbook list. Upstream's — replaced on upgrade |
-| `ai-sandbox/INDEX.md` | Session entry point: routing rule, artifact list, current focus |
-| `ai-sandbox/CHECKPOINT-<owner>.md` | One per person; in-flight reasoning, rewritten, ≤150 lines |
+| `ai-sandbox/INDEX.md` | Session entry point: routing rule, artifact list, current focus, thread table |
+| `ai-sandbox/CHECKPOINT-<thread>.md` | One per thread; in-flight reasoning, rewritten, ≤150 lines, written only by whoever it names `Held by:` |
 | `ai-sandbox/OPEN_QUESTIONS.md` | Active questions only; deleted when answered |
 | `ai-sandbox/ASSUMPTIONS.md` | What the method bets on |
 | `ai-sandbox/SOURCES.md` | Source register: IDs, provenance, sensitivity |
-| `ai-sandbox/DATA_ENVIRONMENT.md` | Access, tables, data traps, run recipes. **The profile layer** — the one file that names the stack (§15). Omit it if the project has no data environment |
+| `ai-sandbox/CAVEATS.yaml` | Data/tool traps, found by subject; never deleted, only corrected |
+| `ai-sandbox/PUBLICATIONS.md` | What was published externally, and whether it has drifted from `docs/`; `stale` is a legitimate resting status |
+| `ai-sandbox/CONFIGURATIONS.md` | Named session configurations and what basis each licenses — see "Session configuration" in §8 |
+| `ai-sandbox/STALENESS_LOG.md` | Temporary: one row per staleness decision, deleted once the threshold is validated |
+| `ai-sandbox/DATA_ENVIRONMENT.md` | Access (one block per source), a generated-catalog pointer, run recipes. **The profile layer** — the one file that names the stack (§15). Omit it if the project has no data environment |
 | `ai-sandbox/RATIONALE.md` | Why each rule exists; failure-mode table |
 | `ai-sandbox/ASSISTANT_PROFILE.md` | Optional; how to pitch explanations. `@`-import it or it does nothing |
 | `ai-sandbox/playbooks/*.md` | The six procedures — see §7 |
+| `ai-sandbox/playbooks/local/_TEMPLATE.md` | Shape for the project's own procedures — content, not mechanism |
 | `MANIFEST` · `.template-version` · `.template-hashes` | Which files upstream owns, which release you took, and what those files hashed to when it shipped — see §15 |
-| `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record |
-| `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record |
+| `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record — the record's header now also names its **configuration**, **participants**, and whether it was **signed off** |
+| `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record — the record now also carries **who verified it**, **how**, and a **run ID** for remote/async execution |
 | `docs/CLAIMS.md` | Index of every claim in `docs/`: shorthand, file, date, basis |
 | `docs/problem.md` | Problem statement, success criteria, stakeholders |
 | `docs/method.md` | The method as it currently stands |
@@ -348,7 +464,7 @@ delivery. The copies are gone.
 | `gitignore.template` | Rename to `.gitignore` — enforces the never-commit list |
 | `check.sh` · `.githooks/pre-commit` | Mechanical checks; secret scan — see §12 |
 
-Three fields are worth explaining rather than just copying, because their shape is not obvious:
+Four fields are worth explaining rather than just copying, because their shape is not obvious:
 
 **`SOURCES.md` — sensitivity is decided at ingestion, defaulting to `reference-only`.** It is the
 only decision in the system a later edit cannot undo. See §9.
@@ -360,7 +476,14 @@ filled this in". See §8.
 
 **`OPEN_QUESTIONS.md` / `ASSUMPTIONS.md` — `Owner:` is always filled in, even alone.** Blank must
 mean *unclaimed*; if solo-era entries are left blank, that meaning is destroyed the day a second
-person joins.
+person joins. The same logic extends to any field that points at another record: `CAVEATS.yaml`'s
+`basis:`, `ASSUMPTIONS.md`'s `Basis:` — `—` is a legitimate value meaning no reference exists, and
+it must never be filled with the nearest similar ID instead. A wrong pointer looks exactly as
+valid as a right one, and is far more expensive to catch.
+
+**`CHECKPOINT-<thread>.md` — named for the work, `Held by:` names the person.** Renaming the file
+to take over a thread is exactly the mistake this design avoids; only the header field changes,
+and that change is itself logged as an event (§14).
 
 ## 7. Playbooks
 
@@ -376,8 +499,8 @@ Follow ai-sandbox/playbooks/checkpoint.md
 
 | Playbook | Purpose | The part that is easy to get wrong |
 |----------|---------|-----------------------------------|
-| `session-start.md` | Load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. |
-| `checkpoint.md` | Close a session: freeze the record, promote, rewrite state | Step 3's cap means **promote something**, never shorten the prose. |
+| `session-start.md` | Pull, load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. Its staleness check **reports and counts**, it does not demand a verdict — the person opening a session is often not the thread's holder. |
+| `checkpoint.md` | Close a session: freeze the record, promote, decide each touched thread's checkpoint | A thread only gets a checkpoint if something is left with nowhere else to live; if it does, the cap means **promote something**, never shorten the prose; closing splits the remainder to `docs/` and one `OPEN_QUESTIONS.md` entry, never a choice between them. |
 | `promote.md` | Move a matured conclusion into `docs/` | Step 2 — find *every* file the conclusion touches. Updating one and missing another leaves `docs/` self-contradictory, which is worse than not recording it. |
 | `ingest-source.md` | Take in a PDF, wiki page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
 | `run-experiment.md` | Run and record an analysis | The question is written **before** the run. An experiment with no stated question cannot fail, and so teaches nothing. |
@@ -421,6 +544,8 @@ record of the data as it was.
 | Result + uncertainty | A point estimate with no spread cannot be compared |
 | Verdict | Forces a conclusion while the context is fresh |
 | Threats | What would make it not replicate |
+| Run ID (remote/async) | The unit of evidence when execution outlives the local session — a run recovered by ID after the local shell died has no other identifier |
+| Verified by / How verified | A self-reported verdict and an independently checked one are different claims; see below |
 
 `DATA_ENVIRONMENT.md` states what these mean for the project's own stack — which lockfile, which
 identifier form for a data source, what identifies a runtime. The playbook and the record template
@@ -430,12 +555,47 @@ name the fields; the profile supplies their shape (§15).
 an oversight, and some of these genuinely do not apply — an experiment that runs no code has no
 environment lock, and an immutable source has no snapshot date. Say so rather than leaving a gap.
 
+### Verification is separate from the verdict
+
+**`Verdict:`** is what the person who ran the experiment concluded — a self-report, filled by
+whoever set it up. **`Verified by:` / `How verified:`** say whether anyone else checked it: `not
+verified`, `self`, or a named other, by independent re-derivation, a re-run, a manual cross-check,
+or "not applicable". **A conclusion resting on an experiment still marked `not verified` does not
+move to `docs/`** — the one hard rule in this section, because self-report and independent
+verification measurably diverge: in the source material for this design, independent recount
+found a real bug in roughly half the tasks it checked, none of which self-report alone had
+flagged.
+
+**If a record cites a file, that file is real** — committed to the repository, or the record says
+why not and names a substitute (typically a small JSON summary in `ai-sandbox/results/`, named
+`<what-was-done>__<timestamp>.json`, created once and never edited). A citation to a path that is
+gitignored, with nothing standing in for it, is not evidence — it just looks like some.
+
+### Session configuration: what a result is allowed to claim
+
+A model name answers "how capable was the check"; it does not answer "was the check
+independent" — and independence is what actually determines what a result may claim.
+`ai-sandbox/CONFIGURATIONS.md` names a small set of session shapes (solo; author plus an AI
+reviewer with no sign-off; author, reviewer, and a human sign-off; oracle-and-executor with
+recount) and states what basis each licenses. A session record cites the configuration by name,
+plus who filled each role when the configuration has a check step — independence is a property of
+the pair doing the checking, not something the configuration's name alone recovers.
+
+**Review by a model of the same family as the author is not independent verification.** It does
+not satisfy a sign-off requirement, and a result checked only this way is not citable as verified.
+The independence ladder, weakest to strongest: self-check → same-family model → different
+provider → a check of a genuinely different kind (a deterministic test, a re-derivation from raw
+data, a human) — the last of which is often also the cheapest, since it runs at zero model cost.
+Written as a rule, not an adjective, for the same reason as everywhere else in this design: a
+`diversity: high/medium/low` field would degrade exactly the way `Confidence` does elsewhere.
+
 ### Graduating a result into `docs/`
 
 A single experiment rarely changes the method. What belongs in `docs/method.md` is the
 **conclusion drawn across experiments**, citing their IDs:
 
-> Feature set C is dropped: it adds 0.3pp at four times the compute `[EXP-2026-05-04-ablation-c, EXP-2026-05-11-cost-c]`.
+> Feature set C is dropped: it adds 0.3pp at four times the compute, per the experiments logged
+> for that comparison.
 
 The experiment records stay where they are. `docs/` holds the claim; `experiments/` holds
 the evidence. This is the same separation as `docs/` versus `sessions/` — conclusion in one
@@ -453,6 +613,15 @@ there is no way to re-check without re-reading everything. An ID assigned at ing
 seconds and makes the claim auditable:
 
 > Latency budget is 200 ms end-to-end `[S-latency-spec §3.2]`.
+
+**A source can be internal, not just external.** A dated note — written *at the moment of
+assertion*, not reconstructed later — is a source too: register it as an ordinary `S-…` with
+author and date. It is as strong as evidence that something was said; it licenses nothing about
+the data itself (see `Does not license:` in §3). The boundary with `sessions/`: a note carries
+knowledge brought *into* the project, a session file carries knowledge *produced* in it — the
+test is whether the claim existed before the session, not who wrote it down. A conversation with
+an AI assistant is still not a source; that boundary is about an absent artifact, not about who
+or what supplied the reasoning.
 
 ### Sensitivity and the never-commit list
 
@@ -495,18 +664,15 @@ re-verified rather than trusted. `session-start.md` includes this check.
 ## 10. Data environment
 
 `ai-sandbox/DATA_ENVIRONMENT.md` records how to obtain data and run analyses: workspace and auth
-*mechanism* (never values), data sources in use with grain and refresh, known data traps,
-environment commands, and verified run recipes.
+*mechanism* (never values) for each source in use, a pointer to the generated schema catalog,
+and verified run recipes. Data and tool traps live in `ai-sandbox/CAVEATS.yaml`, not here — see
+below.
 
 **This is the profile layer, and it is the only file that names the stack.** Everywhere else the
 system states the principle and keeps the stack as a named example — the experiment record asks
 for "the environment's locked state", not for `uv.lock`. Concentrating the stack in one file is
 what lets a project on a different one substitute a single file instead of editing eleven. §15
 covers the layer this belongs to.
-
-Stripping the stack out of *this* file was tried and fails: remove the product names and nothing
-concrete remains, because a known data trap cannot be stated abstractly. So it stays concrete and
-ships in variants.
 
 **A project with no data environment omits the file entirely.** Shipping one full of instructions
 for a stack the project does not have is worse than shipping nothing: it instructs, and the
@@ -515,15 +681,41 @@ instruction is false.
 **No credentials, ever.** Describe where a secret comes from — an environment variable name, a
 CLI profile, a keyring entry — never what it is.
 
-### Why the data-traps section matters most
+### One source is not the common case
 
-It is the only part that cannot be re-derived from the code. A column whose nulls mean "not
+`Access` is a repeated block, one per source, each carrying the same three fields plus a
+**`Status:`** field — `alive`, `being phased out`, or `phased out, no replacement`. That field
+matters most for on-prem sources: a cloud source fails loud (a token expires, the next call
+errors); an on-prem source can fail silent, decommissioned with nobody telling the project,
+discovered months later when someone needs it and it is simply gone. `Status:` exists to say so
+while the source is still there. If one source's own description outgrows the file, it gets
+`ai-sandbox/env/<source>.md`, and `DATA_ENVIRONMENT.md` keeps one line plus a pointer — the same
+thin-file-with-a-pointer shape as a planned thread's checkpoint (§3).
+
+### Tables in use is generated, not hand-maintained
+
+**A hand-written table list is not knowledge — it is derivable, and derived things get generated,
+not typed.** Where a schema-extraction script exists, this section is four lines: where the
+generated catalog lives, the command that regenerates it, when it was last generated, and a
+pointer to `CAVEATS.yaml` for curated notes. Freshness matters here specifically — anything that
+depends on the catalog cites its generation timestamp, the same discipline an experiment record
+already applies to a data snapshot. If a working set is still worth listing by hand, the
+criterion for a row is **a decision depends on it**, not "was queried at some point".
+
+### Why data and tool traps live in `CAVEATS.yaml`, and matter most
+
+A trap is the one thing that cannot be re-derived from the code. A column whose nulls mean "not
 applicable" rather than "unknown" produces a plausible, wrong answer silently, every time, until
-somebody notices. The same goes for duplicated keys, a backfill that rewrote history, and
-timezone conventions that differ from what a column name implies.
+somebody notices. The same goes for duplicated keys, a backfill that rewrote history, timezone
+conventions that differ from what a column name implies — and, just as often, the project's *own
+tooling* lying to it the same way: `CAVEATS.yaml`'s `kind: tool` covers "our own instrument
+misleads us" with exactly the same shape as a data trap, in the same list, found the same way —
+by searching for its `subject`, not by reading start to end.
 
 Write each trap down the moment it is found. It has no other home in the repository, and the
-second person bitten by it is usually the first person, a year later.
+second person bitten by it is usually the first person, a year later. A trap is never deleted
+once entered — it is corrected in place or marked superseded, because the data moving does not
+make the record of the trap untrue.
 
 ### Why the snapshot date is mandatory
 
@@ -549,8 +741,9 @@ upgrade applies, and §15 has nothing to work from.
 ship in `ai-sandbox/RULES.md`, which `AGENTS.md` imports and which an upgrade replaces wholesale;
 rules typed into `AGENTS.md` are outside that mechanism and drift silently from the version
 everything else assumes. Pick an **owner token** — your initials are fine — and declare it in
-`AGENTS.md`; your checkpoint is `CHECKPOINT-<token>.md`. Working alone that is one file, and it
-means a second contributor later costs nothing to add.
+`AGENTS.md`. It is not a filename: it is the value you put in `Held by:` on any thread checkpoint
+you currently hold. Working alone that is still, in practice, one active checkpoint most of the
+time — but it is a thread's file, named for the work, not a file that is "yours".
 
 Verify the imports work: in a fresh session, ask the assistant to state a rule that appears only
 in `RULES.md`, then one that appears only in `INDEX.md`. If either fails, that import is not
@@ -570,8 +763,9 @@ written down. Do not attempt to distil it into `docs/` yet — it has not been t
 and premature promotion puts unstable claims in the permanent base.
 
 **This will exceed 150 lines, and that is expected.** Write it to
-`ai-sandbox/CHECKPOINT-<owner>-intake.md`, which is **exempt from the cap** and carries a
-dismantling date in its header — four to six weeks out.
+`ai-sandbox/CHECKPOINT-intake.md` — its own thread, held by whoever is running the bootstrap —
+which is **exempt from the cap** and carries a dismantling date in its header — four to six weeks
+out.
 
 The exemption exists because the three rules otherwise deadlock: this step says capture
 everything, §3 caps the checkpoint at 150 lines, and this step also forbids promoting yet, which
@@ -585,8 +779,9 @@ as the highest-priority item, not as furniture.
 **6. Backfill the session log.** If the project has git history, reconstruct one row per
 significant past episode from the commits. Approximate rows are worth more than an empty log.
 
-**7. Seed `DATA_ENVIRONMENT.md`** with the tables already in use and every data trap already
-known. This will be incomplete. Incomplete and growing is the working state.
+**7. Seed `DATA_ENVIRONMENT.md`** with the sources already in use, and **`CAVEATS.yaml`** with
+every data or tool trap already known. This will be incomplete. Incomplete and growing is the
+working state.
 
 Do **not** try to fill everything at once. `OPEN_QUESTIONS.md` and `ASSUMPTIONS.md` populate
 naturally as sessions run; forcing entries produces filler that trains everyone to skim.
@@ -611,7 +806,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | Mechanism files against their released hashes · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates | **Always exits 0.** Advisory output only |
+| `check.sh` | Mechanism files against their released hashes · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
@@ -653,6 +848,24 @@ git config core.hooksPath .githooks
 If the project has CI, run the secret scan there too — it is the only layer nobody can forget to
 install.
 
+### Reading what got written by hand — a diagnostic worth keeping
+
+A register field that declares a small dictionary of values is testable by its actual
+distribution, not by inspection of the schema. Three outcomes, and they mean different things:
+values spread evenly across the declared vocabulary means the field is healthy; values
+hand-appended beyond it means the field is being asked **two questions at once**, and what got
+appended names the missing axis; one value dominating nearly every row means the field is asking
+**the wrong question** entirely. `check.sh`'s dictionary-field distribution check exists to make
+this visible without reading every entry by hand.
+
+This is not hypothetical: it is how most of the gaps this design closes were actually found, by
+reading a real project's registers and noting where people wrote something the schema never
+anticipated. A `Confidence` field that converged to one value on 77% of its rows was asking about
+two things at once (how sure, and about which part of the claim); a `Session role` field with a
+three-value dictionary collected twenty-two distinct strings because it had no single axis at
+all. The method is mechanical and has a real blind spot: it says a field is unhealthy, not what
+the healthy version should be — recovering that still takes reading what people actually wrote.
+
 ## 13. Assistant profile (optional)
 
 If explanations land consistently too shallow or too deep, fill in
@@ -680,17 +893,21 @@ simply n = 1:
 
 | Decision | Where | Solo cost |
 |----------|-------|-----------|
-| One checkpoint per owner | §3 | one file, named with your token |
+| One checkpoint per thread, held by one person at a time | §3 | one file per active thread; holding it just means your token is in `Held by:` |
 | No shared counters in any ID | §4 | none — it removed a register lookup |
 | Entries written for someone who was not there | §3 | none — that reader is you, later |
 | Resolutions named in `LOG.md` | §3 | none, same reason |
 | `docs/` reviewed before it lands | §7 | a deliberate diff pass instead of a PR |
 | `Raised:` date on register entries | §6 | none — it surfaces age, which rots solo too |
 | `Owner:` on register entries | §6 | ten characters, and every historic entry is already attributed |
+| Session configuration named on every record | §8 | one line, usually "Solo" |
 
-Adding a person is therefore a no-op: they pick an owner token, create their own
-`CHECKPOINT-<token>.md`, and everything else is already shared-safe. Nothing is renamed, no
-playbook changes, and no existing file moves.
+Adding a person is therefore close to a no-op: they either take over an unattended thread — a
+logged event, not a silent edit — or open a new one with their token in `Held by:`. Nothing is
+renamed, no playbook changes, and no existing file moves. The one place solo use genuinely differs
+from multi-person use is upstream of this table: a single person running several agents in
+parallel already produces several concurrent threads, which is exactly why the axis is the thread
+and not the person in the first place — see §3.
 
 That property is the whole point of designing this way. Retrofitting concurrency-safety onto an
 established project means renaming a file referenced from the index and every playbook — and it
@@ -704,9 +921,11 @@ where more people make the system genuinely better rather than merely surviving:
 step 2 requires finding every file a conclusion touches, and a second reader catches the missed
 one that a tired author does not.
 
-**Pull before closing a session.** `checkpoint.md` step 5 touches shared `LOG.md` and `INDEX.md`.
-Both are append or small-edit, so conflicts are one line and trivially resolved — but two agents
-running Copilot CLI simultaneously have nothing coordinating them.
+**Pulling matters, and it now happens at the start, not just the end.** `session-start.md`'s
+first step is `git pull`, specifically so that two people writing the same thread's checkpoint
+diverge visibly before work starts rather than being discovered after — the earlier of the two
+possible moments to catch it. `checkpoint.md`'s closing steps still touch shared `LOG.md` and
+`INDEX.md`; both are append or small-edit, so conflicts there are one line and trivially resolved.
 
 That is the complete list.
 
@@ -720,7 +939,7 @@ paid on every session rather than only when a conflict occurs.
 
 | Symptom | Cause | Response |
 |---------|-------|----------|
-| Merge conflict spanning a whole checkpoint | Two people writing one checkpoint file | One file per owner (§3) — check the owner token in `AGENTS.md` |
+| Merge conflict spanning a whole checkpoint | Two people writing the same thread's checkpoint | Only the `Held by:` holder writes it (§3) — take-over is a logged event, not a silent edit |
 | A colleague's checkpoint reads as cryptic | Written for someone who was there | §3, "written for someone who was not there" |
 | Questions sitting untouched for weeks | `Owner:` left blank, so nobody has claimed it | Fill it in; blank means unclaimed, never "legacy" |
 | Two people re-deriving the same conclusion | It never got promoted, or the promotion was not visible | Review at merge |
@@ -804,20 +1023,23 @@ The bump says what raising it will cost you.
 
 For a rule change the discriminator is **not how big the rule is but whether your existing entries
 still conform.** *"Search the logs before concluding something is unknown"* binds future behaviour
-only — MINOR. *"Checkpoints are per owner"* leaves your `CHECKPOINT.md` misnamed — MAJOR, and the
-migration renames it.
+only — MINOR. *"Checkpoints are named for a thread, not an owner"* leaves your existing
+`CHECKPOINT-<owner>.md` misnamed — MAJOR, and the migration renames it.
 
 ### Migrations are prose, not scripts
 
 A MAJOR release carries a section in `MIGRATIONS.md`, written as instructions **to an assistant**.
 The reason is that the material being migrated is prose, and the steps that matter most are
-exceptions:
+exceptions. The template's own first real migration, `v1.2.0 → v2.0.0`, is the worked example:
 
 ```markdown
-## v1 → v2: checkpoints became per-owner
+## v1.2.0 → v2.0.0
 
-3. Find references to the old name: `rg -n 'CHECKPOINT\.md'` — including playbooks and
-   session files. Session files are immutable: do NOT edit them; the mismatch is expected.
+### Exceptions
+
+Session and experiment records are immutable: a reference to `CHECKPOINT-<old-owner>.md`
+inside an already-closed session file is NOT rewritten to the new thread-based name — that
+mismatch is the historical record working correctly, not a stale citation to fix.
 ```
 
 A script would "fix" the immutable session files, violate the system's central rule, and report
@@ -880,7 +1102,14 @@ behaviour is reasoned from the design, not observed. The merge properties are ce
 that terse notes degrade for a reader who was not there is a prediction, well supported by how
 badly it degrades for the same author six months on.
 
-**The delivery half is younger and less tested than the memory half.** Sections 1–14 have been
-run; §15 has not. No project has yet lived through an upgrade, so every claim about what a
-migration costs is reasoning rather than observation. The template repository upgrades itself
-first, deliberately, so that the first thing to break belongs to whoever wrote it.
+**The delivery half is younger and less tested than the memory half, and stayed that way longer
+than the rest.** Sections 1–14 have been run from the start; §15's file-replacement mechanics ran
+three times (`v1.0.0 → v1.1.0 → v1.2.0`) before it saw a release that actually changed structure.
+`v1.2.0 → v2.0.0` is that first real migration — renaming a checkpoint axis, moving a whole
+section's worth of content between files, closing a thread whose entries had to be sorted into
+what still applied and what didn't. It ran once, against this repository's own memory, by the
+person who wrote both the migration and the thing being migrated. That is still a long way from
+"tested": one execution, self-hosted, by the migration's own author, is exactly the setup where a
+subtle mistake is least likely to be caught. The template repository upgrades itself first,
+deliberately, so that the first thing to break belongs to whoever wrote it — and now something
+finally has, in a small enough way to be a useful signal rather than a costly one.

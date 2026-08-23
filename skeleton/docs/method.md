@@ -16,7 +16,7 @@
 
 ## Evidence
 
-<Which experiments support this, by ID: `[EXP-2026-05-04-ablation-c, EXP-2026-05-11-cost-c]`.>
+<Which experiments support this, by ID — e.g. `EXP-<YYYY-MM-DD>-<slug>`.>
 
 ## Known limitations
 
