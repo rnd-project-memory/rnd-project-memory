@@ -101,8 +101,9 @@ work looks equivalent for exactly one case — one person, one thread at a time 
 the moment either condition fails: a solo author running several agents in parallel produces
 several threads pausing and resuming independently (a delivery, a data catalog, a stakeholder
 question, unrelated to each other), and an owner-named file forces all of it into one document.
-That is the same silently-diverging-copies failure a per-owner file was built to prevent, arrived
-at from the opposite direction: two *threads* sharing a file, rather than two *people* sharing one.
+That is the same silently-diverging-copies failure a file scoped to one person was built to
+prevent, arrived at from the opposite direction: two *threads* sharing a file, rather than two
+*people* sharing one.
 
 *Prevents:* the worst possible git merge, same as before — wholesale rewrite changes nearly every
 line, so two concurrent rewrites of the same thread conflict across the whole file, and the only
@@ -806,7 +807,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | Mechanism files against their released hashes · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
+| `check.sh` | Mechanism files against their released hashes · retired vocabulary from past MAJORs · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
@@ -1024,7 +1025,7 @@ The bump says what raising it will cost you.
 For a rule change the discriminator is **not how big the rule is but whether your existing entries
 still conform.** *"Search the logs before concluding something is unknown"* binds future behaviour
 only — MINOR. *"Checkpoints are named for a thread, not an owner"* leaves your existing
-`CHECKPOINT-<owner>.md` misnamed — MAJOR, and the migration renames it.
+owner-named checkpoint file misnamed — MAJOR, and the migration renames it.
 
 ### Migrations are prose, not scripts
 

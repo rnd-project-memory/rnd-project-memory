@@ -225,6 +225,7 @@ automates the mechanical half.
 | A task ID named in a checkpoint header | The plan pointer has stopped holding | Delete it; add a mechanical check if it recurs |
 | A dictionary field collecting hand-appended values | It's asking about more than one axis | Split the field along the axis the appended values reveal |
 | One value filling almost every row of a field | It's asking the wrong question | Reconsider what the field should distinguish |
+| A term a MAJOR retired still appears in prose | It renamed correctly in the mechanism files but not in hand-written playbook or scaffold text — and a dogfooded project can drift both copies the same wrong way, so they still hash-match | Fix the prose; `check.sh`'s "Retired vocabulary" check exists to catch this, and its `RETIRED` array is updated per `MIGRATIONS.md`'s "Cutting a release" step 3 |
 
 ### The last one is invisible when it fails
 

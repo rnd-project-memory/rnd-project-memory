@@ -28,6 +28,26 @@ else
   echo "  none  no .template-hashes — adopted before this check existed, or not from a release"
 fi
 
+n "Retired vocabulary"
+# Each MAJOR retires a small vocabulary — already named in that release's MIGRATIONS.md Reason
+# section (see its "Cutting a release" step on updating this list). A rename this size lands in
+# the mechanism files by construction; it strays into playbook prose and scaffold tables by hand,
+# and the hash check above cannot see that — a project that dogfoods itself (skeleton/ and
+# ai-sandbox/ both) can drift both copies the same wrong way, and they still hash-match each
+# other. Exclusions are exactly MIGRATIONS.md's own Exceptions: session and experiment records
+# are immutable, ADRs are historical, and MIGRATIONS.md documents the old name on purpose.
+RETIRED=(
+  'CHECKPOINT-<owner>'
+  'one per person'
+  'per-owner'
+)
+RE=$(IFS='|'; echo "${RETIRED[*]}")
+hits=$(grep -rlIE \
+         --exclude-dir=.git --exclude-dir=sessions --exclude-dir=experiments \
+         --exclude-dir=decisions --exclude=MIGRATIONS.md --exclude=check.sh \
+         -- "$RE" . 2>/dev/null)
+if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
+
 n "Checkpoint size (limit 150)"
 for f in "$SB"/CHECKPOINT-*.md; do
   [ -e "$f" ] || continue
