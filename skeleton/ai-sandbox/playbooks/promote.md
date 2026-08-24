@@ -61,7 +61,7 @@ checkbox in the `docs/` file it came from.
 
 ## 5. Delete the working copy
 
-Remove what moved from `CHECKPOINT-<owner>.md` / `ASSUMPTIONS.md`. Duplication between `docs/` and
+Remove what moved from `CHECKPOINT-<thread>.md` / `ASSUMPTIONS.md`. Duplication between `docs/` and
 `ai-sandbox/` is precisely what this system is built to prevent: two copies drift, and then
 neither is trustworthy.
 
