@@ -28,14 +28,21 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-`v1.0.0`. The memory half — sections 1–14 of the handbook — has been run against a real
-single-author project. The delivery half (§15: ownership layers, versioning, migrations) is
-designed and **unexercised**: no project has yet lived through an upgrade, so every claim about
-what one costs is reasoning rather than observation.
+`v2.1.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+single-author project. The delivery half (§15: ownership layers, versioning, migrations) has now
+been exercised too: five releases shipped (`v1.0.0` through `v2.1.0`), including one real
+structural migration — `v1.2.0` → `v2.0.0`, a checkpoint-axis rename, not just a mechanism-file
+swap.
+
+That exercise is still narrow. It is one project, upgraded by the same person who wrote the
+migration — the setup least likely to catch a subtle mistake, and one did slip through: three
+stray references to the old naming survived `v2.0.0`'s own rollout, caught by inspection the next
+day and closed out in `v2.1.0`, which also added mechanical checks so that class of miss is caught
+going forward rather than found by hand next time. Multi-user behaviour remains reasoned from the
+design rather than observed.
 
 This repository runs the system on itself and upgrades itself first, deliberately, so that the
-first thing to break belongs to whoever wrote it. Multi-user behaviour is likewise reasoned from
-the design rather than observed.
+first thing to break belongs to whoever wrote it.
 
 ## Licence
 
