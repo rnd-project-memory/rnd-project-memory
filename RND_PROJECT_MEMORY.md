@@ -807,7 +807,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | Mechanism files against their released hashes · retired vocabulary from past MAJORs · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
+| `check.sh` | Mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
