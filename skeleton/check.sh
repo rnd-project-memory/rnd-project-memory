@@ -48,6 +48,28 @@ hits=$(grep -rlIE \
          -- "$RE" . 2>/dev/null)
 if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
 
+n "skeleton/ vs .template-version"
+# Only meaningful where this repository carries both its own skeleton/ artefact and a
+# .template-version for itself — the self-hosting case from ADR-006. An ordinary consumer never
+# has a local skeleton/ directory (README.md's step 1 copies the directory's *contents* out, not
+# the directory), so this is silently a no-op there.
+if [ -d skeleton ] && [ -f .template-version ]; then
+  recorded=$(grep -oE 'skeleton @ [0-9a-f]+' .template-version | awk '{print $NF}')
+  actual=$(git log -1 --format=%h -- skeleton/ 2>/dev/null)
+  if [ -n "$recorded" ] && [ -n "$actual" ]; then
+    recorded_full=$(git rev-parse "$recorded" 2>/dev/null)
+    actual_full=$(git rev-parse "$actual" 2>/dev/null)
+    if [ -n "$recorded_full" ] && [ "$recorded_full" = "$actual_full" ]; then
+      echo "  ok    .template-version matches skeleton/'s last commit ($recorded)"
+    else
+      echo "  DRIFT .template-version says skeleton @ $recorded, but skeleton/ last changed at"
+      echo "        $actual ($(git log -1 --format=%s -- skeleton/ 2>/dev/null))"
+      echo "        expected mid-session while skeleton/ is being edited; if this is settled"
+      echo "        work, .template-version needs bumping to match"
+    fi
+  fi
+fi
+
 n "Checkpoint size (limit 150)"
 for f in "$SB"/CHECKPOINT-*.md; do
   [ -e "$f" ] || continue
