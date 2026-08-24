@@ -26,6 +26,12 @@ Each section states:
 
 Release notes and the section here are the same text. One source, not two.
 
+**If the release retires a term** — a filename pattern, a phrase like "one per owner" — name the
+exact retired strings in the Reason above. That list is not just documentation: "Cutting a
+release" step 2a below turns it directly into `check.sh`'s retired-vocabulary check, and Reason
+is where those strings already have to be written out for the migration to make sense. Naming
+them once here means not deciding it separately later.
+
 ## Cutting a release
 
 1. Settle the tree first. **Tag when the artefact is finished, not when it looks finished** — the
@@ -41,10 +47,18 @@ Release notes and the section here are the same text. One source, not two.
 
    Paths are relative to a consumer's repository root, which is what `skeleton/` becomes. The file
    does not list itself.
-3. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
+3. **If the section's Reason names retired terminology, add it to `check.sh`'s `RETIRED` array**
+   (in the "Retired vocabulary" check). A rename this size lands correctly in the mechanism files
+   upstream ships by construction — the hash check already covers those — but strays into
+   playbook prose and scaffold tables by hand, and nothing else catches that. This is exactly the
+   class of miss found after `v2.0.0` shipped: three stray `CHECKPOINT-<owner>.md` references
+   survived in files the hash check doesn't see, in two dogfooded copies that agreed with each
+   other, wrongly. Regenerate the hash list again after this edit, since `check.sh` is itself
+   mechanism.
+4. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
    line per rule, at any bump level. If it does not, say so explicitly: "no rule changes" is
    information, and its absence is indistinguishable from an oversight.
-4. Add the section here if the bump is MAJOR.
+5. Add the section here if the bump is MAJOR.
 
 ## Partial application
 
@@ -98,6 +112,11 @@ Alongside these, a larger set of MINOR additions ships in the same release: `PUB
 experiment and session records, scope and basis fields on claims and assumptions, and advisory
 `check.sh` checks. These do not invalidate any existing entry and need no per-entry migration —
 only the file replacement in step 4 below, same as any MINOR.
+
+**Retired vocabulary** (per "Cutting a release" step 3, and `check.sh`'s "Retired vocabulary"
+check): `CHECKPOINT-<owner>`, `one per person`, `per-owner`. Found necessary the hard way — three
+stray instances of the first survived this release's own rollout, in files the hash check does
+not cover, present identically in both of this repository's dogfooded copies.
 
 ### Steps
 
