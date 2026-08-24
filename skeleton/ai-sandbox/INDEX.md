@@ -11,7 +11,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | What | Where |
 |------|-------|
 | Settled conclusion | `docs/` |
-| In-flight reasoning | `CHECKPOINT-<owner>.md` (one per person) |
+| In-flight reasoning on one thread | `CHECKPOINT-<thread>.md` (one per thread, holder-only write) |
 | What happened in a session | `sessions/<date>-<slug>.md` |
 | What an analysis produced | `experiments/EXP-<YYYY-MM-DD>-<slug>.md` |
 | Where a fact came from | `SOURCES.md` |

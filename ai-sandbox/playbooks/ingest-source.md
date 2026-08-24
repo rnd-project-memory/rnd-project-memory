@@ -42,7 +42,7 @@ Separate:
 ## 4. Route the output
 
 - Settles an open question → follow `promote.md`; delete the question.
-- Interesting but unresolved → `CHECKPOINT-<owner>.md`.
+- Interesting but unresolved → `CHECKPOINT-<thread>.md`.
 - Something the method now relies on → `ASSUMPTIONS.md`.
 - Raises new questions → `OPEN_QUESTIONS.md`, citing the source ID.
 
