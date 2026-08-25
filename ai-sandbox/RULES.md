@@ -46,6 +46,11 @@
 - Data and tool traps go in `ai-sandbox/CAVEATS.yaml`, found by subject — not read start to end.
 - Every claim promoted into `docs/` gets a row in `docs/CLAIMS.md` with its basis (`EXP-…`,
   `S-…`, `sessions/…`, or `ADR-…`), written in the same change.
+- **A record that describes a check is never rewritten to satisfy it.** These files are prose
+  *about* this system, so they quote the strings the checks look for while explaining them, and an
+  advisory check will sometimes report the explanation as the thing explained. Editing the record
+  to silence it makes the record less true — the worse of the two trades. Aim the check better, or
+  leave the line and say why.
 - Search before concluding something is unknown: `rg -i "<topic>" ai-sandbox/*/LOG.md docs/`.
 - Every number that enters `docs/` carries a date and a source.
 - Never commit credentials, tokens, PII, or raw extracted data. See `ai-sandbox/SOURCES.md`.
