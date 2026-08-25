@@ -69,7 +69,7 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `docs/method.md` | 2026-08-23 | `ADR-007` |
 | Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `docs/method.md` | 2026-08-23 | `ADR-007` |
 | The hash list holds only files installed verbatim | `docs/method.md` | 2026-08-25 | `ADR-008` |
-| Self-hosting cannot validate anything that happens during installation | `docs/method.md` | 2026-08-25 | `ADR-008` |
+| Self-check sees the settled state and is blind to the transition | `docs/method.md` | 2026-08-25 | `ADR-008` |
 | `.gitignore` is owned by region: project above the marker, upstream below | `docs/method.md` | 2026-08-25 | `ADR-009` |
 | Region splitting is permitted only where an include mechanism is unavailable | `docs/method.md` | 2026-08-25 | `ADR-009` |
 | A sanctioned adoption-note form is what lets a check skip a deviation's description | `docs/method.md` | 2026-08-25 | `ADR-010` |

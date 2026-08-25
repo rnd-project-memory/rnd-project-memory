@@ -196,6 +196,26 @@ one-command recipe that reads the artefact directory and reports status belongs 
 task table: the table states intent and can drift (a task added mid-flight may never make it back
 into the table), while the directory only ever states fact.
 
+### A record that describes a check is not rewritten to satisfy it
+
+The checks in `check.sh` grep the same prose you write. Every register here carries a preamble
+explaining its own rules, every session record explains what was done and why, and the words those
+files use are the words the checks look for. So a check will periodically report a description of a
+rule as a violation of it.
+
+When that happens the tempting repair is the record: reword the sentence, the check goes quiet, the
+output is clean. It is the wrong one every time. The check is advisory and costs a line of noise;
+the record is the only account of what happened, and prose written to satisfy a grep is prose that
+has stopped saying what the writer meant. A clean report bought that way is worth less than the
+sentence it cost.
+
+The right repairs are to aim the check better — usually by anchoring on the *form* a field takes
+rather than the words it contains — or to leave the line and note why it fires. Both keep the record
+intact, which is the thing that has to survive.
+
+This has to be a rule rather than a preference because the pull is consistent and the cost is
+invisible. Nobody notices a record that is slightly less true; everybody notices a line of output.
+
 ### A divergence that cannot be closed is recorded, and names what would close it
 
 A project adopting this system mid-life brings habits that some of these rules contradict — an
@@ -262,6 +282,7 @@ automates the mechanical half.
 | A rule having no effect | Nothing imports the file it lives in — `RULES.md` is one `@` line away from silence | Reachable from `AGENTS.md`, or it does not exist |
 | The assistant follows a rule nobody can find in `RULES.md` | A second auto-loaded instruction file is in play and disagrees | Reduce every loaded path but `AGENTS.md` to a pointer |
 | An adoption note with no third part | The divergence has no end and no owner | Name what would close it, or why it cannot |
+| A record edited so a check stops reporting it | The check was aimed at words, not at a form — and the record paid for it | Re-aim the check; restore the sentence |
 | A note on a record that could have conformed when written | The device is being used to opt out of a rule, not to adopt one | Fix the divergence; a note is owed only where conforming was impossible |
 | A release introduces a rule and nothing enforces it | The artefact it governs was never told — a field, a check or a list is missing | A rule nothing can violate never fires, and reads as order for years |
 | A decision record that cannot say who decided it | `ADR-` is licensed by a configuration the file has no field for | Add the fields; a commitment's force is that someone made it |
