@@ -1,3 +1,19 @@
+# Your own ignores go ABOVE the marker below, and stay there across upgrades.
+# Everything from the marker down is replaced wholesale when the template is upgraded; anything
+# you write below it is lost. Nothing above it is ever touched.
+#
+# The order is not cosmetic. .gitignore resolves last-match-wins, so upstream's patterns sit at
+# the bottom deliberately: a `!negation` written up here cannot silently re-admit a file the
+# never-commit list excludes. That is the one thing this layout is protecting.
+
+# Python / uv — delete this block if the project is not Python
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+
+# ─── UPSTREAM BLOCK — rnd-project-memory; replaced on upgrade, do not edit below ───
+
 # Never commit — see ai-sandbox/SOURCES.md
 .env
 .env.*
@@ -21,8 +37,3 @@ data/
 # (ai-sandbox/SOURCES.md); this line exists to catch the mistake, not to
 # sanction the directory.
 sources/reference-only/
-
-# Python / uv — delete this block if the project is not Python
-.venv/
-__pycache__/
-.ipynb_checkpoints/

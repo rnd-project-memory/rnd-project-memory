@@ -1,6 +1,34 @@
-# This repository's own working files.
-# The skeleton ships its own ignore list for adopting projects — skeleton/gitignore.template.
+# This repository's own working files. They sit above the marker and survive an upgrade.
+# The block below is upstream's own ignore list, vendored like every other mechanism file:
+# this repository runs the system it ships (ADR-006), and that includes this part of it.
 
 .DS_Store
 *.swp
 scratch/
+
+
+# ─── UPSTREAM BLOCK — rnd-project-memory; replaced on upgrade, do not edit below ───
+
+# Never commit — see ai-sandbox/SOURCES.md
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+data/
+
+# Extracted data, in any of its usual shapes
+*.csv
+*.parquet
+*.pkl
+*.pickle
+*.xlsx
+*.feather
+*.h5
+
+# Backstop only. reference-only sources are NEVER placed in the repository
+# (ai-sandbox/SOURCES.md); this line exists to catch the mistake, not to
+# sanction the directory.
+sources/reference-only/

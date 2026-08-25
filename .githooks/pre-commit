@@ -19,7 +19,32 @@ done <<< "$staged"
 # fires on `aws_secret_access_key` alone also fires on documentation about secret scanning —
 # including this file — and a blocking check that cries wolf is answered with --no-verify, after
 # which it is dead while still appearing installed.
-pat='(aws_secret_access_key\s*[=:]\s*\S{16,}|BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-|gh[pousr]_[A-Za-z0-9]{20,}|dapi[a-f0-9]{32}|AccountKey=[A-Za-z0-9+/=]{20,}|password\s*=\s*["\x27][^"\x27]{6,})'
+core='(aws_secret_access_key\s*[=:]\s*\S{16,}|BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-|gh[pousr]_[A-Za-z0-9]{20,}|dapi[a-f0-9]{32}|AccountKey=[A-Za-z0-9+/=]{20,}|password\s*=\s*["\x27][^"\x27]{6,})'
+
+# An organisation's own patterns live in .githooks/patterns.profile — one alternative per line.
+# They are read as DATA and never sourced: this is the most sensitive check in the repository and
+# it does not execute a file someone else supplies. The file is kept out of the release hash list
+# for the same reason this one is in it — a hash means something only for a file installed
+# verbatim, and this hook now is one.
+#
+# Two ways a supplied file could reach the core, both closed here. A blank line would contribute
+# an empty alternative, which matches every line, blocks every clean commit and teaches
+# --no-verify — the failure this hook cannot come back from. A malformed pattern would make grep
+# exit 2, which `>/dev/null 2>&1` below cannot tell apart from "found nothing", silently
+# disabling the scan while the hook still looks installed. So blank and comment lines are
+# dropped, and a file that does not compile is discarded whole rather than folded in.
+pat="$core"
+extra=$(grep -vE '^[[:space:]]*(#|$)' .githooks/patterns.profile 2>/dev/null)
+if [ -n "$extra" ]; then
+  cand="${pat%)}|$(paste -sd'|' <<<"$extra"))"
+  printf '' | grep -Eq "$cand" 2>/dev/null; rc=$?
+  if [ "$rc" -lt 2 ]; then
+    pat="$cand"
+  else
+    echo "WARNING: .githooks/patterns.profile is not a valid regex — using core patterns only"
+  fi
+fi
+
 if git diff --cached -U0 | grep -nEi "$pat" >/dev/null 2>&1; then
   echo "BLOCKED: credential-shaped string in the staged diff:"
   git diff --cached -U0 | grep -nEi "$pat" | head -5 | sed 's/^/  /'

@@ -48,12 +48,12 @@ hits=$(grep -rlIE \
          -- "$RE" . 2>/dev/null)
 if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
 
-n "skeleton/ vs .template-version"
 # Only meaningful where this repository carries both its own skeleton/ artefact and a
 # .template-version for itself — the self-hosting case from ADR-006. An ordinary consumer never
 # has a local skeleton/ directory (README.md's step 1 copies the directory's *contents* out, not
-# the directory), so this is silently a no-op there.
+# the directory), so the whole section is skipped there rather than printing an empty heading.
 if [ -d skeleton ] && [ -f .template-version ]; then
+  n "skeleton/ vs .template-version"
   recorded=$(grep -oE 'skeleton @ [0-9a-f]+' .template-version | awk '{print $NF}')
   actual=$(git log -1 --format=%h -- skeleton/ 2>/dev/null)
   if [ -n "$recorded" ] && [ -n "$actual" ]; then
@@ -70,10 +70,55 @@ if [ -d skeleton ] && [ -f .template-version ]; then
   fi
 fi
 
+n ".gitignore upstream block"
+# The project's own patterns live above the UPSTREAM BLOCK marker and survive an upgrade;
+# everything from the marker down is upstream's and is replaced wholesale. Without the marker the
+# two are indistinguishable, so an upgrade cannot preserve the project's half — and what those
+# lines were protecting quietly stops being ignored. Advisory, not required: a project that
+# adopted before the marker existed still works exactly as it did.
+MARK='^# ─── UPSTREAM BLOCK'
+if [ ! -f .gitignore ]; then
+  echo "  none  no .gitignore"
+elif grep -qE "$MARK" .gitignore; then
+  at=$(grep -nE "$MARK" .gitignore | head -1 | cut -d: -f1)
+  mine=$(head -n "$((at - 1))" .gitignore | grep -cvE '^[[:space:]]*(#|$)')
+  echo "  ok    marker at line $at; $mine of your own patterns above it survive an upgrade"
+else
+  echo "  none  no UPSTREAM BLOCK marker — your patterns and upstream's are indistinguishable,"
+  echo "        so the next upgrade cannot preserve yours. Add the marker above upstream's block."
+fi
+
+n "Credential patterns (profile layer)"
+# The hook ships with a core list and reads additions from this file. It is not in the hash list
+# by design — see MANIFEST's criterion — so nothing else would notice its absence.
+if [ -f .githooks/patterns.profile ]; then
+  c=$(grep -cvE '^[[:space:]]*(#|$)' .githooks/patterns.profile 2>/dev/null)
+  echo "  ok    .githooks/patterns.profile: $c pattern(s) beyond the core"
+else
+  echo "  none  .githooks/patterns.profile is missing — it ships with the template, so it was"
+  echo "        deleted. The hook runs its core patterns and says nothing about the absence."
+fi
+
 n "Checkpoint size (limit 150)"
 for f in "$SB"/CHECKPOINT-*.md; do
   [ -e "$f" ] || continue
   l=$(wc -l < "$f")
+  # §11's intake step exempts this file and says outright that it may exceed the cap.
+  # Reporting it as OVER would tell the adopter to promote — the one thing that step forbids
+  # during bootstrap. What is worth watching on this file is its dismantling date instead: an
+  # intake still full after that date is the signal that bootstrapping never finished.
+  if [ "$(basename "$f")" = "CHECKPOINT-intake.md" ]; then
+    d=$(grep -m1 -iE 'dismantl' "$f" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    if [ -z "$d" ]; then
+      echo "  ?     $f: $l lines, exempt from the cap — but carries no dismantling date"
+    elif [ "$(date -d "$d" +%s 2>/dev/null || echo 0)" -lt "$(date +%s)" ]; then
+      echo "  PAST  $f: dismantling date $d has passed and $l lines remain —"
+      echo "        bootstrapping never finished; this is the highest-priority item, not furniture"
+    else
+      echo "  ok    $f: $l lines, exempt from the cap; dismantle by $d"
+    fi
+    continue
+  fi
   [ "$l" -gt 150 ] && echo "  OVER  $f: $l lines — promote something, do not compress" \
                    || echo "  ok    $f: $l"
 done
@@ -93,10 +138,36 @@ for id in $(grep -rhE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/n
 done
 
 n "Registers: resolved entries should be deleted, not marked"
-# Same exclusion: each register's own preamble explains that `Resolved` must never be used.
+# Same exclusion: each register's own preamble explains that `Resolved` must never be used — and
+# so does a sanctioned adoption note, which is written as a blockquote for exactly this reason.
+# Matched lines are truncated: on a greenfield project an entry is a line, on the existing
+# projects §11 is written for it is a paragraph, and six findings can bury the output in a screen
+# of prose. The line number is what you act on; the rest is there to recognise the entry by.
 hits=$(grep -rn 'Resolved\|RESOLVED\|~~' "$SB"/OPEN_QUESTIONS.md "$SB"/ASSUMPTIONS.md 2>/dev/null \
-       | grep -vE ':[0-9]+:[[:space:]]*>')
+       | grep -vE ':[0-9]+:[[:space:]]*>' | cut -c1-160)
 if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
+
+n "Adoption notes"
+# A note records a divergence a file inherited at adoption and could not close. It is a bootstrap
+# artefact: notes belong to what the project brought with it, not to current work. Neither number
+# is a finding on its own — a note whose closure is genuinely unavailable stays for years, and a
+# recent adoption with several notes is exactly what §11 predicts. The pairing is the signal: notes
+# on an adoption from long ago mean the device is being used to opt out of rules one at a time.
+notes=$(grep -rlI --exclude-dir=.git -- '^> \*\*Adoption note\.\*\*' "$SB" docs 2>/dev/null)
+ncount=$(printf '%s' "$notes" | grep -c .)
+if [ "$ncount" -eq 0 ]; then
+  echo "  none"
+else
+  echo "$notes" | sed 's/^/  /'
+  adopted=$(grep -oE 'applied [0-9]{4}-[0-9]{2}-[0-9]{2}' .template-version 2>/dev/null | awk '{print $2}')
+  if [ -n "$adopted" ]; then
+    days=$(( ( $(date +%s) - $(date -d "$adopted" +%s 2>/dev/null || date +%s) ) / 86400 ))
+    echo "  ↑ $ncount note(s); this version applied $adopted (${days}d ago). Notes are written at"
+    echo "    adoption, never for current work — a new one long after is the finding."
+  else
+    echo "  ↑ $ncount note(s); no applied date in .template-version to weigh them against"
+  fi
+fi
 
 n "Session files without a LOG.md row"
 for f in "$SB"/sessions/*.md; do
@@ -124,7 +195,8 @@ grep -ho '`#[a-z0-9-]*`' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/n
 
 n "Heuristic: numbers in docs/ with no nearby date (expect false positives)"
 grep -rnE '[0-9]+(\.[0-9]+)?\s*(%|ms|GB|k)\b' docs/ 2>/dev/null \
-  | grep -vE '[0-9]{4}-[0-9]{2}-[0-9]{2}|S-[a-z]|EXP-' | head -10 | sed 's/^/  /' || echo "  none"
+  | grep -vE '[0-9]{4}-[0-9]{2}-[0-9]{2}|S-[a-z]|EXP-' | head -10 | cut -c1-160 \
+  | sed 's/^/  /' || echo "  none"
 
 n "Unverified experiments"
 # P-112: a conclusion resting on one of these does not promote to docs/ until this changes.

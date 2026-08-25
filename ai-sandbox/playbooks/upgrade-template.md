@@ -50,6 +50,17 @@ discrepancy this system ever had.
 
 Copy the paths `MANIFEST` marks `mechanism`. Replace them wholesale; do not merge.
 
+**`.gitignore` is the one exception, and it is not a merge.** The file has two regions: everything
+from the `# ─── UPSTREAM BLOCK` marker down is upstream's, everything above it is the project's.
+Replace the region from the marker down with the release's `gitignore.template`, and **leave every
+line above the marker exactly as it is.** Order is not cosmetic — upstream's patterns sit at the
+bottom so that a `!negation` in the project's region cannot re-admit a file the never-commit list
+excludes.
+
+If the file has no marker, the project adopted before this layout existed and the two halves are
+indistinguishable. Do not guess. Show the user the release's block beside their file and let them
+place the marker; from then on it is mechanical.
+
 **Do not touch:**
 
 | Layer | Why |
@@ -113,6 +124,7 @@ Then propose a commit. Do not commit unprompted.
 - [ ] Every migration between the versions read, in order
 - [ ] Edits to mechanism files surfaced to the user before anything was replaced
 - [ ] Mechanism replaced; scaffold, content and profile untouched
+- [ ] `.gitignore` replaced from its marker down, the project's own lines above it untouched
 - [ ] **Every changed rule reported**
 - [ ] Migrations executed, exceptions honoured
 - [ ] `check.sh` no noisier than before
