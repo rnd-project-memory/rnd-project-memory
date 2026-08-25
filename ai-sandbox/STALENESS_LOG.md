@@ -1,6 +1,6 @@
 # rnd-project-memory — Staleness Log
 
-**Updated:** 2026-08-23
+- **Updated:** 2026-08-23
 
 > **Temporary, by design.** Exists only until the 3-week staleness threshold `session-start.md`
 > uses is validated against real data; once a project has enough closures to say whether three

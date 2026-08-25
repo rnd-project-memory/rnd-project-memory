@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Problem
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 ## What is being solved
 

@@ -1,6 +1,6 @@
 # rnd-project-memory — Assumption Register
 
-**Updated:** 2026-08-17
+- **Updated:** 2026-08-17
 
 > What the method **bets on, and where it could be wrong**. Not "what I understood about the
 > project" — that belongs in `docs/`. The test: *if this turned out false, what breaks?*
@@ -24,72 +24,72 @@
 
 ## A-vendor-no-drift · Consumers will not edit files they do not own — `ASSUMED`
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Basis:** ADR-002/ADR-003 reasoning. The whole no-conflict argument rests on manifest-owned files
-being untouched downstream.
-**If false:** Upgrades stop being delete-and-copy and become merges, at which point they stop
-happening — the exact failure ADR-002 was written to avoid, arrived at by a different route. The
-symptom is silent: a consumer's local fix is destroyed by an upgrade, and the person who made it
-concludes upgrading is unsafe.
-**What would settle it:** The `check.sh` hash comparison from ADR-003, observed over the first few
-upgrades. A consumer editing an owned file is exactly what it reports.
+- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Basis:** ADR-002/ADR-003 reasoning. The whole no-conflict argument rests on manifest-owned files
+  being untouched downstream.
+- **If false:** Upgrades stop being delete-and-copy and become merges, at which point they stop
+  happening — the exact failure ADR-002 was written to avoid, arrived at by a different route. The
+  symptom is silent: a consumer's local fix is destroyed by an upgrade, and the person who made it
+  concludes upgrading is unsafe.
+- **What would settle it:** The `check.sh` hash comparison from ADR-003, observed over the first few
+  upgrades. A consumer editing an owned file is exactly what it reports.
 
 ## A-prose-migrations · An assistant executes prose migrations reliably — `ASSUMED`
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Basis:** ADR-004. Assumed, not demonstrated; no migration has ever been run. What rests on this
-**decreased** the same day: rules moved into a mechanism file, so the common rule change is a file
-replacement rather than a migration, and the withdrawn preamble fences no longer need an assistant
-to apply region diffs. Migrations now carry structural change only.
-**If false:** A half-applied migration is worse than none — the repository claims a version it does
-not structurally have, and the next migration builds on a false base. Failure is likely partial and
-quiet rather than loud, because the steps that get skipped are the exceptions ("do not touch
-immutable files"), which are also the ones nothing checks.
-**What would settle it:** The first real v1 → v2 migration executed against this repository under
-ADR-006, with `check.sh` run before and after and the diff reviewed by hand.
+- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Basis:** ADR-004. Assumed, not demonstrated; no migration has ever been run. What rests on this
+  **decreased** the same day: rules moved into a mechanism file, so the common rule change is a file
+  replacement rather than a migration, and the withdrawn preamble fences no longer need an assistant
+  to apply region diffs. Migrations now carry structural change only.
+- **If false:** A half-applied migration is worse than none — the repository claims a version it does
+  not structurally have, and the next migration builds on a false base. Failure is likely partial and
+  quiet rather than loud, because the steps that get skipped are the exceptions ("do not touch
+  immutable files"), which are also the ones nothing checks.
+- **What would settle it:** The first real v1 → v2 migration executed against this repository under
+  ADR-006, with `check.sh` run before and after and the diff reviewed by hand.
 
 ## A-misdirection-criterion · Content that does not instruct falsely is safe to leave — `ASSUMED`
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Basis:** `EXP-2026-08-17-pattern-list-extraction` and `EXP-2026-08-17-misdirection-recheck`. The
-criterion was formulated during the first of those, on the two files it exonerated, and it has
-since reduced the design's scope twice. That provenance is a reason to hold it loosely.
-**If false:** Content that does misdirect was classified as harmless and left in place — most
-plausibly in the nine register files, which were assessed as a class rather than individually. The
-symptom would be an adopting project quietly following a rule the template no longer holds.
-**What would settle it:** The first upgrade of a project that has been running on an older version
-for months, watched specifically for whether stale preamble text changed anyone's behaviour. Until
-then the asymmetry is what justifies acting on it: leaving these files alone is reversible,
-fencing them is nine files of work against no evidence.
+- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Basis:** `EXP-2026-08-17-pattern-list-extraction` and `EXP-2026-08-17-misdirection-recheck`. The
+  criterion was formulated during the first of those, on the two files it exonerated, and it has
+  since reduced the design's scope twice. That provenance is a reason to hold it loosely.
+- **If false:** Content that does misdirect was classified as harmless and left in place — most
+  plausibly in the nine register files, which were assessed as a class rather than individually. The
+  symptom would be an adopting project quietly following a rule the template no longer holds.
+- **What would settle it:** The first upgrade of a project that has been running on an older version
+  for months, watched specifically for whether stale preamble text changed anyone's behaviour. Until
+  then the asymmetry is what justifies acting on it: leaving these files alone is reversible,
+  fencing them is nine files of work against no evidence.
 
 ## A-dogfood-coverage · The half dogfooding exercises is the half most likely to be wrong — `INFERRED`
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Basis:** Inferred from where design churn has concentrated: routing, checkpoint discipline,
-promotion, and the upgrade machinery — all exercised by this repository. The unexercised components
-(data environment, source ingestion, secret scanning) have been comparatively stable.
-**If false:** Confidence accumulates precisely where it is not warranted. A clean `check.sh` and a
-smooth run of sessions here would be read as "the system works", while the components that fail at
-the first work project were never touched.
-**What would settle it:** First real use at work, treated as a pilot — see
-`Q-unexercised-components`. Until then this assumption should be restated whenever the system is
-described as validated.
+- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Basis:** Inferred from where design churn has concentrated: routing, checkpoint discipline,
+  promotion, and the upgrade machinery — all exercised by this repository. The unexercised components
+  (data environment, source ingestion, secret scanning) have been comparatively stable.
+- **If false:** Confidence accumulates precisely where it is not warranted. A clean `check.sh` and a
+  smooth run of sessions here would be read as "the system works", while the components that fail at
+  the first work project were never touched.
+- **What would settle it:** First real use at work, treated as a pilot — see
+  `Q-unexercised-components`. Until then this assumption should be restated whenever the system is
+  described as validated.
 
 ## A-personal-provenance · The core is personal work, not work-for-hire — `ASSUMED`
 
-**Raised:** 2026-08-17 · **Owner:** esdevop
-**Basis:** ADR-001, restated the same day after reading the first commit instead of assuming it.
-The history does **not** show the system predating its use at work — that was the first, wrong
-reading. It shows six generic templates brought *from* the work project, deleted wholesale, and the
-current system created in their place inside a personal repository. What the evidence supports is
-that everything from that commit onward is new work done here; it says nothing about whether that
-work is within an employer's IP reach.
-**If false:** An employment agreement claiming work-derived IP could reach the core, undermining
-both the MIT licence and the right to use it in personal projects. Two routes make it more
-plausible than the first framing suggested: the predecessors came from the job, and the design has
-been shaped throughout by the intention to use it there. Consequences are legal rather than
-technical and would surface only when expensive.
-**What would settle it:** Reading the actual employment agreement, and asking if it is ambiguous.
-Not resolvable by reasoning here — this entry records that the system is betting on it, not that
-the bet is safe. The scan of the superseded files (ADR-001) addresses confidentiality and is not
-evidence either way on this question; do not let the clean scan stand in for the answer.
+- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Basis:** ADR-001, restated the same day after reading the first commit instead of assuming it.
+  The history does **not** show the system predating its use at work — that was the first, wrong
+  reading. It shows six generic templates brought *from* the work project, deleted wholesale, and the
+  current system created in their place inside a personal repository. What the evidence supports is
+  that everything from that commit onward is new work done here; it says nothing about whether that
+  work is within an employer's IP reach.
+- **If false:** An employment agreement claiming work-derived IP could reach the core, undermining
+  both the MIT licence and the right to use it in personal projects. Two routes make it more
+  plausible than the first framing suggested: the predecessors came from the job, and the design has
+  been shaped throughout by the intention to use it there. Consequences are legal rather than
+  technical and would surface only when expensive.
+- **What would settle it:** Reading the actual employment agreement, and asking if it is ambiguous.
+  Not resolvable by reasoning here — this entry records that the system is betting on it, not that
+  the bet is safe. The scan of the superseded files (ADR-001) addresses confidentiality and is not
+  evidence either way on this question; do not let the clean scan stand in for the answer.

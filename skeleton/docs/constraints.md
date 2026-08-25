@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Constraints
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > Hard limits the method must respect. A constraint here is binding: if it turns out
 > negotiable, remove it rather than quietly working around it.

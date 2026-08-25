@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Data Environment
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > How to obtain data and run analyses. **No credentials here** — describe where they come
 > from, never what they are.

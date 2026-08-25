@@ -1,6 +1,6 @@
 # Playbook — <what this does>
 
-**When to run it:** <the trigger — a point in a session, a cadence, a symptom>
+- **When to run it:** <the trigger — a point in a session, a cadence, a symptom>
 
 ## Steps
 

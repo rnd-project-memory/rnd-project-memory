@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Method
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > Current best understanding of how the method works. **No history here** — no "we used to
 > think". Rationale for contested choices lives in `decisions/`; evidence lives in
