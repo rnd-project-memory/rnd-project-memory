@@ -1,9 +1,10 @@
 # 2026-08-25 · Template adoption trial — reading the results in
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo, except Author + reviewer + sign-off for `ADR-008`–`ADR-011`
 - **Participants:** author — claude-opus-5 · high effort; reviewer — esdevop (human)
 - **Signed off:** esdevop, for `ADR-008`–`ADR-011` only; nothing else in this session is signed
+- **Tags:** `#template` `#versioning` `#upgrade` `#adoption`
 
 ---
 
@@ -333,6 +334,23 @@ the register check's existing blockquote exclusion already skips it — verified
 containing the exact words that check greps for. That only works because the form is fixed; the
 trial's own note was a numbered list and was reported as the violation it documented.
 
-Then: cut `v2.2.0` and raise the root memory to it through `upgrade-template.md` — which this
-release makes a genuine test, since the root's own `.gitignore` has no marker and step 4's
-fallback path has never been exercised.
+### What the next session picks up
+
+`v2.2.0` is tagged and the root is running on it. Nothing is left in progress, so no thread
+checkpoint was opened — the same outcome as the `v2.0.0` session, and for the same reason:
+everything produced either shipped or has a home.
+
+Two things carried forward, neither blocking:
+
+- **`Q-marker-absence-reasons`** — the `.gitignore` marker check and `upgrade-template.md`'s
+  fallback both assume a missing marker means the file predates the layout. Found by running the
+  upgrade against this repository, where the second reason applied and the tooling asserted the
+  first. A wording fix in two places, after the tag.
+- **`Q-unexercised-components`** has its first evidence from outside this repository, and it is
+  partial: the installation region is now instrumented by `bootstrap-test.sh`, and the rest of the
+  question — data environment, source ingestion, the secret scan firing on a real secret — is
+  untouched by this release.
+
+Not carried forward, and worth saying so: the trial produced 29 findings and this release acted on
+roughly half. The ones left were judged bound to that project's particular shape rather than to the
+template, and re-opening them needs a second adopter, not more reasoning about the first.

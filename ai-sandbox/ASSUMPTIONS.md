@@ -74,6 +74,13 @@
 - **What would settle it:** First real use at work, treated as a pilot — see
   `Q-unexercised-components`. Until then this assumption should be restated whenever the system is
   described as validated.
+- **Evidence, 2026-08-25:** An external adoption trial confirmed the consequence and sharpened the
+  statement. Three shipped defects (`ADR-008`) lived not in the *unexercised* half but in a third
+  category the inference missed: components dogfooding appears to exercise while taking a different
+  path through them. This repository never installs the skeleton, so its own `check.sh` reported
+  `ok` for four releases while every adopter saw a failure on line one. "Exercised" and "exercised
+  the way a consumer exercises it" are different claims. That region is now instrumented by
+  `bootstrap-test.sh`; the originally-named components remain untouched.
 
 ## A-personal-provenance · The core is personal work, not work-for-hire — `ASSUMED`
 

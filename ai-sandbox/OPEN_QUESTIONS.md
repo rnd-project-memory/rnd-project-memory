@@ -47,6 +47,10 @@ resolve to a different question. A slug, once assigned, is never changed.
   directly and cheaply against crafted staged content, without a project. The rest plausibly cannot
   be validated before first real use at work, which makes the first work project a deliberate pilot
   rather than an adoption.
+  Partly answered on 2026-08-25 by an external adoption trial, and not in the direction expected:
+  the components that failed were not the ones named here. They were in the *installation* — a path
+  this repository never takes — and that region now has an instrument (`bootstrap-test.sh`,
+  `ADR-008`). The four components above remain unexercised; the trial did not reach them.
 
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
 
@@ -72,3 +76,35 @@ resolve to a different question. A slug, once assigned, is never changed.
   question does not arise; or obtain explicit permission per change. Blocks nothing until a second
   adopter exists. Not a question to answer from first principles — it needs whoever owns the
   employment agreement.
+
+## Q-marker-absence-reasons · A missing `.gitignore` marker has two causes; the tooling asserts one 🟢
+
+- **Raised:** 2026-08-25 · **Owner:** esdevop
+- **Source:** Running `upgrade-template.md` against this repository, v2.1.0 → v2.2.0
+- **Question:** `check.sh` and `upgrade-template.md` step 4 both treat a missing `UPSTREAM BLOCK`
+  marker as meaning the file predates the layout, and the check states it outright — "your patterns
+  and upstream's are indistinguishable". A file that never adopted the upstream block at all is the
+  second cause, and it is the one that actually occurred here. What should each say instead?
+- **Why it matters:** Blocks nothing. But it is a check asserting something false about the
+  repository it is checking, which is the failure this release spent its length closing elsewhere.
+- **Progress:** None. Found after `v2.2.0` was tagged, so it waits for a release. The distinguishing
+  test is cheap: no marker and none of upstream's patterns means the file was never a consumer; no
+  marker and some of them means it predates the layout.
+
+## Q-check-reads-prose-as-state · `check.sh` reports a closed session as open 🟢
+
+- **Raised:** 2026-08-25 · **Owner:** esdevop
+- **Source:** Closing `sessions/2026-08-25-adoption-trial-intake.md`
+- **Question:** The "Sessions left open" check greps `Status:.*open` anywhere in a session file, so
+  a record that *describes* the interrupted-session check — quoting the string it looks for — is
+  reported as an interrupted session forever. Should it anchor on the field form
+  (`^[-*] \*\*Status:\*\*`), now that fields are bullets and therefore distinguishable from prose?
+- **Why it matters:** Blocks nothing, and the answer is one anchor. It matters because it is the
+  third instance of one class: a check mistaking a description of a rule for a violation of it. The
+  first was found by the adoption trial (its adoption note was read as the deviation it documented,
+  fixed by giving notes a recognisable form); the second is `Q-marker-absence-reasons`. Writing
+  around the checker instead — rewording the record so the grep misses it — is the wrong repair, and
+  it is the tempting one.
+- **Progress:** None. Found after `v2.2.0` was tagged. Pairs with `Q-marker-absence-reasons`: both
+  are one-line fixes to the same file and would ship together.
+

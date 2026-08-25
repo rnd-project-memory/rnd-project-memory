@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-08-23
+- **Updated:** 2026-08-25
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -51,22 +51,27 @@ template's own rule says content that instructs falsely is worse than content th
 |--------|---------|--------|-------|
 | *(none open)* | | | |
 
-The last thread (`CHECKPOINT-esdevop.md`, template-completion work) closed on 2026-08-23 when
-`v2.0.0` shipped — see `sessions/2026-08-23-skeleton-v2-thread-checkpoints.md` and
-`docs/decisions/ADR-007-threads-and-negative-knowledge.md`.
+No thread has been open since `v2.0.0` shipped on 2026-08-23. `v2.1.0` and `v2.2.0` were both
+released without one: everything each session produced either shipped or had a home, which is the
+condition under which a checkpoint is not opened.
 
 ---
 
 ## Current focus
 
-`v2.0.0` has shipped: the skeleton implements all 30 techniques from the design review
-(`P-101`–`P-130`), and this root memory has been raised through `upgrade-template.md` for the
-third time — the first time carrying a real structural migration rather than a file swap.
+`v2.2.0` has shipped and the root memory runs on it. It is the first release driven by evidence
+from outside this repository: an adopter took `v2.1.0` into a project with three months of its own
+history and kept a friction log. Four decisions came out of it — `ADR-008`–`ADR-011` — and they are
+the first here to carry a named human sign-off.
 
-No substantive work is queued. `Q-oss-intake` and `Q-contribution-flow` need answers from outside
-this repository and block nothing today.
+The finding worth remembering: three defects had shipped through four releases because they live in
+the *installation*, and this repository never installs anything. `bootstrap-test.sh` now performs
+that installation at release time.
 
----
+No substantive work is queued. `Q-marker-absence-reasons` 🟢 is a two-place wording fix waiting for
+a release. `Q-oss-intake` and `Q-contribution-flow` still need answers from outside this repository
+and block nothing. Roughly half the trial's findings were judged bound to that one project's shape
+and left alone; re-opening them needs a second adopter rather than more reasoning about the first.
 
 ## What a new session does
 
