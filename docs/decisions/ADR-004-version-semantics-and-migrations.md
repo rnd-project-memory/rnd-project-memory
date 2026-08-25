@@ -1,6 +1,6 @@
 # ADR-004 · Versions are semantic; migrations are prose an assistant executes
 
-**Date:** 2026-08-17 · **Status:** accepted
+**Date:** 2026-08-17 · **Status:** accepted · extended by ADR-011
 **Revised:** the same day, to cover behavioural rule changes — a category the original table did
 not classify. Surfaced by `EXP-2026-08-17-misdirection-recheck`.
 

@@ -1,6 +1,6 @@
 # rnd-project-memory — Claims Index
 
-**Updated:** 2026-08-23
+- **Updated:** 2026-08-23
 
 > **An index, not a second copy.** One line per claim: a shorthand, the file it lives in, when
 > it landed, and what it rests on. The claim's actual wording stays in its file — restating it
@@ -68,3 +68,11 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | Handbook and skeleton share one tag | `docs/method.md` | 2026-08-17 | `ADR-004` |
 | A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `docs/method.md` | 2026-08-23 | `ADR-007` |
 | Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `docs/method.md` | 2026-08-23 | `ADR-007` |
+| The hash list holds only files installed verbatim | `docs/method.md` | 2026-08-25 | `ADR-008` |
+| Self-hosting cannot validate anything that happens during installation | `docs/method.md` | 2026-08-25 | `ADR-008` |
+| `.gitignore` is owned by region: project above the marker, upstream below | `docs/method.md` | 2026-08-25 | `ADR-009` |
+| Region splitting is permitted only where an include mechanism is unavailable | `docs/method.md` | 2026-08-25 | `ADR-009` |
+| A sanctioned adoption-note form is what lets a check skip a deviation's description | `docs/method.md` | 2026-08-25 | `ADR-010` |
+| A note is owed only where conforming was impossible | `docs/method.md` | 2026-08-25 | `ADR-010` |
+| The bump level depends on the rule's wording because the wording is the consumer's obligation | `docs/method.md` | 2026-08-25 | `ADR-011` |
+| An exception that keeps a release MINOR must be inert or expiring | `docs/method.md` | 2026-08-25 | `ADR-011` |
