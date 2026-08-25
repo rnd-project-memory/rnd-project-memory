@@ -8,9 +8,12 @@ the handbook wins** — fix the skeleton, not the handbook.
 
 1. Copy the contents of this directory into the project repository root — **except this
    `README.md`**, which is installation instructions rather than part of the system and would
-   replace the project's own. Nothing else here is meant to overwrite an existing file either:
-   where one already exists, merge. `AGENTS.md` is the case that matters — the project's own
-   content stays, and the `@` import plus the working rules are added to it.
+   replace the project's own. That sentence is the whole copy set; `MANIFEST` in the template
+   repository is about who owns which file on upgrade, not about what to copy. Nothing else here
+   is meant to overwrite an existing file either: where one already exists, merge. `AGENTS.md` is
+   the case that matters — the project's own content stays, and the two `@` import lines are added
+   to it. The rules themselves are **not** copied into `AGENTS.md`: they live in
+   `ai-sandbox/RULES.md`, which the import pulls in and an upgrade replaces wholesale.
 2. Rename `gitignore.template` to `.gitignore`, then install the hooks — one line, and
    it is the only protection for the rule no later edit can repair:
    ```bash
@@ -18,18 +21,26 @@ the handbook wins** — fix the skeleton, not the handbook.
    ```
    If the project has CI, run the same secret scan there: it is the one layer nobody can
    forget to install.
-3. Replace every `<PROJECT_NAME>` and `<PLACEHOLDER>`.
+3. Replace every `<PROJECT_NAME>` and `<PLACEHOLDER>` — around twenty files carry one, including
+   `ai-sandbox/INDEX.md`, which is loaded into every session. `.template-version` takes the
+   release you copied, the commit `skeleton/` was at, and today's date; its first field is what
+   `check.sh` reports. Files named `_TEMPLATE.md` keep their placeholders.
 4. Pick an **owner token** (your initials) and declare it in `AGENTS.md`. It identifies who can
    hold a thread — it no longer names a file. Rename `ai-sandbox/CHECKPOINT-thread.md` to
    `CHECKPOINT-<what-you're-working-on>.md` for your first thread, and set `Held by: <token>` in
    its header.
-5. Delete `sources/` and `src/` if the project already has its own.
+5. Delete `sources/` and `src/` if the project already keeps code and source material somewhere —
+   **under any name.** The condition is whether these already have a home, not whether a directory
+   of that exact name exists; creating them beside the project's own equivalents gives it two
+   homes for each on day one.
 6. Verify instruction loading: in a fresh Copilot CLI session, ask it to state a rule that
    appears only in `ai-sandbox/RULES.md`, then one that appears only in `ai-sandbox/INDEX.md`.
    If either fails, that `@` import in `AGENTS.md` is not resolving and every rule in the file
    is inert. `RULES.md` is the one that matters most — it holds every behavioural rule, and its
    silence looks exactly like correctness.
-7. Follow `RND_PROJECT_MEMORY.md` §11 to bootstrap from existing material.
+7. Follow `RND_PROJECT_MEMORY.md` §11 to bootstrap from existing material. **On a project that is
+   already underway, read §11 before starting here** — it re-orders these steps and adds several
+   that only apply when the repository already has history in it.
 
 Files named `_TEMPLATE.md` are copied per entry, not filled in place.
 

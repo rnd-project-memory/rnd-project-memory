@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Assumption Register
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > What the method **bets on, and where it could be wrong**. Not "what I understood about the
 > project" — that belongs in `docs/`. The test: *if this turned out false, what breaks?*
@@ -14,7 +14,9 @@
 >
 > **IDs are slugs, not numbers** — `A-keeper-latency`, not `A4`. Same reason as
 > `OPEN_QUESTIONS.md`: deletion pits a numbered sequence and old cross-references silently
-> point at the wrong entry.
+> point at the wrong entry. A register inherited from before adoption keeps its numbers, frozen,
+> and takes slugs for everything new — see §11; renumbering breaks citations in files this system
+> declares immutable.
 
 > **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
 > claimed this* — the signal the field exists to carry. If solo-era entries are left
@@ -34,9 +36,9 @@
 
 ## A-<slug> · <statement> — `ASSUMED`
 
-**Raised:** <DATE> · **Owner:** <owner>
-**Basis:** <what it rests on — source ID, reasoning, or convention — or `—` if none exists>
-**If false:** <what breaks, and how badly>
-**What would settle it:** <the check that would confirm or kill it>
-**Does not license:** <optional — the specific thing this assumption is too narrow to justify,
-when the statement is stronger than what it actually covers>
+- **Raised:** <DATE> · **Owner:** <owner>
+- **Basis:** <what it rests on — source ID, reasoning, or convention — or `—` if none exists>
+- **If false:** <what breaks, and how badly>
+- **What would settle it:** <the check that would confirm or kill it>
+- **Does not license:** <optional — the specific thing this assumption is too narrow to justify,
+  when the statement is stronger than what it actually covers>

@@ -4,8 +4,8 @@ A system for keeping knowledge alive across AI-assisted sessions on a research a
 project, where the method is discovered rather than specified, and the knowledge arrives as PDFs,
 Confluence pages, call transcripts, brainstorming, and data analysis.
 
-**Audience:** an AI assistant (GitHub Copilot CLI) setting this up in a project repository, and
-the human working with it.
+- **Audience:** an AI assistant (GitHub Copilot CLI) setting this up in a project repository,
+  and the human working with it.
 
 **Read this in order.** Sections 1–3 are the whole idea; everything after is mechanism. §15 is
 about upgrading a project that already runs the system — safe to skip until you have one.
@@ -339,6 +339,14 @@ they are cited in dedicated Evidence sections rather than mid-prose, where lengt
 rare and deliberate, and a collision between two of them is one file and trivially resolved.
 Breaking a known convention needs a better reason than consistency.
 
+**And there is a second reason the counter is safe there, which is the rule underneath all of
+this: nothing is ever deleted from `docs/decisions/`.** The registers that *do* delete on resolve —
+`OPEN_QUESTIONS.md`, `ASSUMPTIONS.md` — cannot carry a counter, because a deletion either recycles
+the number, so an old citation silently resolves to a different entry, or pits the sequence. So
+the two rules depend on each other: **delete-on-resolve requires an identifier that can never be
+reused.** A register that never deletes may use anything. §11 covers what to do when a project
+arrives having already chosen the other way.
+
 **Sessions lose their counter entirely.** It duplicated the date already in the filename, and
 `S07` was one character from the source prefix `S-007` — two unrelated namespaces that looked
 alike in prose. The filename is the identifier.
@@ -395,6 +403,13 @@ a failed import silently removes all of them at once while the repository still 
 > file is meant to shape the assistant's behaviour, it must be reachable through `AGENTS.md`.
 > Verify by asking the assistant, in a fresh session, to state a rule that appears only in the
 > imported file.
+
+**The mirror image is worse, and applies to any project that had an assistant before it had this
+one.** Every path in the list above loads on its own, without being imported by anything. A second
+file holding working rules therefore applies alongside `AGENTS.md`, in the same session, with no
+error and no indication of which won where they disagree. Adopting this system means reducing
+those files to a pointer — §11 step 4. One entry point is the premise the rest of the design rests
+on, not a stylistic preference.
 
 ### Procedures: playbooks, not slash commands
 
@@ -727,65 +742,269 @@ side. Where a source genuinely cannot change, record that instead of leaving the
 
 ## 11. Bootstrapping an existing project
 
-For a project already underway with material piled up. Roughly one working session.
+For a project already underway with material piled up.
 
-**1. Copy the structure.** Take the files `MANIFEST` lists out of `skeleton/` — **not the whole
-directory.** `skeleton/README.md` is installation instructions and would replace the project's
-own; anything else that already exists is merged, not overwritten. Rename `gitignore.template` to
-`.gitignore` and install the hooks *before* any source material is anywhere near the repository,
-because that is the one guard a later edit cannot supply retroactively.
+### What one session buys
 
-Record which release you took in `.template-version`. Without it nothing can tell you whether an
+The steps below fit roughly one working session. **The adoption does not, and the difference is
+not effort** — several of these steps deliberately hand work forward. Expect all of the following
+to be open when the session ends:
+
+- the intake file still full, carrying a dismantling date some weeks out
+- registers that disagree with the template's rules, annotated rather than reconciled
+- material that has no slot in this system, left where it is
+- the import check unrun, if the assistant doing the bootstrap is not the one the project runs
+
+That is the correct end state, not an incomplete one. Bootstrapping **begins** here and finishes
+over the following weeks, in ordinary sessions. A section that reads as though the project is
+running this system by the end of the day sets up the opposite expectation, and the cost of that
+is a bootstrap declared finished while the intake file quietly becomes furniture.
+
+**1. Copy the structure.** `skeleton/README.md` steps 1 and 2 are the authority for what gets
+copied and in what order: everything in `skeleton/` except that `README.md`, then rename
+`gitignore.template` to `.gitignore`, then install the hooks. Anything that already exists is
+merged, not overwritten — step 3 is what "merged" turns out to mean.
+
+Install the hooks before any *new* material arrives. On an existing project that guard cannot
+reach what is already committed, and no later edit can supply it retroactively; step 2 is the one
+moment where that gap is still cheap to act on.
+
+Record which release you took in `.template-version`, which ships in the skeleton with its format
+as placeholders:
+
+```
+<VERSION>  skeleton @ <SHA>  applied <DATE>
+```
+
+Field one is the version `check.sh` reports. Without this file nothing can tell you whether an
 upgrade applies, and §15 has nothing to work from.
 
-**2. Write `AGENTS.md`.** The project description only — **do not write the working rules.** They
-ship in `ai-sandbox/RULES.md`, which `AGENTS.md` imports and which an upgrade replaces wholesale;
-rules typed into `AGENTS.md` are outside that mechanism and drift silently from the version
-everything else assumes. Pick an **owner token** — your initials are fine — and declare it in
-`AGENTS.md`. It is not a filename: it is the value you put in `Held by:` on any thread checkpoint
-you currently hold. Working alone that is still, in practice, one active checkpoint most of the
-time — but it is a thread's file, named for the work, not a file that is "yours".
+**2. Run the ignore list against what is already committed.** One command, and it is the only
+place in this section where §9's unrepairable rule can still be acted on cheaply:
 
-Verify the imports work: in a fresh session, ask the assistant to state a rule that appears only
-in `RULES.md`, then one that appears only in `INDEX.md`. If either fails, that import is not
-loading and every rule in the file is inert.
+```bash
+git ls-files | git check-ignore --stdin
+```
 
-**3. Register sources before reading them.** List all existing material — PDFs, Confluence
+Everything it prints is tracked *and* matched by a pattern you have just installed. Two things
+follow, and the second is immediate:
+
+- Git keeps a tracked file tracked, so nothing vanishes today. The *next* file written to one of
+  those paths is silently ignored — correct-looking and absent in fact.
+- The hook blocks a commit that **modifies** one of them, not just one that adds it. Ordinary work
+  starts being rejected, and the escape is `--no-verify`, which retires the hook while leaving it
+  looking installed.
+
+Record what came back. **Do not add negations to re-admit those paths** — your own patterns sit
+above the upstream block precisely so they cannot override the never-commit list, and that
+ordering is deliberate. What the list is for is the decision it forces: either the project stops
+committing that class of file, or the evidence it was carrying moves to an
+`ai-sandbox/results/*.json` summary, which is the shape §8 asks for and is committable by design.
+A blanket pattern that turns out to be wrong for the project is a finding to raise, not a line to
+edit on day one.
+
+**3. Inventory what the project already has.** "Merged, not overwritten" reads as an assurance
+that a merge always exists. Often it does not, and on a project with its own working memory this
+step is the largest of the section by a wide margin.
+
+List every file in the project's existing memory, and against each write the slot this system
+gives it — or `none`. **Files with no slot stay where they are.** Forcing one into the nearest
+available file is worse than leaving it outside the system, because the file then claims a write
+mode it does not follow.
+
+Check these names before copying, because the skeleton claims all of them and a project three
+months old may already mean something different by any of them: `experiments`, `sessions`,
+`results`, `docs`, `src`, `sources`. A name that collides without the meaning colliding is the
+expensive case — in particular, an existing `docs/` almost always means "documents", not "settled
+conclusions only", and merging the template's five files into it silently produces one directory
+operating under two contracts. Decide which you have and record the decision; either answer is
+defensible and only the silence is not.
+
+Two shapes recur and neither has a slot: an append-only narrative journal, and files that switch
+the assistant into a particular register. Converting them is a project of its own and nothing here
+asks for it.
+
+**4. Write `AGENTS.md`, and empty every other loaded instruction file.** The project description
+only — **do not write the working rules.** They ship in `ai-sandbox/RULES.md`, which `AGENTS.md`
+imports and which an upgrade replaces wholesale; rules typed into `AGENTS.md` are outside that
+mechanism and drift silently from the version everything else assumes. Pick an **owner token** —
+your initials are fine — and declare it in `AGENTS.md`. It is not a filename: it is the value you
+put in `Held by:` on any thread checkpoint you currently hold. Working alone that is still, in
+practice, one active checkpoint most of the time — but it is a thread's file, named for the work,
+not a file that is "yours".
+
+**Then go through §5's list of automatically loaded paths** — `.github/copilot-instructions.md`,
+`.github/instructions/**`, `CLAUDE.md`, `.claude/CLAUDE.md`, `GEMINI.md` — and reduce any that
+holds working rules to a pointer at `AGENTS.md`. A project of this age usually has at least one.
+
+This is not tidying. Two loaded instruction files do not error, do not warn, and do not announce
+which of them won; they simply both apply, and where they disagree the behaviour depends on
+nothing you can inspect. §5 warns about an instruction file that nothing imports and is therefore
+inert. This is the opposite failure and it is harder to see: a second file that loads perfectly
+and contradicts the first.
+
+**5. Verify the imports — and expect to end the session to do it.** In a *fresh* session, ask the
+assistant to state a rule that appears only in `RULES.md`, then one that appears only in
+`INDEX.md`. If either fails, that import is not loading and every rule in the file is inert.
+
+**This one cannot be done from inside the bootstrap session.** The session that just wrote
+`AGENTS.md` has its contents in context already and will answer correctly whether or not the
+import resolves — it measures nothing from the inside. Treat it as a deliberate stop: end the
+session, start a new one, ask the two questions, come back. It is placed here rather than at the
+end because every rule below depends on it, and skipping it produces exactly the failure §5
+describes — a repository that looks correct and a session that never loaded a rule.
+
+If the assistant performing the bootstrap is not the one the project will run — a different CLI,
+or one not installed on this machine — you cannot run this test, and nothing else can vouch for
+it. Record it as an outstanding bootstrap item rather than treating it as passed.
+
+**6. Register sources before reading them.** List all existing material — PDFs, Confluence
 pages, transcripts — into `SOURCES.md` with IDs and sensitivity. Registering is fast;
 ingesting is not. Do the registration in one pass so the inventory is complete, then ingest in
 priority order.
 
-**4. Write `docs/problem.md` first.** What is being solved, for whom, and what "done" means. If
+On an existing project some of that material is already committed, and generally not to
+`sources/`. **Record where each source actually is, not where the rule says it should be**, and
+raise the discrepancy as an entry in `OPEN_QUESTIONS.md`. Moving files to satisfy the rule breaks
+every path that cites them, and writing a classification that was never actually made — for
+material ingested before the project had the concept — records a decision nobody took. The
+mechanical half of this step is fast, as promised; deciding sensitivity retroactively for material
+already in history is where the time goes, and it is not clerical.
+
+**7. Write `docs/problem.md` first.** What is being solved, for whom, and what "done" means. If
 this cannot be stated crisply, that is the most valuable finding of the day — record the
 ambiguity in `OPEN_QUESTIONS.md`.
 
-**5. Capture current understanding into an intake file.** Everything currently believed but not
-written down. Do not attempt to distil it into `docs/` yet — it has not been tested by a session,
-and premature promotion puts unstable claims in the permanent base.
-
-**This will exceed 150 lines, and that is expected.** Write it to
+**8. Capture current understanding into an intake file.** Write it to
 `ai-sandbox/CHECKPOINT-intake.md` — its own thread, held by whoever is running the bootstrap —
-which is **exempt from the cap** and carries a dismantling date in its header — four to six weeks
-out.
+which is **exempt from the 150-line cap** and carries a dismantling date in its header, four to
+six weeks out. Do not attempt to distil any of it into `docs/` yet: it has not been tested by a
+session, and premature promotion puts unstable claims in the permanent base.
 
 The exemption exists because the three rules otherwise deadlock: this step says capture
 everything, §3 caps the checkpoint at 150 lines, and this step also forbids promoting yet, which
-is the cap's only prescribed remedy. On a real project the intake is 300+ lines on day one.
+is the cap's only prescribed remedy.
+
+**What goes in depends on whether the knowledge is already written down.**
+
+- If it is not — the usual case, where what the project knows lives in someone's head — write it
+  out. This will exceed 150 lines. On a real project it is 300+ on day one.
+- If it is — a project with months of written notes — **do not restate it.** Write a drain queue
+  instead: one line per existing section, naming the destination the routing rule gives it, with
+  only the genuinely unwritten belief written out in full. A restatement of an existing file
+  duplicates it, which §2 forbids outright, and it cannot be drained — only re-summarised, which
+  is the loss this whole system exists to prevent. A queue on a project with real history is
+  usually shorter than the intake of a project with none, and that is the correct result.
 
 The intake file is drained, not archived: each session moves what has proven durable into `docs/`
 and what is still live into the real checkpoint. When it empties, delete it. If the dismantling
 date passes and it is still full, that is the signal that bootstrapping never finished — treat it
 as the highest-priority item, not as furniture.
 
-**6. Backfill the session log.** If the project has git history, reconstruct one row per
-significant past episode from the commits. Approximate rows are worth more than an empty log.
+**If you can already see that the queue will not empty in six weeks, say so in the header** and
+set the date anyway, with one line naming what makes it unreachable. A date you expect to miss
+still fires on schedule and still says something true; a date chosen to be met understates the
+backlog and is the version that turns into furniture.
 
-**7. Seed `DATA_ENVIRONMENT.md`** with the sources already in use, and **`CAVEATS.yaml`** with
+**9. Backfill the session log.** Reconstruct one row per significant past episode from whatever
+record of past work exists — commits, an existing index or session table, a journal. Commits are
+one source and often not the best one: a project with its own working memory frequently already
+holds a better log than anything reconstructible from them.
+
+Backfilled rows are a **different kind of row**, not merely a less precise one, and should be
+marked as such above the block. A live row records what a session *resolved*, which is what makes
+it the only surviving cue that a deleted register entry ever had an answer. A backfilled row
+almost always records what a session *produced* — files, sections, artefacts — and does not
+support that use. `Link` has nothing to point at, because there is no session file; leave it empty
+and say so once, rather than inventing targets. Tags assigned retroactively in one sitting will
+also make `check.sh`'s singleton warning noisy for a while; that check is right about live logs
+and cannot tell a backfilled one apart.
+
+**10. Seed `DATA_ENVIRONMENT.md`** with the sources already in use, and **`CAVEATS.yaml`** with
 every data or tool trap already known. This will be incomplete. Incomplete and growing is the
 working state.
 
+An existing project's environment documentation is usually **broader than the profile layer**:
+alongside access, catalog and run recipes it carries document-handling habits, reporting
+workflows, notebook conventions. Take what `DATA_ENVIRONMENT.md` asks for, move any procedure to
+`playbooks/local/`, move any tool trap to `CAVEATS.yaml` — and leave the residue where it is,
+noting at the bottom of `DATA_ENVIRONMENT.md` what stayed behind and why. A project with real data
+experience may also already keep a traps register of its own; that is step 3's inventory question,
+not a licence to maintain two.
+
+**11. Finish the placeholders.** Return to `skeleton/README.md` step 3 and replace every
+`<PROJECT_NAME>` and `<PLACEHOLDER>` in the files this section never sent you to — there are
+around twenty, and `_TEMPLATE.md` files keep theirs, being copied per entry rather than filled in
+place. `ai-sandbox/INDEX.md` is the one that matters: it is `@`-imported into every session, so an
+unfilled one is loaded, silently, forever. Leaving a file's *content* empty is fine and expected;
+leaving its title saying `<PROJECT_NAME>` is not.
+
 Do **not** try to fill everything at once. `OPEN_QUESTIONS.md` and `ASSUMPTIONS.md` populate
 naturally as sessions run; forcing entries produces filler that trains everyone to skim.
+
+### When the project and the template disagree
+
+An existing project has its own habits, and some of them contradict the rules that just arrived.
+
+**The default is that the template wins, until shown otherwise.** Not because it is better, but
+because a system adopted selectively on day one is a system whose rules are advisory, and the
+adopter has not yet run a single session under it. Where the project's practice turns out to be
+right, that is a finding worth raising upstream — after the session that showed it, not before.
+
+**Where a file cannot follow a rule, write an adoption note.** A short blockquote directly under
+that file's preamble, opening `> **Adoption note.**`, with three parts:
+
+1. what the rule says;
+2. what this file does instead;
+3. **what must happen for the divergence to close — or a statement that it cannot close, and why.**
+
+The third part is what separates a record from an excuse. Without it, "we wrote down that we
+diverge" becomes the answer to every friction, and reconciliation never arrives. This is the same
+discipline `STALENESS_LOG.md` and the intake file's dismantling date already carry: a device the
+system creates to hold a known imperfection names what ends it.
+
+A declared *inability* to close is a legitimate value, not a blank — the same way `Basis:` accepts
+`—`. But the reason must name an impossibility, not an absence of appetite: "the citations live in
+files this system declares immutable" qualifies, "we have not got to it" does not, and the second
+is a closing condition with no date rather than a permanent divergence. When the divergence does
+close, delete the note and put a row in `LOG.md`, the way every other removal here stays
+discoverable.
+
+Writing the note as a blockquote is not cosmetic: it is how `check.sh` tells commentary about a
+rule apart from a violation of it, the same exclusion the register preambles rely on. The fixed
+opening is what makes the form recognisable at all — a device each adopter shapes differently is
+invisible to every check by construction.
+
+**A note is owed only where conforming was impossible.** It covers records the rule cannot reach
+because they are older than it — whether the rule arrived when the template was adopted or in a
+later upgrade. One test: *could this file have conformed when it was written?* If it could, no note
+is owed and the divergence is fixed rather than documented; otherwise the note stops being how the
+system is adopted and becomes how its rules are avoided, one reasonable exception at a time. The
+boundary is about when a note is *written* — one whose third part says closure is unavailable stays
+as long as the divergence does, which may be permanently.
+
+**Inherited identifier schemes are the case where this comes up first.** A project that has been
+running for months usually numbers its register entries — `Q-001`, `A-001` — and the template
+requires slugs. The two rules involved depend on each other, which is not obvious from either:
+entries are **deleted** when resolved rather than marked, and deleting is only safe because a slug
+can never be reused. Delete from a counter and the number is either recycled, so an old citation
+silently resolves to a different entry, or the sequence is pitted. This is why ADRs are the one
+identifier in §4 that keeps a counter: nothing is ever deleted from `docs/decisions/`.
+
+Renumbering is not the answer. It breaks every existing citation silently, and the citations live
+in `sessions/`, `experiments/` and `decisions/` — files this system declares immutable once
+written. Finishing that migration would mean editing files that may not be edited, so it is not
+deferred work; it is work the system forbids. The supported answer is three clauses:
+
+- **Freeze the counter.** Nothing new is ever allocated under it. This is the clause that makes
+  the rest safe: reuse requires allocation, and a frozen sequence cannot be reused.
+- **New entries take slugs.** The register carries two schemes, permanently. Write that permanence
+  into the adoption note, with the reason, or the next person to read the file will try to finish
+  the migration.
+- **Old entries still drain.** Delete on resolve exactly like any other entry — but the `LOG.md`
+  row must name the entry's *subject* as well as its outcome. A deleted slug still reads
+  meaningfully in an old citation; a deleted number does not, and the row is the only thing
+  standing between the deletion and an unreadable reference.
 
 ---
 
@@ -982,6 +1201,22 @@ and the logs. Content is your sessions, experiments, ADRs and checkpoints.
 `MANIFEST`, in the template repository, records which file is which. It is the table above in a
 form a script can read.
 
+**One file has two owners at once, and it is deliberately the only one.** `.gitignore` must carry
+upstream's never-commit list *and* the project's own paths. Making it mechanism deletes the
+project's lines at every upgrade; making it scaffold means upstream can never strengthen the list
+again on a project already running. The `AGENTS.md` device — a small file the project owns,
+importing a large one upstream owns — is unavailable, because `.gitignore` has no include
+directive. So the file is split by a marker: everything above it is the project's and survives an
+upgrade, everything from `# ─── UPSTREAM BLOCK` down is upstream's and is replaced. Upstream sits
+last because `.gitignore` resolves last-match-wins, so a negation in the project's region cannot
+re-admit a path the never-commit list excludes.
+
+**Splitting a file this way is an exception, not a technique.** It is permitted only where an
+include mechanism is unavailable; where a file can import another, the `AGENTS.md` device is used
+instead. Otherwise a marker becomes the comfortable answer whenever the choice between mechanism
+and scaffold is awkward, and the model stops being able to answer "who owns this file?" in one
+word.
+
 **A scaffold file is never upgraded, and that is deliberate.** Once you have written your
 `problem.md`, a revised heading structure from upstream is not an improvement — it is an unwanted
 rewrite of your document. The same goes for the register preambles: a preamble one version old is
@@ -990,8 +1225,10 @@ a rule genuinely must reach you, it arrives through `RULES.md`, which is mechani
 
 ### Taking a version, and knowing which you took
 
-Adoption and upgrade are both a copy of the paths `MANIFEST` lists. No fork, no submodule, no
-subtree — **no git relationship of any kind** between your project and the template.
+Adoption copies the whole of `skeleton/` except its `README.md`; an upgrade copies the paths
+`MANIFEST` marks `mechanism`. `MANIFEST` is an ownership map, not a copy list — that distinction
+is the difference between the two operations. No fork, no submodule, no subtree — **no git
+relationship of any kind** between your project and the template.
 
 That is what makes your copy self-contained: it keeps working if the upstream repository is
 renamed, moved, or deleted. It also means there is no mechanism for pushing changes back, which is
@@ -1001,8 +1238,13 @@ Two files come out of that. You write the first; the release supplies the second
 
 ```
 .template-version    v1.1.0  skeleton @ 8aee1f4  applied 2026-08-17
-.template-hashes     the sha256 of every mechanism file as it shipped
+.template-hashes     the sha256 of every mechanism file that installs verbatim
 ```
+
+`.template-hashes` carries only the mechanism files the installation does not touch. A file that
+is renamed, substituted into, or has its placeholders filled cannot match the hash it shipped
+with, and listing one anyway puts a permanent failure on the first line of output an adopter ever
+sees — which teaches that failing checks are normal and costs more than the check was worth.
 
 `.template-hashes` is what lets `check.sh` tell you, before an upgrade, that someone has edited a
 file upstream owns — offline, with no copy of the template anywhere. That warning is worth more
@@ -1026,6 +1268,23 @@ For a rule change the discriminator is **not how big the rule is but whether you
 still conform.** *"Search the logs before concluding something is unknown"* binds future behaviour
 only — MINOR. *"Checkpoints are named for a thread, not an owner"* leaves your existing
 owner-named checkpoint file misnamed — MAJOR, and the migration renames it.
+
+**The bump therefore depends on how the rule is worded, and that is deliberate.** "Every ADR
+carries these fields" makes seven existing files non-conforming and costs the consumer an
+afternoon; "new ADRs carry them, existing ones predate the requirement" costs nothing. Same diff,
+different obligation, and the criterion is doing its job by making you decide which release you are
+shipping rather than by measuring the diff.
+
+**But an exception that keeps a release MINOR must be inert or expiring.** Inert: nothing downstream
+costs anything, and nobody maintains two shapes — old ADRs simply lack three informational fields
+that no code reads. Expiring: a fallback with a check beside it that says the old shape is still
+there, as with an ignore file that has no region marker yet. **An exception that requires both
+populations to be supported indefinitely is not an exception; it is a deferred MAJOR, and calling
+it MINOR only moves the cost to whoever is unlucky enough to be holding it later.**
+
+Without that constraint MAJOR becomes unreachable — every breaking change de-escalates behind a
+grandfather clause. This is the same discipline an adoption note carries one level down: a
+temporary allowance is legitimate only when it names its own end.
 
 ### Migrations are prose, not scripts
 
@@ -1090,12 +1349,12 @@ GitHub Copilot CLI in place of Claude Code. The rules that look pedantic — del
 mark resolved, promote rather than compress, freeze rather than edit — are the ones that were
 learned from watching the alternatives fail.
 
-That project was CGS, a personal repository, and the history is preserved in this one. It shows a
+That project was a private repository of the author's, and the history is preserved in this one. It shows a
 discontinuity rather than a straight line: the first commit carries generic templates brought
 *from* a work project, and the next deletes all of them and builds the current system in their
 place. Everything from that second commit is new work. The commits before the split resolve in
-CGS, not here — the extraction rewrote every tree, so they arrived with their dates and messages
-and new hashes.
+that repository, not here — the extraction rewrote every tree, so they arrived with their dates
+and messages and new hashes.
 
 **The single-author case is the tested one.** The structure is built for concurrent contributors
 because that costs the solo case nothing and removes a later migration — but the multi-user
