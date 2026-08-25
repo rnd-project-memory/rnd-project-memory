@@ -1,9 +1,10 @@
 # 2026-08-25 · Anchoring two checks, and the rule about not writing for them
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Participants:** author — claude-opus-5 · high effort
 - **Signed off:** no
+- **Tags:** `#template` `#versioning` `#upgrade`
 
 ---
 
@@ -62,8 +63,29 @@ and which the rule-naming obligation in `ADR-004` exists to prevent.
 
 ## Found along the way
 
-<pending>
+**The fix verified itself on this repository.** After the anchor landed, `check.sh` reports only
+the genuinely open session; the closed record from the earlier session — which quotes
+`Status: open` while describing this very check — is no longer flagged. That record was never
+edited, which is the whole point of the rule shipping beside the fix.
+
+**Root raised to `v2.3.0`.** Fifth self-upgrade. Step 3 clean before anything was replaced; three
+mechanism files changed (`check.sh`, `RULES.md`, `RATIONALE.md`), the rest identical; no migration.
+Step 5 reported the one new rule. The `.gitignore` branch was a no-op this time — the marker went
+in during the `v2.2.0` upgrade and the check reports `ok`.
 
 ## Next
 
-<pending>
+Nothing queued, and no thread checkpoint: both questions this session opened were answered by the
+release that closed them, and everything else shipped.
+
+`Q-oss-intake` and `Q-contribution-flow` remain 🟢 and still need answers from outside this
+repository. `Q-unexercised-components` is 🟡 and untouched by this release.
+
+One thing worth watching rather than acting on: the register check (`Resolved|RESOLVED|~~`) has the
+same shape as the two fixed here — it matches words, not a form. It does not currently misfire,
+because every mention in both registers sits in a blockquote the check already excludes. A
+constructed case does misfire: prose inside a field, such as a `Progress:` line saying an earlier
+question *was Resolved*. Not fixed, because `Resolved` has no field form to anchor on — it is a
+word that can legitimately appear in any value — and a check that has never misfired on real
+content may not be worth pre-emptive machinery. Recorded so the next occurrence is recognised as
+the second, not the first.

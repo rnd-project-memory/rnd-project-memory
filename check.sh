@@ -83,9 +83,14 @@ elif grep -qE "$MARK" .gitignore; then
   at=$(grep -nE "$MARK" .gitignore | head -1 | cut -d: -f1)
   mine=$(head -n "$((at - 1))" .gitignore | grep -cvE '^[[:space:]]*(#|$)')
   echo "  ok    marker at line $at; $mine of your own patterns above it survive an upgrade"
+elif grep -qE '^(\.env|secrets/|\*\.key|\*\.pem)$' .gitignore; then
+  echo "  none  no UPSTREAM BLOCK marker, but upstream's patterns are present — this file predates"
+  echo "        the marker. The two halves are indistinguishable, so the next upgrade cannot"
+  echo "        preserve yours. Add the marker above upstream's block."
 else
-  echo "  none  no UPSTREAM BLOCK marker — your patterns and upstream's are indistinguishable,"
-  echo "        so the next upgrade cannot preserve yours. Add the marker above upstream's block."
+  echo "  none  no UPSTREAM BLOCK marker and none of upstream's patterns — this file has never"
+  echo "        taken the never-commit list. That may be deliberate; it is not the same thing as"
+  echo "        having lost the boundary, and only you can say which this is."
 fi
 
 n "Credential patterns (profile layer)"
@@ -176,9 +181,15 @@ for f in "$SB"/sessions/*.md; do
 done
 
 n "Sessions left open"
-# _TEMPLATE.md ships with Status: open — it is the shape a new session is created from,
+# _TEMPLATE.md ships with the field set to open — it is the shape a new session is created from,
 # not a session that was interrupted.
-open=$(grep -ln 'Status:.*open' "$SB"/sessions/*.md 2>/dev/null | grep -v '_TEMPLATE\.md$')
+#
+# Anchored on the field, not on the words. A session record is prose *about* this system, so it
+# quotes the strings these checks look for while explaining them — and an unanchored grep reports
+# the explanation as the thing explained. The repair belongs here and not in the record: rewriting
+# a record to satisfy a check makes the record less true, which is a worse trade than a noisy line.
+# The anchor works because a field is a list item and a mention of one is not.
+open=$(grep -lnE '^[-*] \*\*Status:\*\*.*open' "$SB"/sessions/*.md 2>/dev/null | grep -v '_TEMPLATE\.md$')
 if [ -n "$open" ]; then
   echo "$open" | sed 's/^/  still open (freeze as abandoned if interrupted): /'
 else echo "  none"; fi

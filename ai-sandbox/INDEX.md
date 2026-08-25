@@ -59,19 +59,21 @@ condition under which a checkpoint is not opened.
 
 ## Current focus
 
-`v2.2.0` has shipped and the root memory runs on it. It is the first release driven by evidence
-from outside this repository: an adopter took `v2.1.0` into a project with three months of its own
-history and kept a friction log. Four decisions came out of it — `ADR-008`–`ADR-011` — and they are
-the first here to carry a named human sign-off.
+`v2.3.0` has shipped and the root memory runs on it. Two releases today, both driven by evidence
+rather than design: `v2.2.0` from an external adoption trial, `v2.3.0` from two defects that trial's
+own release exposed after it was tagged — one found by running the upgrade, one by closing the
+session that recorded it.
 
-The finding worth remembering: three defects had shipped through four releases because they live in
-the *installation*, and this repository never installs anything. `bootstrap-test.sh` now performs
-that installation at release time.
+Two things from today worth carrying:
 
-No substantive work is queued. `Q-marker-absence-reasons` 🟢 is a two-place wording fix waiting for
-a release. `Q-oss-intake` and `Q-contribution-flow` still need answers from outside this repository
-and block nothing. Roughly half the trial's findings were judged bound to that one project's shape
-and left alone; re-opening them needs a second adopter rather than more reasoning about the first.
+- **Self-check sees the settled state and is blind to the transition.** Three defects shipped
+  through four releases because they live in the installation, which a self-hosting repository never
+  performs. `bootstrap-test.sh` now performs it at release time.
+- **A record that describes a check is never rewritten to satisfy it** — new rule, and the third
+  time in one session the tempting repair was the record rather than the check.
+
+No substantive work is queued. `Q-unexercised-components` 🟡 is untouched by either release;
+`Q-oss-intake` and `Q-contribution-flow` 🟢 still need answers from outside this repository.
 
 ## What a new session does
 
