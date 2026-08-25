@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Publications Register
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > `SOURCES.md` in reverse: that file answers *where a fact came from*, this one answers *where
 > it went*. A published page is a copy of knowledge in `docs/`, and it drifts from the original
@@ -20,10 +20,10 @@
 
 ## P-<slug> · <title>
 
-**Where:** <external location the published copy lives — wiki page, URL, distribution list>
-**Version:** <published version identifier, and the date it went out>
-**Collected:** <script path, and whether it is idempotent — or "by hand">
-**Basis:** <what in `docs/` this rests on, plus that claim's own basis — `docs/method.md`,
-`EXP-…`>
-**Status:** current | stale — <if stale, the specific gap: which sections, what changed
-underneath it>
+- **Where:** <external location the published copy lives — wiki page, URL, distribution list>
+- **Version:** <published version identifier, and the date it went out>
+- **Collected:** <script path, and whether it is idempotent — or "by hand">
+- **Basis:** <what in `docs/` this rests on, plus that claim's own basis — `docs/method.md`,
+  `EXP-…`>
+- **Status:** current | stale — <if stale, the specific gap: which sections, what changed
+  underneath it>

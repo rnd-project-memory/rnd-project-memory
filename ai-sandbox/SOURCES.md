@@ -1,6 +1,6 @@
 # rnd-project-memory — Source Register
 
-**Updated:** 2026-08-17
+- **Updated:** 2026-08-17
 
 > **Empty, and legitimately so.** This project's knowledge is produced by reasoning in session and
 > by reading its own artefact, not by ingesting external material. Claims here carry
@@ -34,11 +34,11 @@ anything whose sensitivity has not been established.
 
 ## S-<slug> · <title>
 
-**Type:** PDF | Confluence | transcript | conversation | dataset doc
-**Origin:** <URL, SharePoint path, or `sources/<file>`>
-**Source date:** <when the source itself was written>
-**Date read:** <when it was ingested — matters for mutable sources>
-**Sensitivity:** committable | reference-only
-**Status:** ingested | partial | superseded by S-<slug>
-**Answers:** <which questions this source can settle>
-**Notes:** <caveats, contested claims, sections worth revisiting>
+- **Type:** PDF | Confluence | transcript | conversation | dataset doc
+- **Origin:** <URL, SharePoint path, or `sources/<file>`>
+- **Source date:** <when the source itself was written>
+- **Date read:** <when it was ingested — matters for mutable sources>
+- **Sensitivity:** committable | reference-only
+- **Status:** ingested | partial | superseded by S-<slug>
+- **Answers:** <which questions this source can settle>
+- **Notes:** <caveats, contested claims, sections worth revisiting>

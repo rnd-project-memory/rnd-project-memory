@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Staleness Log
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > **Temporary, by design.** This file exists only until the 3-week staleness threshold
 > `session-start.md` uses is validated against real data. Once a project has enough closures to

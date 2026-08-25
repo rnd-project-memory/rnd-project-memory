@@ -1,6 +1,6 @@
 # rnd-project-memory — Glossary
 
-**Updated:** 2026-08-17
+- **Updated:** 2026-08-17
 
 > Terms used with a specific meaning in this project, especially ones whose everyday
 > meaning differs, and ones where stakeholders disagree.

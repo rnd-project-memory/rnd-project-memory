@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Source Register
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > Every fact in `docs/` that came from outside is traceable to an ID here.
 > Cite as `[S-latency-spec §3.2]`.
@@ -29,11 +29,11 @@ anything whose sensitivity has not been established.
 
 ## S-<slug> · <title>
 
-**Type:** PDF | Confluence | transcript | conversation | dataset doc
-**Origin:** <URL, SharePoint path, or `sources/<file>`>
-**Source date:** <when the source itself was written>
-**Date read:** <when it was ingested — matters for mutable sources>
-**Sensitivity:** committable | reference-only
-**Status:** ingested | partial | superseded by S-<slug>
-**Answers:** <which questions this source can settle>
-**Notes:** <caveats, contested claims, sections worth revisiting>
+- **Type:** PDF | Confluence | transcript | conversation | dataset doc
+- **Origin:** <URL, SharePoint path, or `sources/<file>`>
+- **Source date:** <when the source itself was written>
+- **Date read:** <when it was ingested — matters for mutable sources>
+- **Sensitivity:** committable | reference-only
+- **Status:** ingested | partial | superseded by S-<slug>
+- **Answers:** <which questions this source can settle>
+- **Notes:** <caveats, contested claims, sections worth revisiting>

@@ -1,12 +1,12 @@
 # <PROJECT_NAME> — Checkpoint · <thread>
 
-**Held by:** <token> · since <DATE>
-**Status:** active | paused
-**Plan:** <path to a plan file, if this thread has one — omit the line if it does not>
-**Resume from:** <the single fact that says where the break is — not "what's done", the state
-of the break itself>
-**Do not do until re-verified:** <the specific things not to do until this is checked — the
-danger of interrupted work is resuming from the wrong point, not forgetting to resume>
+- **Held by:** <token> · since <DATE>
+- **Status:** active | paused
+- **Plan:** <path to a plan file, if this thread has one — omit the line if it does not>
+- **Resume from:** <the single fact that says where the break is — not "what's done", the state
+  of the break itself>
+  **Do not do until re-verified:** <the specific things not to do until this is checked — the
+  danger of interrupted work is resuming from the wrong point, not forgetting to resume>
 
 > **This file belongs to one thread, named for what is being worked on, not who is doing it.**
 > Only whoever this file names as `Held by:` writes it; other `CHECKPOINT-*.md` files are

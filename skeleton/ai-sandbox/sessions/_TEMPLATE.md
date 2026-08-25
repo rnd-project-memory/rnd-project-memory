@@ -1,9 +1,9 @@
 # <DATE> · <topic>
 
-**Status:** open
-**Configuration:** <name from `CONFIGURATIONS.md`>
-**Participants:** <role — model · effort, one per participant with a verification role>
-**Signed off:** <human name, or "no">
+- **Status:** open
+- **Configuration:** <name from `CONFIGURATIONS.md`>
+- **Participants:** <role — model · effort, one per participant with a verification role>
+- **Signed off:** <human name, or "no">
 
 > `open` means **this session, right now**. Append to this file as the session runs —
 > a decision reached is a decision written down, not something to reconstruct at the end.

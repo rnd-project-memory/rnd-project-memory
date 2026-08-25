@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Session Index
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 

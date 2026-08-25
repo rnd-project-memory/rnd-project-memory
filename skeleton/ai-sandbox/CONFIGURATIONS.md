@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Session Configurations
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > A short, named catalog of how a session can be staffed, cited by name from
 > `sessions/_TEMPLATE.md`'s **Configuration:** field. Not `content` — this is a portable way of

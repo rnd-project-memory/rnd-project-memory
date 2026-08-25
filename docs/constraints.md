@@ -1,6 +1,6 @@
 # rnd-project-memory — Constraints
 
-**Updated:** 2026-08-17
+- **Updated:** 2026-08-17
 
 > Hard limits the method must respect. A constraint here is binding: if it turns out
 > negotiable, remove it rather than quietly working around it.

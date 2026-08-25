@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Claims Index
 
-**Updated:** <DATE>
+- **Updated:** <DATE>
 
 > **An index, not a second copy.** One line per claim: a shorthand, the file it lives in, when
 > it landed, and what it rests on. The claim's actual wording stays in its file — restating it

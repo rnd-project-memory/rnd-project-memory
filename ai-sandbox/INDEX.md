@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-**Updated:** 2026-08-23
+- **Updated:** 2026-08-23
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
