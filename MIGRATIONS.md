@@ -89,6 +89,12 @@ them once here means not deciding it separately later.
    MAJOR and is called MAJOR now. Without this, MAJOR becomes unreachable: every breaking change
    de-escalates behind a grandfather clause.
 
+3b. **Update `README.md`'s Status section.** It is the only description of this project a reader
+   meets before deciding whether to adopt it, it names a version, and nothing else in this
+   procedure points at it — which is why it sat two releases stale. State the current version, what
+   has actually been exercised, and what is still narrow. It is not release notes; the tag carries
+   those.
+
 4. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
    line per rule, at any bump level. If it does not, say so explicitly: "no rule changes" is
    information, and its absence is indistinguishable from an oversight.
