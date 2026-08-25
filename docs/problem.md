@@ -1,6 +1,6 @@
 # rnd-project-memory — Problem
 
-**Updated:** 2026-08-17
+- **Updated:** 2026-08-17
 
 ## What is being solved
 
@@ -53,6 +53,7 @@ through an upgrade. Criterion 5 is a standing bet.
 
 ## Open questions
 
-- [ ] `Q-unexercised-components` — the components neither this repository nor CGS exercises
+- [ ] `Q-unexercised-components` — the components neither this repository nor the originating
+      one exercises
 - [ ] `Q-enterprise-access` — what the employer's GitHub permits
 - [ ] `Q-contribution-flow` — how colleague improvements reach upstream

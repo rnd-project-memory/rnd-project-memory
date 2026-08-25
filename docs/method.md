@@ -1,6 +1,6 @@
 # rnd-project-memory — Method
 
-**Updated:** 2026-08-23
+- **Updated:** 2026-08-23
 
 > Current best understanding of how the template is built, versioned and delivered. **No history
 > here** — no "we used to think". Rationale for contested choices lives in `decisions/`; evidence
@@ -59,12 +59,22 @@ its own memory at the root, vendored from a released tag.
 | Handbook and skeleton share one tag | `ADR-004` |
 | A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `ADR-007` |
 | Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `ADR-007` |
+| The hash list holds only files installed verbatim; a transformed file cannot be hashed at either path | `ADR-008` |
+| Self-hosting cannot validate anything that happens during installation | `ADR-008` |
+| `.gitignore` is owned by region — project above the marker, upstream below, upstream last so a negation cannot re-admit | `ADR-009` |
+| Region splitting is an exception, permitted only where an include mechanism is unavailable | `ADR-009` |
+| A deviation is invisible to the checks unless its description has one sanctioned form | `ADR-010` |
+| A note is owed only where conforming was impossible; the test is whether the record could have conformed when written | `ADR-010` |
+| The bump level depends on the rule's wording, because the wording is the consumer's obligation | `ADR-011` |
+| An exception that keeps a release MINOR must be inert or expiring; otherwise it is a deferred MAJOR | `ADR-011` |
 
 ## Known limitations
 
 - **No project has upgraded yet.** The whole delivery half is designed and unexercised.
 - **Half the system is untouched by dogfooding** — data environment, source ingestion, the secret
-  scan firing on a real secret. See `A-dogfood-coverage`.
+  scan firing on a real secret. See `A-dogfood-coverage`. One region of that blindness is now
+  named and instrumented: everything that happens during installation, which self-hosting never
+  performs. `bootstrap-test.sh` covers it; the rest is still uncovered (`ADR-008`).
 - The misdirection criterion has reduced scope twice and was formulated on cases it exonerated;
   acting on it is justified by reversibility rather than by confidence.
 
