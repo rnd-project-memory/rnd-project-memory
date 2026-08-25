@@ -213,6 +213,39 @@ looked at, found by executing the install rather than reasoning about it.
 `git diff --stat`, moved, root restored to its released hash. Exactly the confusion `AGENTS.md`
 names in its second paragraph, made while working on the file that detects drift.
 
+### Raising the root memory, v2.1.0 → v2.2.0
+
+Ran `playbooks/upgrade-template.md` in order. Fourth self-upgrade, and the first to exercise the
+`.gitignore` branch that shipped in this release.
+
+- **Step 2** — no MAJOR between the versions, so no migration; file replacement only.
+- **Step 3** — `check.sh` reported `ok all match v2.1.0` before anything was replaced. No edits to
+  files upstream owns, so nothing was about to be discarded.
+- **Step 4** — nine mechanism files replaced, five already identical.
+  `.githooks/patterns.profile` installed as new (profile layer, nothing to overwrite).
+- **Step 5** — two rule changes reported: the adoption-note rule (new) and the subject-naming
+  clause on register deletion for inherited numbered IDs (amended). Both bind future behaviour
+  only; every existing entry here still conforms.
+- **Step 7** — clean, including the new checks. The tracked-file scan §11 step 2 introduces
+  returned nothing, so adopting the never-commit list stranded no file that is already committed.
+
+**The `.gitignore` decision, and what running it exposed.** The root had no `UPSTREAM BLOCK`
+marker — but not for the reason step 4's fallback assumes. Its `.gitignore` held *none* of
+upstream's patterns: three project lines and a comment saying the ignore list was "for adopting
+projects". The fallback is written for a file whose two halves are indistinguishable; this was a
+file that had never taken the upstream half at all. `check.sh` cannot tell those apart either, and
+its message — "your patterns and upstream's are indistinguishable" — was simply untrue here.
+
+Resolved by adopting the block, on the owner's decision. The root is now a real consumer of the
+ignore list, which removes one of the divergences that made `ADR-008`'s defect invisible here: a
+repository that ships a never-commit list and does not run it is not running the system it ships
+(`ADR-006`). The extra patterns are inert — no data environment, no Python — but the credential
+lines are live, and this repository is public.
+
+**Recorded as a finding, not fixed:** step 4's fallback and the marker check both assume the only
+reason a marker is missing is age. "Never adopted the block" is a second reason, and the wording
+should distinguish them. Not changed in this release — it arrived after the tag.
+
 ## Next
 
 Three decisions taken here are ADR-shaped. One is now signed off and written:

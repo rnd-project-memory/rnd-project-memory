@@ -1,7 +1,7 @@
 # EXP-<YYYY-MM-DD>-<slug>
 
-**Date:** <DATE> · **Status:** complete | aborted
-**Question:** <the single question this run answers>
+- **Date:** <DATE> · **Status:** complete | aborted
+- **Question:** <the single question this run answers>
 
 ---
 
@@ -36,8 +36,9 @@ oversight. `DATA_ENVIRONMENT.md` states what this project's stack requires here.
 
 ## Verification
 
-**Verified by:** not verified | self | <who/what>
-**How verified:** independent re-derivation from scratch | re-run | manual cross-check | not applicable
+- **Verified by:** not verified | self | <who/what>
+- **How verified:** independent re-derivation from scratch | re-run | manual cross-check |
+  not applicable
 
 This is separate from the verdict above: the verdict is what the person who ran it concluded —
 a self-report. These two fields say whether anyone else checked it.

@@ -1,4 +1,4 @@
-# <PROJECT_NAME> — Why the rules are what they are
+# Why the rules are what they are
 
 **Read on demand, not every session.** Nothing imports this file and nothing should: it is
 reference material, like `docs/`, not behavioural instruction. `ai-sandbox/RULES.md` carries the
@@ -196,6 +196,44 @@ one-command recipe that reads the artefact directory and reports status belongs 
 task table: the table states intent and can drift (a task added mid-flight may never make it back
 into the table), while the directory only ever states fact.
 
+### A divergence that cannot be closed is recorded, and names what would close it
+
+A project adopting this system mid-life brings habits that some of these rules contradict — an
+inherited identifier scheme, a register that has been a journal for a year, material with no slot.
+Pretending otherwise produces a file that claims a write mode it does not follow, which is worse
+than either the old habit or the new rule, because a reader cannot tell which one is in force.
+
+So the divergence is written down, under the file's own preamble, as a blockquote — blockquote
+because that is how the mechanical checks already tell commentary about a rule apart from a
+violation of it, and a note that makes `check.sh` noisier is a note nobody keeps.
+
+The load-bearing part is the third: **what has to happen for this to end.** Without it the note is
+an excuse, and "we recorded that we diverge" becomes the answer to every friction the system ever
+produces. This is the same shape as the intake file's dismantling date and `STALENESS_LOG.md`'s
+reason for existing: anything created to hold a known imperfection carries the name of its own
+removal, or it becomes furniture.
+
+A stated *inability* to close is a legitimate third part — the design already treats a declared
+absence as knowledge rather than a gap. The test is whether closure is unavailable or merely
+unscheduled. "The citations live in files this system declares immutable" is the first. "We have
+not got to it" is the second wearing the first's clothes, and it is a deadline with no date.
+
+**And a note is owed only where conforming was impossible.** It covers records the rule cannot
+reach because they are older than it — whether the rule arrived when the template was adopted or
+in a later upgrade. One test settles it: *could this file have conformed when it was written?* If
+it could, no note is owed; the divergence is fixed, not documented.
+
+The boundary is stated by that reason rather than by listing which doors a rule may come through,
+because a boundary maintained by enumeration gets worked around while still looking intact — and
+because the loose version, "anything older than the rule", quietly excuses the one case that
+matters most: a record written *after* a rule, in the very release that introduced it. Without the
+boundary the note becomes a rule-exemption mechanism with no author and no expiry, and the system
+a project adopted stops applying one reasonable exception at a time. `check.sh` prints the number
+of notes beside the adoption date rather than judging either alone.
+
+The boundary is about when a note is *written*, not how long it lives. One whose third part says
+closure is unavailable stays as long as the divergence does. That is the device working.
+
 ---
 
 ## Failure modes
@@ -222,6 +260,13 @@ automates the mechanical half.
 | A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |
 | An intake file past its dismantling date | Bootstrapping never finished | Highest-priority item, not furniture |
 | A rule having no effect | Nothing imports the file it lives in — `RULES.md` is one `@` line away from silence | Reachable from `AGENTS.md`, or it does not exist |
+| The assistant follows a rule nobody can find in `RULES.md` | A second auto-loaded instruction file is in play and disagrees | Reduce every loaded path but `AGENTS.md` to a pointer |
+| An adoption note with no third part | The divergence has no end and no owner | Name what would close it, or why it cannot |
+| A note on a record that could have conformed when written | The device is being used to opt out of a rule, not to adopt one | Fix the divergence; a note is owed only where conforming was impossible |
+| A release introduces a rule and nothing enforces it | The artefact it governs was never told — a field, a check or a list is missing | A rule nothing can violate never fires, and reads as order for years |
+| A decision record that cannot say who decided it | `ADR-` is licensed by a configuration the file has no field for | Add the fields; a commitment's force is that someone made it |
+| `check.sh` reports a mechanism file you never edited | Upstream's hash list may name a path the install transforms | Not yours to fix; report it, and do not edit the hash list |
+| Commits rejected for files the project has always tracked | The ignore list arrived after the material | Move the evidence to a `results/*.json` summary; never negate the pattern |
 | A task ID named in a checkpoint header | The plan pointer has stopped holding | Delete it; add a mechanical check if it recurs |
 | A dictionary field collecting hand-appended values | It's asking about more than one axis | Split the field along the axis the appended values reveal |
 | One value filling almost every row of a field | It's asking the wrong question | Reconsider what the field should distinguish |
