@@ -2,7 +2,7 @@
 
 **Status:** closed
 
-> Recorded retroactively. This session ran in the CGS repository, before this repository and its
+> Recorded retroactively. This session ran in the originating repository, before this one and its
 > memory layer existed; it is the bootstrap record. Later sessions are opened at the start, as
 > `RULES.md` requires.
 
@@ -10,13 +10,13 @@
 
 ## Objective
 
-Decide whether `templates/` should leave the CGS repository, and if so, design how the template is
+Decide whether `templates/` should leave the originating repository, and if so, design how it is
 versioned, distributed, and shared — with colleagues, with a work project, and with personal
 projects — without creating two originals.
 
 ## Reasoning
 
-Started from a narrow question: does `templates/` belong in CGS? The measurements settled it
+Started from a narrow question: does `templates/` belong there? The measurements settled it
 quickly — 1840 lines against 1452 in the host's own `docs/`, unrelated change cadence, and the
 skeleton's own README already asserting the existence of a template repository that did not exist.
 
@@ -84,7 +84,7 @@ Sequence, with dependencies:
 
 | # | Step | Depends on |
 |---|------|-----------|
-| 1 | `git subtree split --prefix=templates` from CGS into the new repository | — |
+| 1 | `git subtree split --prefix=templates` into the new repository | — |
 | 2 | Organisation name and `LICENSE` | Q-upstream-identity |
 | 3 | Restructure: handbook / `skeleton/` / root memory | 1 |
 | 4 | Split `AGENTS.md` into project file plus imported `RULES.md` | 3 |
@@ -93,5 +93,5 @@ Sequence, with dependencies:
 | 7 | `MANIFEST`, `MIGRATIONS.md`, `playbooks/upgrade-template.md` | 5 |
 | 8 | Enterprise copy | 7, and a real colleague |
 
-In CGS: remove `templates/`, update the README, and record the move as a fact. The design
+There: remove `templates/`, update the README, and record the move as a fact. The design
 reasoning does not go there — that would create the second copy this session ruled out.

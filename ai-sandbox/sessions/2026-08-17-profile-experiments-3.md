@@ -85,7 +85,7 @@ Supersedes the sequence in `2026-08-17-ownership-audit-2.md`.
 |---|------|-------|
 | 1–3 | Extract, licence and organisation, restructure | **done** |
 | 4 | `AGENTS.md` → `RULES.md` split | **done** |
-| 4a | README install defect | **done**, in CGS before extraction |
+| 4a | README install defect | **done**, in the originating repository before extraction |
 | 4b | Five local edits under the profile indirection | **done** |
 | 4c | Three `check.sh` false positives | **done** |
 | 5 | Bootstrap the root memory, tag `v1.0.0` | **done** |

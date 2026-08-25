@@ -4,13 +4,13 @@
 
 ## Context
 
-The template was developed inside CGS, a personal crypto-strategy repository, where it had arrived
-as working material from an unrelated job. By 2026-08-17 it had grown to 1840 lines against 1452
-in that repository's own `docs/` — the largest component of a repository it has nothing to do
+The template was developed inside the author's private repository on an unrelated subject, where
+it had arrived as working material from a job. By 2026-08-17 it had grown to 1840 lines against
+1452 in that repository's own `docs/` — the largest component of a repository it has nothing to do
 with, sharing one commit history and one `git log`.
 
-The two also change on unrelated rhythms: CGS changes when the portfolio or the market changes;
-the template changes when the memory system is refined against a real project.
+The two also change on unrelated rhythms: that repository changes when its own subject does; the
+template changes when the memory system is refined against a real project.
 
 The skeleton's own `README.md` already stated the resolution as fact:
 
@@ -26,15 +26,15 @@ Extract into a dedicated repository named `rnd-project-memory`, using
 `git subtree split --prefix=templates` so that the four commits which shaped the design travel
 with it, in order: `767b1d9` (2026-08-15) → `105d28e` → `cd1579f` → `9d547dc` (2026-08-16).
 
-Those SHAs are **coordinates in CGS, not in this repository.** The split rewrites every tree to
-strip the `templates/` prefix, so the commits arrive with their author, date and message intact
-and with new hashes. Anyone tracing provenance later resolves these four in CGS.
+Those SHAs are **coordinates in the originating repository, not in this one.** The split rewrites
+every tree to strip the `templates/` prefix, so the commits arrive with their author, date and
+message intact and with new hashes. Anyone tracing provenance later resolves these four there.
 
 ## Alternatives considered
 
 | Option | Why not |
 |--------|---------|
-| Leave it in CGS | The skeleton README's claim stays false; reuse in other projects means hand-copying out of a repository of personal financial notes, with a fresh chance each time of taking the wrong thing |
+| Leave it where it was | The skeleton README's claim stays false; reuse in other projects means hand-copying out of a private repository of unrelated personal notes, with a fresh chance each time of taking the wrong thing |
 | Copy without history | Discards the provenance record — see the consequences below, which turn out to matter beyond tidiness |
 
 ## Consequences
@@ -55,6 +55,7 @@ and with new hashes. Anyone tracing provenance later resolves these four in CGS.
   names, internal URLs, ticket keys — and carry none; they are `<PROJECT_NAME>` scaffolding. That
   is what makes publishing the full history safe under ADR-005. It bears on confidentiality only,
   not on IP: see `A-personal-provenance`.
-- CGS `README.md` described `templates/` and now carries a pointer here instead.
-- CGS keeps its own simpler memory layer (single `CHECKPOINT.md`, no owner token). That is a
-  deliberate divergence, not drift: CGS is not a consumer of this template.
+- The originating repository's `README.md` described `templates/` and now carries a pointer here
+  instead.
+- It keeps its own simpler memory layer (single `CHECKPOINT.md`, no owner token). That is a
+  deliberate divergence, not drift: it is not a consumer of this template.
