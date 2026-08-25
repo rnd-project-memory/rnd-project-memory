@@ -30,7 +30,19 @@
 - Register entries are **deleted**, never marked resolved — whether answered or gone obsolete.
   The `LOG.md` row names the outcome, which is what keeps the deletion discoverable.
   `ai-sandbox/CAVEATS.yaml` is the one register exempt from this: a trap does not stop being true
-  when addressed, so it is corrected or marked gone, never deleted.
+  when addressed, so it is corrected or marked gone, never deleted. Where a register inherited
+  numbered IDs from before adoption, that row also names the entry's **subject**: a deleted slug
+  still reads in an old citation, a deleted number does not.
+- **Where a file inherited at adoption cannot follow a rule here, say so in an adoption note** — a
+  blockquote under that file's preamble opening `> **Adoption note.**`, stating the rule, what the
+  file does instead, and what must happen for the divergence to close. A declared inability to
+  close is a valid third part; an omitted one is not, and turns the note into an excuse. Delete the
+  note when the divergence closes, with a `LOG.md` row like any other removal.
+  **A note covers only records the rule cannot reach because they are older than it** — whether it
+  arrived at adoption or in an upgrade. One test: could this file have conformed when it was
+  written? If it could, no note is owed and the divergence is fixed rather than documented.
+  Otherwise the device stops being how the system is adopted and becomes how its rules are avoided,
+  one reasonable exception at a time.
 - Data and tool traps go in `ai-sandbox/CAVEATS.yaml`, found by subject — not read start to end.
 - Every claim promoted into `docs/` gets a row in `docs/CLAIMS.md` with its basis (`EXP-…`,
   `S-…`, `sessions/…`, or `ADR-…`), written in the same change.

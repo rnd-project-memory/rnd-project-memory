@@ -16,18 +16,59 @@
 # with paths relative to a consumer's repository root. It is deliberately absent from this list:
 # a file cannot carry its own hash. MIGRATIONS.md "Cutting a release" regenerates it.
 #
-# There is no region scope. An earlier draft fenced upstream preambles inside nine files and
-# scoped manifest entries to those regions; that was withdrawn — markers serve a tool, and this
+# THE HASH LIST MAY CONTAIN ONLY FILES INSTALLED VERBATIM, SUBJECT TO NO TRANSFORMATION.
+#
+# Not "files nobody is told to edit" — the transformations differ in kind and the consequence is
+# the same. A file the install renames can never be found at the path the list names. A file a
+# profile substitutes into never matches the hash it shipped with. A file whose placeholders step
+# 3 fills is modified before its first commit. In all three the check reports FAILED on a correct
+# adoption, on the first line of output an adopter ever sees, and what it teaches is that failing
+# checks are normal — which costs more than the check was ever worth.
+#
+# A mechanism file that is transformed on install carries `# transformed on install` on its line
+# below and is excluded from the generated list; nothing else may be. `bootstrap-test.sh` enforces
+# this by installing the skeleton and verifying every hashed path survives byte-for-byte, which is
+# the criterion restated as an executable test. Three entries violated it before v2.2.0:
+# `gitignore.template` (renamed), `.githooks/pre-commit` (substituted into — fixed by moving the
+# substitution point out to `.githooks/patterns.profile`), and `ai-sandbox/RATIONALE.md` (carried
+# `<PROJECT_NAME>` in its title — fixed by removing it). None was visible to this repository's own
+# check.sh, which performs no installation.
+#
+# There is no general region scope. An earlier draft fenced upstream preambles inside nine files
+# and scoped manifest entries to those regions; that was withdrawn — markers serve a tool, and this
 # design builds no tool. Rule changes reach projects through ai-sandbox/RULES.md, which is
 # mechanism and replaced whole; preamble revisions ride on prose migrations.
+#
+# ONE EXCEPTION, AND IT IS CONDITIONAL. A file is split into owned regions only where an include
+# mechanism is unavailable. If the file can import another file, the AGENTS.md/RULES.md device is
+# used instead — a small file the project owns, importing a large one upstream owns.
+#
+# .gitignore is the only file that qualifies: it is a security control that must also carry the
+# project's own lines, and git has no include directive for it (.git/info/exclude and
+# core.excludesFile are per-clone and uncommitted, so neither reaches a second machine). Its
+# marker splits it; everything from `# ─── UPSTREAM BLOCK` down is upstream's, everything above is
+# the project's, and upstream sits last because .gitignore is last-match-wins.
+#
+# Without the condition, "put a marker in it" becomes the answer every time the choice between
+# mechanism and scaffold is unpleasant, and one word per file stops answering "who owns this?".
+# bootstrap-test.sh fails the release if a second installed file grows a region marker. See
+# ADR-009.
 
 # ─── never copied into an adopting project ───────────────────────────────────
 norcopy    README.md
 norcopy    ../RND_PROJECT_MEMORY.md
+norcopy    ../bootstrap-test.sh
 
 # ─── mechanism: replaced wholesale on upgrade ────────────────────────────────
 mechanism  check.sh
-mechanism  gitignore.template
+
+# Upstream owns the region below its UPSTREAM BLOCK marker and replaces that region wholesale;
+# everything above the marker is the project's and is never touched. It is not scaffold: an
+# ignore list is a security control, and `.gitignore` has no include mechanism, so the AGENTS.md
+# device — a small project file importing a large upstream one — is unavailable here. Handing the
+# whole file to the project would mean a strengthened never-commit pattern could never again reach
+# a project already running, which is a regression dressed as a layer change.
+mechanism  gitignore.template            # transformed on install
 mechanism  ai-sandbox/RULES.md
 mechanism  ai-sandbox/RATIONALE.md
 mechanism  ai-sandbox/playbooks/session-start.md
@@ -42,15 +83,21 @@ mechanism  ai-sandbox/playbooks/local/_TEMPLATE.md
 mechanism  docs/decisions/_TEMPLATE.md
 mechanism  docs/techniques/_TEMPLATE.md
 
-# mechanism, with one exception to the profile's substitution semantics:
-# a profile APPENDS credential patterns here, it never replaces the list. An absent or
-# unsubstituted pattern source leaves an empty regex, which matches every line, blocks every
-# commit on clean content, and trains the user into --no-verify. The inline core cannot go
-# missing, and this is the one check whose failure a later edit cannot repair.
+# Mechanism, and now genuinely verbatim. A profile used to be substituted into this file
+# directly, which put the one check whose failure a later edit cannot repair permanently out of
+# step with its own hash. The substitution point moved to .githooks/patterns.profile, read as
+# data and never sourced; the core list is inline and cannot go missing. Keeping this file
+# hashable matters more than for any other entry: it is the file you most need to know is intact.
 mechanism  .githooks/pre-commit
 
 # ─── profile: substituted per stack ──────────────────────────────────────────
 profile    ai-sandbox/DATA_ENVIRONMENT.md
+
+# Credential patterns beyond the core, one alternative per line. Deliberately not hashed — it is
+# the file the organisation writes. The hook drops blank and comment lines (an empty alternative
+# matches every line) and discards the whole file if it does not compile (a malformed pattern
+# makes grep exit 2, which reads as "found nothing" and would silently disable the scan).
+profile    .githooks/patterns.profile
 
 # ─── scaffold: seeded once, the project's own thereafter ─────────────────────
 # The register and index files below carry an upstream preamble above project entries. They
@@ -58,6 +105,7 @@ profile    ai-sandbox/DATA_ENVIRONMENT.md
 # mode is missing a newly added rule, not following a false one, and rules that must reach
 # existing projects live in RULES.md. See EXP-2026-08-17-misdirection-recheck.
 scaffold   AGENTS.md
+scaffold   .template-version
 scaffold   ai-sandbox/INDEX.md
 scaffold   ai-sandbox/CHECKPOINT-thread.md
 scaffold   ai-sandbox/OPEN_QUESTIONS.md

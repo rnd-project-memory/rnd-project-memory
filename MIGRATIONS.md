@@ -40,13 +40,39 @@ them once here means not deciding it separately later.
 2. Regenerate the hash list that consumers check against:
 
    ```bash
-   grep '^mechanism' MANIFEST | awk '{print $2}' | while read -r p; do
+   grep '^mechanism' MANIFEST | grep -v '# transformed on install' | awk '{print $2}' \
+   | while read -r p; do
      [ -f "skeleton/$p" ] && (cd skeleton && sha256sum "$p")
    done > skeleton/.template-hashes
    ```
 
    Paths are relative to a consumer's repository root, which is what `skeleton/` becomes. The file
-   does not list itself.
+   does not list itself, and it excludes the mechanism entries `MANIFEST` marks
+   `# transformed on install` — see the criterion at the top of `MANIFEST`. A file the install
+   renames, substitutes into, or fills placeholders in cannot be hashed at the path it lands on,
+   and listing it anyway puts a permanent `FAILED` on the first line of output every adopter sees.
+
+2a. **Run `./bootstrap-test.sh`. It must pass.** It installs `skeleton/` into a scratch repository
+   exactly as `skeleton/README.md` says and runs the `check.sh` that lands there. This repository's
+   own `check.sh` cannot see any of that: self-hosting vendors the skeleton's files in place, so
+   nothing is renamed, no placeholder is filled, and the copy set is never chosen. Every defect
+   living in the transformation from skeleton to consumer is invisible here and unavoidable there.
+   Three shipped for four releases before this test existed.
+2b. **If the release introduces a rule, name the artefact that enforces it — and check that the
+   artefact knows.** A field, a check, or a list; the question is deliberately not "which field",
+   because two of the four times this has been missed the answer was not a field at all.
+
+   | Missed | The artefact that had to know | What it was |
+   |---|---|---|
+   | the install renames one file | `.template-hashes` | a list |
+   | the intake file is exempt from the cap | `check.sh` | a check |
+   | a register may carry inherited numbered IDs | the register preambles | a field's meaning |
+   | `CONFIGURATIONS.md` licenses the `ADR-` number | `docs/decisions/_TEMPLATE.md` | three fields |
+
+   Every one of them was a rule stated in one file while the thing it governed was never told. The
+   failure is silent in both directions: the artefact either reports a violation that is not one,
+   or — worse, because nothing is ever annoying — it can never report anything at all.
+
 3. **If the section's Reason names retired terminology, add it to `check.sh`'s `RETIRED` array**
    (in the "Retired vocabulary" check). A rename this size lands correctly in the mechanism files
    upstream ships by construction — the hash check already covers those — but strays into
@@ -55,6 +81,14 @@ them once here means not deciding it separately later.
    survived in files the hash check doesn't see, in two dogfooded copies that agreed with each
    other, wrongly. Regenerate the hash list again after this edit, since `check.sh` is itself
    mechanism.
+3a. **Settle the bump level against §15 before tagging.** If what keeps the release MINOR is an
+   exception — "new records carry the field, existing ones predate it" — check that the exception
+   is **inert or expiring**. Inert: nothing downstream costs anything and nobody maintains two
+   shapes. Expiring: a fallback with a check beside it that keeps saying the old shape is still
+   there. An exception that requires both populations to be supported indefinitely is a deferred
+   MAJOR and is called MAJOR now. Without this, MAJOR becomes unreachable: every breaking change
+   de-escalates behind a grandfather clause.
+
 4. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
    line per rule, at any bump level. If it does not, say so explicitly: "no rule changes" is
    information, and its absence is indistinguishable from an oversight.
