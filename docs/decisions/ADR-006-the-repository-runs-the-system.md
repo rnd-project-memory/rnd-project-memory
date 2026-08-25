@@ -4,14 +4,14 @@
 
 ## Context
 
-The design decisions above were produced in sessions inside CGS, a repository whose subject is a
-crypto portfolio. They would have been filed in that repository's session archive, where they are
+The design decisions above were produced in sessions inside the author's private repository on an
+unrelated subject. They would have been filed in that repository's session archive, where they are
 noise to every future reader of it — the routing violation this system exists to prevent, being
 committed by the project that defines the rule.
 
 Beyond that: the versioning and migration machinery of ADR-003 and ADR-004 is the newest and least
 proven part of the design, and it is only exercised by a project that lives through a version
-change. A work project will not reach one for months; CGS never will.
+change. A work project will not reach one for months; the originating repository never will.
 
 ## Decision
 
@@ -36,7 +36,7 @@ performed by its own author, recorded as a session.
 
 | Option | Why not |
 |--------|---------|
-| Keep designing inside CGS | Every design decision is filed where nobody will look for it |
+| Keep designing in the originating repository | Every design decision is filed where nobody will look for it |
 | Root memory pointing directly at `skeleton/` | Editing a playbook would change the procedure mid-session, and the upgrade path would never be exercised |
 | Root memory as a hand-synced copy of `skeleton/` | Two living originals inside one repository — the forbidden shape, at close range |
 | Adopt the system only after v1.0 is finished | The machinery would ship unexercised, and "finished" has no definition here |

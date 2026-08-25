@@ -3,7 +3,7 @@
 **Status:** closed
 
 > Second session of the day; suffix per `checkpoint.md`. Recorded retroactively for the same
-> reason as the first — this ran in CGS, before this repository existed.
+> reason as the first — this ran in the originating repository, before this one existed.
 
 ---
 
@@ -72,7 +72,7 @@ as written.
 
 | # | Step | Depends on | Change |
 |---|------|-----------|--------|
-| 1 | `git subtree split --prefix=templates` from CGS | — | — |
+| 1 | `git subtree split --prefix=templates` from the originating repository | — | — |
 | 2 | Organisation name and `LICENSE` | Q-upstream-identity | — |
 | 3 | Restructure: handbook / `skeleton/` / root memory | 1 | — |
 | 4 | **Fence the mechanism preamble in nine files**, `AGENTS.md` → `RULES.md` being the largest | 3 | **grown** |
