@@ -836,6 +836,11 @@ on any thread checkpoint you currently hold. Working alone that is still, in pra
 checkpoint most of the time — but it is a thread's file, named for the work, not a file that is
 "yours".
 
+`AGENTS.md` does carry one thing besides the project description: the per-clone setup section the
+skeleton ships, *First run in a new clone*. **Keep it.** It is the only route by which a second
+contributor is ever told to install the secret-scan hook — `skeleton/README.md` is not copied into
+the project, so they never see step 2 — and `AGENTS.md` is the one file loaded into every session.
+
 **Then go through §5's list of automatically loaded paths** — `.github/copilot-instructions.md`,
 `.github/instructions/**`, `CLAUDE.md`, `.claude/CLAUDE.md`, `GEMINI.md` — and reduce any that
 holds working rules to a pointer at `AGENTS.md`. A project of this age usually has at least one.
@@ -1061,8 +1066,13 @@ never supply the list.** An absent or unsubstituted pattern file leaves an empty
 empty expression matches every line, and every commit blocks on clean content — which produces
 exactly the `--no-verify` reflex above.
 
-Hooks do not survive a clone. Installation is one line, and it belongs in the setup steps where
-it will actually be run:
+**Hooks do not survive a clone.** `core.hooksPath` lives in `.git/config`, which `git clone` never
+copies: the hook *file* travels with the repository, the setting that runs it does not. A second
+contributor therefore has `.githooks/pre-commit` sitting inert in their working tree, with no
+warning from git that anything is off, while the adopter's own clone is protected and reports
+nothing wrong. Installation is one line, and it belongs in a **tracked** file every contributor
+reads rather than only in adoption instructions the adopter alone sees — the skeleton puts it in
+`AGENTS.md`, loaded into every session, and `check.sh` reports the condition on every run:
 
 ```bash
 git config core.hooksPath .githooks
@@ -1125,9 +1135,14 @@ simply n = 1:
 | `Owner:` on register entries | §6 | ten characters, and every historic entry is already attributed |
 | Session configuration named on every record | §8 | one line, usually "Solo" |
 
-Adding a person is therefore close to a no-op: they either take over an unattended thread — a
-logged event, not a silent edit — or open a new one with their own address in `Held by:`. Nothing is
-renamed, no playbook changes, and no existing file moves. The one place solo use genuinely differs
+Adding a person is therefore close to a no-op *in the files*: they either take over an unattended
+thread — a logged event, not a silent edit — or open a new one with their own address in
+`Held by:`. Nothing is renamed, no playbook changes, and no existing file moves.
+
+**The one thing a second person must do is not in the table, because it is not a file.**
+`core.hooksPath` and `user.email` both live in `.git/config`, which no clone inherits. Until those
+two commands are run in their clone they have no secret scan and no value for `Held by:` — see
+§12. `AGENTS.md` carries them for exactly this reason, and `check.sh` reports both on every run. The one place solo use genuinely differs
 from multi-person use is upstream of this table: a single person running several agents in
 parallel already produces several concurrent threads, which is exactly why the axis is the thread
 and not the person in the first place — see §3.
