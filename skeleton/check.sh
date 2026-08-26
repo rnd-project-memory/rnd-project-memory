@@ -69,15 +69,23 @@ n "Unfilled install blanks"
 # by step 3 and would then fail its own hash on every correct adoption. A marker surviving in AGENTS.md or ai-sandbox/INDEX.md is not
 # an empty section — both are loaded into every session, so its own text is read as instruction,
 # and an assistant asked to fill it from nothing will write something plausible instead.
-# Excluded: check.sh, which describes the check; _TEMPLATE.md files, copied per entry rather than
-# filled in place; and skeleton/, where an unfilled marker is the shipped artefact, not a defect.
-fill=$(grep -rlI --exclude-dir=.git --exclude-dir=skeleton --exclude=check.sh \
-         -- '<<FILL' . 2>/dev/null | grep -v '_TEMPLATE\.md$')
+# Excluded: _TEMPLATE.md files, copied per entry rather than filled in place, and skeleton/, where
+# an unfilled marker is the shipped artefact rather than a defect.
+#
+# **Anchored to the start of a line**, which is where every real marker sits. A file that mentions
+# the marker in prose or matches on it in code is documenting it, not carrying one — the same
+# distinction the .gitignore block check below makes, and for the same reason. Unanchored, this
+# section reported nine files in the repository that *ships* the marker, including `INDEX.md`
+# under the loud heading, while being correct for every adopter, who has prose about none of it.
+# That asymmetry is this project's own blind spot pointed the other way: the author sees noise the
+# consumer never sees, and the temptation is to edit the prose rather than aim the check.
+fill=$(grep -rlI --exclude-dir=.git --exclude-dir=skeleton \
+         -- '^<<FILL:' . 2>/dev/null | grep -v '_TEMPLATE\.md$')
 if [ -z "$fill" ]; then
   echo "  ok    no install blanks left unanswered"
 else
   echo "$fill" | while IFS= read -r f; do
-    c=$(grep -c '<<FILL' "$f")
+    c=$(grep -c '^<<FILL:' "$f")
     case "$f" in
       ./AGENTS.md|./ai-sandbox/INDEX.md)
         echo "  TODO  $f: $c unanswered — loaded into every session, so it instructs";;

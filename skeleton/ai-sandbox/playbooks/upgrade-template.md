@@ -50,6 +50,11 @@ discrepancy this system ever had.
 
 Copy the paths `MANIFEST` marks `mechanism`. Replace them wholesale; do not merge.
 
+**Copy `.template-hashes` as well.** It is deliberately not in the manifest — a file cannot carry
+its own hash — so "copy what `MANIFEST` marks" leaves it behind, still describing the release you
+are leaving. Every file you just replaced then fails step 7's comparison against the old list, on a
+correct upgrade, which is the standing false alarm `ADR-008` exists to prevent.
+
 **`.gitignore` is the one exception, and it is not a merge.** The file has two regions: everything
 from the `# ─── UPSTREAM BLOCK` marker down is upstream's, everything above it is the project's.
 Replace the region from the marker down with the release's `gitignore.template`, and **leave every
@@ -81,7 +86,13 @@ step, is the thing *this* step does: copying an upstream file over one of yours.
 
 ```bash
 diff <(git show HEAD:ai-sandbox/RULES.md) ai-sandbox/RULES.md
+for f in ai-sandbox/playbooks/*.md; do diff <(git show "HEAD:$f") "$f"; done
 ```
+
+**Both, not just the first.** `RULES.md` is where a rule is *supposed* to live, and the playbooks
+are where one arrives when it governs a single procedure — `v3.1.0` delivered two that way, and
+this step, run on `RULES.md` alone, would have reported "no rule changes" and been wrong. A rule is
+whatever binds the next session, not whatever sits in the file named for rules.
 
 Rules arrive by file replacement, which means they arrive **silently**: the file is copied and the
 project is now bound by a rule nobody read. Report each change to the user in plain language, one
