@@ -107,6 +107,24 @@ them once here means not deciding it separately later.
    explicitly: "no rule changes" is information, and its absence is indistinguishable from an
    oversight.
 5. Add the section here if the bump is MAJOR.
+6. **Publish the branch and its tags together.**
+
+   ```bash
+   git push --follow-tags
+   ```
+
+   `git push --tags` pushes the tags and **not the branch**. What that leaves on the remote is a
+   version that exists and content that does not: the tag resolves, the default branch is still
+   the previous release, and the landing page describes a system without the thing the tag
+   announces. Nobody is warned — the push succeeds, and the repository looks published.
+
+   `--follow-tags` sends the branch plus the annotated tags reachable from it, which is exactly
+   the set a release consists of, and it cannot produce the split. Every tag this procedure cuts
+   is annotated (step 4), so nothing is left behind by it.
+
+   Until this step ran, "cutting a release" ended at a local tag. That is the same gap that left
+   `README.md`'s Status two releases stale: a step nobody wrote down, done correctly from memory
+   until the once it was not.
 
 ## Partial application
 
