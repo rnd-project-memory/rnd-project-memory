@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-08-25
+- **Updated:** 2026-08-26
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -59,20 +59,28 @@ condition under which a checkpoint is not opened.
 
 ## Current focus
 
-`v2.3.0` has shipped and the root memory runs on it. Two releases today, both driven by evidence
-rather than design: `v2.2.0` from an external adoption trial, `v2.3.0` from two defects that trial's
-own release exposed after it was tagged — one found by running the upgrade, one by closing the
-session that recorded it.
+`v2.4.0` has shipped and the root memory runs on it. It came out of a question about the owner
+token — with two contributors, whose token appears in `Held by:`? — which exposed something larger
+than the thing it asked about.
 
-Two things from today worth carrying:
+Two things worth carrying:
 
-- **Self-check sees the settled state and is blind to the transition.** Three defects shipped
-  through four releases because they live in the installation, which a self-hosting repository never
-  performs. `bootstrap-test.sh` now performs it at release time.
-- **A record that describes a check is never rewritten to satisfy it** — new rule, and the third
-  time in one session the tempting repair was the record rather than the check.
+- **`git clone` does not copy `.git/config`.** The hook *file* travels with the repository; the
+  setting that runs it does not. So every contributor except the adopter has `.githooks/pre-commit`
+  sitting inert in their working tree, with no warning from git, and `skeleton/README.md` — where
+  the install instruction lives — is `norcopy`, so it never reaches them either. Demonstrated in a
+  scratch repository rather than argued. `v2.4.0` puts the two commands in `AGENTS.md`, the check
+  first in `check.sh`, and step 0a in `session-start.md`.
+- **A fix's reach is decided by its layer, not by its intent.** The `AGENTS.md` section was the
+  point of the change and reaches new adoptions only, because `AGENTS.md` is `scaffold`. The
+  `check.sh` section was the supporting half and is `mechanism`, so it is the part that actually
+  reaches an existing project's second contributor. Worth asking of the next fix before writing it.
 
-No substantive work is queued. `Q-unexercised-components` 🟡 is untouched by either release;
+`Q-held-by-identity-binding` 🟡 is queued and evaluated: retire the owner token, bind `Held by:`
+to `git config user.email`. MAJOR, deliberately not bundled with `v2.4.0` — the security half was
+separable and should not have waited for it.
+
+`Q-unexercised-components` 🟡 is untouched by this release;
 `Q-oss-intake` and `Q-contribution-flow` 🟢 still need answers from outside this repository.
 
 ## What a new session does
