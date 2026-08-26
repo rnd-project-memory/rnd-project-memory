@@ -61,7 +61,7 @@ if [ -n "$em" ]; then
 fi
 
 n "Unfilled install blanks"
-# README.md step 3 splits what wears angle brackets into three classes and gives only one of them
+# README.md splits what wears angle brackets into three classes and gives only one of them
 # a marker: <<FILL: ...>> is an answer no install can produce, as against the project-name and
 # date tokens (a sed does those) and slug-style example syntax (never touched). Only the marked
 # class is checkable, which is the reason it is marked. Neither token is spelled out anywhere in
