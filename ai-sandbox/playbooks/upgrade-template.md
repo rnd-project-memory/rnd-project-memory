@@ -69,6 +69,12 @@ place the marker; from then on it is mechanical.
 | `content` | Sessions, experiments, ADRs, checkpoints. Upstream never wrote these and must never rewrite them |
 | `profile` | `DATA_ENVIRONMENT.md` is yours or your organisation's. Substituted only when you choose to |
 
+**"Do not touch" governs this step, not the whole upgrade.** A migration section in step 6 may
+direct edits to `scaffold` or `content` files, and `v2.4.0 → v3.0.0` does both — it deletes a
+section from `AGENTS.md` and rewrites `Held by:` in every live checkpoint. Those are hand edits
+the section names one at a time, made by you against your own files. What never happens, at any
+step, is the thing *this* step does: copying an upstream file over one of yours.
+
 ## 5. Diff `RULES.md` and report every changed rule
 
 **This step is required, and it is the reason this playbook exists.**
