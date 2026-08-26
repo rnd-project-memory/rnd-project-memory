@@ -14,22 +14,24 @@ the handbook wins** — fix the skeleton, not the handbook.
    the case that matters — the project's own content stays, and the two `@` import lines are added
    to it. The rules themselves are **not** copied into `AGENTS.md`: they live in
    `ai-sandbox/RULES.md`, which the import pulls in and an upgrade replaces wholesale.
-2. Rename `gitignore.template` to `.gitignore`, then install the hooks — one line, and
-   it is the only protection for the rule no later edit can repair:
+2. Rename `gitignore.template` to `.gitignore`, then configure **this clone**:
    ```bash
-   git config core.hooksPath .githooks
+   git config core.hooksPath .githooks        # runs the secret scan — nothing else does
+   git config user.email "you@example.org"    # what `Held by:` takes
    ```
-   If the project has CI, run the same secret scan there: it is the one layer nobody can
-   forget to install.
+   Neither setting is copied by `git clone` — both live in `.git/config` — so these are run once
+   **per clone, by every contributor**, and installing the hook protects only the clone it is run
+   in. `AGENTS.md`'s "First run in a new clone" section is where the project keeps them for
+   whoever clones next; this file never reaches them. If the project has CI, run the same secret
+   scan there: it is the one layer that does not depend on how an individual clone is configured.
 3. Replace every `<PROJECT_NAME>` and `<PLACEHOLDER>` — around twenty files carry one, including
    `ai-sandbox/INDEX.md`, which is loaded into every session. `.template-version` takes the
    release you copied, the commit `skeleton/` was at, and today's date; its first field is what
    `check.sh` reports. Files named `_TEMPLATE.md` keep their placeholders.
-4. Set this clone's identity if it is not set already — `git config user.email "you@example.org"`.
-   It is what `Held by:` takes: a thread's holder is named by the address that signs this clone's
-   commits, and there is nothing to declare in `AGENTS.md`. Rename
-   `ai-sandbox/CHECKPOINT-thread.md` to `CHECKPOINT-<what-you're-working-on>.md` for your first
-   thread, and set `Held by:` to that address.
+4. Rename `ai-sandbox/CHECKPOINT-thread.md` to `CHECKPOINT-<what-you're-working-on>.md` for your
+   first thread, and set `Held by:` to the address you configured in step 2. There is nothing to
+   declare in `AGENTS.md`: a thread's holder is named by the identity that signs this clone's
+   commits, never by a token (`ADR-012`).
 5. Delete `sources/` and `src/` if the project already keeps code and source material somewhere —
    **under any name.** The condition is whether these already have a home, not whether a directory
    of that exact name exists; creating them beside the project's own equivalents gives it two
@@ -63,10 +65,11 @@ system is in this directory.
 
 Nothing to change. The structure is already concurrency-safe: checkpoints are per thread and
 only their holder writes them, no identifier uses a shared counter, and every other file is
-append-only or edited in localised spots. A second contributor sets `user.email` in their own
-clone — which they need in order to commit at all — and either takes over an unattended thread
-(an event, logged — see `RULES.md`) or opens a new one. Nothing about a person is declared in a
-shared file, so there is no line for two people to overwrite (`ADR-012`).
+append-only or edited in localised spots. A second contributor runs **step 2 in their own clone**
+— both settings live in `.git/config` and no clone inherits them, so a colleague who skips it has
+no secret scan and no value for `Held by:` — and then either takes over an unattended thread (an
+event, logged — see `RULES.md`) or opens a new one. Nothing about a person is declared in a shared
+file, so there is no line for two people to overwrite (`ADR-012`).
 
 Only one thing changes, and it doesn't touch a file:
 
