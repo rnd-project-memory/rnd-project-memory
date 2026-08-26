@@ -1,6 +1,6 @@
 # rnd-project-memory — Glossary
 
-- **Updated:** 2026-08-17
+- **Updated:** 2026-08-26
 
 > Terms used with a specific meaning in this project, especially ones whose everyday
 > meaning differs, and ones where stakeholders disagree.
@@ -14,5 +14,5 @@
 | **vendoring** | Taking a copy of the mechanism layer at a pinned version, with no git relationship | Not a fork, not a submodule, not a subtree |
 | **misdirects** | Content that instructs, where the instruction is false for this project | The test for whether stack content is a defect. Content that merely sits there does not misdirect |
 | **the routing rule** | Every piece of information has exactly one home | The core of the system; handbook §2 |
-| **owner token** | The initials naming one person's checkpoint file | The one value the rules cannot supply themselves; declared in `AGENTS.md` |
+| **owner token** | Initials identifying who currently holds a thread — the value that appears in a checkpoint's `Held by:` field | **Not a filename.** A checkpoint is named for the work, not the holder (`ADR-007`); the token names a temporary state, not a possession. The one value the rules cannot supply themselves; declared in `AGENTS.md` |
 | **drift** | Two copies of the same content diverging until neither is trustworthy | The failure the whole system exists to prevent, including in its own delivery |
