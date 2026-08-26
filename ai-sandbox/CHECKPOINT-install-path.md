@@ -2,9 +2,10 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** `install.sh` exists and is what the guide points at; Gap 4 is closed and gated;
-  the extraction's one measurement came out against the reasoning that motivated it. Four commits
-  are in, nothing is released, one install defect of the original four remains.
+- **Resume from:** `v3.1.0` and `v3.1.1` are released and the root runs on `v3.1.1`. All four
+  original install defects are closed, the documents have been audited against what the release
+  does, and nothing is pushed. The next move is the new-project experiment, which this thread
+  cannot perform.
   **Do not do until re-verified:** do not claim the new-project path works. It has been tested by
   `bootstrap-test.sh`, which is this repository installing its own skeleton — the same blind spot
   `ADR-008` exists for, one level up. No person has followed the rewritten step 3 from a clean
@@ -33,29 +34,36 @@
 
 ## In progress
 
-### Gap 1 — the bump is undecided (priority: high)
+### Gap 1 — nothing is published (priority: high)
 
-Three mechanism files have changed (`check.sh`, and the playbook `checkpoint.md`, plus the
-installer and gate which are `norcopy` and reach nobody) and two behavioural rules with them: the
-session filename carries no counter, and `<<FILL: …>>` marks an install-time blank. `ADR-004`
-requires a release touching the rules to name each changed one in its notes, and `v2.3.0`'s
-precedent settled a near-identical case as MINOR on the consumer's obligation. The remaining doubt
-is only whether the two new advisory sections, both of which print `ok` on an already-filled
-project, add anything. `ADR-011` bounds the discriminator to inert-or-expiring and has not been
-applied.
+Two tags and eleven commits are local. `v3.1.0` was re-cut once before publication, which the
+`v1.2.0` precedent licenses, and `v3.1.1` followed as the alignment pass. Once pushed, neither can
+be re-cut, so the question is only whether anything else should ride with them.
 
-### Gap 2 — one install defect left of the original four (priority: medium)
+### Gap 2 — the experiment this thread exists to enable (priority: high)
 
-GitHub's *Use this template* copies the whole repository, this project's own live memory included.
-`ADR-003` says distribution is a vendored copy, so the button is the wrong mechanism and nothing
-says so. The other three are closed: the placeholder class, the guide that asked to be deleted
-while being followed, and the absent path for a project with no history — `./install.sh <dest>
-<name>` is that path and it `git init`s a destination that is not yet a repository.
+A new project started from the template, by a session with no access to this one. It cannot be run
+from here: whoever ran today's work has read the whole skeleton, knows the three bracket classes,
+and wrote the installer, so a success measures memory rather than documentation — the same reason
+§11 step 5 cannot be run from inside the bootstrap session.
 
-Untested by anyone but this repository. `bootstrap-test.sh` installing the skeleton is still
-self-hosting one level up.
+Fixed in advance, or it measures nothing: the project paragraph written before either arm starts,
+so both get the same input; two arms, assisted and unassisted, the second timed, which is the
+number `Q-who-keeps-the-history` has been waiting for; and the primary measure is **invented
+content**, not time — confident statements about the project in the finished repository that
+nobody made.
 
-### Gap 3 — the pre-registered next measurement (priority: medium)
+### Gap 3 — all four install defects are closed and none is verified (priority: medium)
+
+The placeholder class, the guide that asked to be deleted while being followed, the absent path
+for a project with no history, and the *Use this template* button. Every one closed by the person
+who found them, in the repository that cannot install anything.
+
+`bootstrap-test.sh` is self-hosting one level up: it installs into a scratch directory, which is
+why it passed all day while the blank check was reporting nine false positives here. Gap 2 is the
+only instrument that reaches this.
+
+### Gap 4 — the pre-registered next measurement (priority: low)
 
 `EXP-2026-08-26-install-extraction-cost` came out `contradicts` and retired its own metric.
 The question it leaves, registered before it can be chosen to fit an answer: **does a change to
