@@ -6,6 +6,22 @@
 nothing in git enforces that — a conflict here is divergence caught **before** work starts
 instead of discovered after two people wrote the same file.
 
+## 0a. Check this clone
+
+```bash
+git config core.hooksPath   # expect .githooks
+git config user.email       # expect an address
+```
+
+Both live in `.git/config`, which `git clone` does not copy. A fresh clone therefore has neither:
+`.githooks/pre-commit` sits in the working tree and never runs, and git gives no warning that
+anything is off. `./check.sh` reports both in its first section.
+
+An empty hooks path is reported **before** anything else in the session and named as the first
+thing to fix — the one check whose failure a later edit cannot repair is not running, which
+outranks whatever the session was opened to do. An empty `user.email` is asked about, never
+inferred from commit history or from another file.
+
 ## Read, in this order
 
 1. `ai-sandbox/INDEX.md` — current focus, and the `## Threads` table

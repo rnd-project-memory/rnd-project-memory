@@ -1,6 +1,6 @@
 # 2026-08-26 · Clone-local settings, and the contributor they never reach
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Participants:** author — claude-opus-5 · high effort
 - **Signed off:** no

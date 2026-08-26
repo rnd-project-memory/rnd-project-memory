@@ -28,9 +28,9 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-`v2.3.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+`v2.4.0`. The memory half — sections 1–14 of the handbook — has been run against a real
 single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: seven releases, `v1.0.0` through `v2.3.0`, including one real structural migration
+exercised too: eight releases, `v1.0.0` through `v2.4.0`, including one real structural migration
 (`v1.2.0` → `v2.0.0`, a checkpoint-axis rename rather than a mechanism-file swap).
 
 **The system has now been adopted once by someone other than its author**, into a project already
@@ -49,7 +49,8 @@ checks itself sees the settled state and is blind to the transition.** `bootstra
 performs that transition at release time.
 
 What is still narrow: one adopter, one project, and multi-user behaviour reasoned from the design
-rather than observed. Upgrades are still performed by the person who writes the migrations, which
+rather than observed — though reasoning about it carefully is what produced `v2.4.0`, so the gap is
+not inert. Upgrades are still performed by the person who writes the migrations, which
 is the setup least likely to catch a subtle mistake — one slipped through `v2.0.0`'s own rollout
 and was closed out in `v2.1.0`, which added mechanical checks so that class of miss is caught
 rather than found by hand.
@@ -58,6 +59,15 @@ This repository runs the system on itself and upgrades itself first, deliberatel
 first thing to break belongs to whoever wrote it. `v2.3.0` came from exactly that: two defects
 the previous release exposed in its own rollout, one found by running the upgrade and one by
 closing the session that recorded it.
+
+`v2.4.0` came from a different direction — a question, not a failure. Asked which contributor's
+token belongs in a thread's `Held by:` field, the answer was already in the rules; what was not
+was that **`git clone` does not copy `.git/config`**. The secret-scan hook is a tracked file and
+travels with the repository, but `core.hooksPath`, which runs it, does not — so it protects the
+person who adopted the template and no one who clones from them, silently, because git issues no
+warning when hooks are off. Six releases had shipped over that. The general form is the same one
+`bootstrap-test.sh` was built for: **the state a system can inspect is not the state its users are
+in.**
 
 ## Licence
 
