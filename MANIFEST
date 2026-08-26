@@ -58,6 +58,7 @@
 norcopy    README.md
 norcopy    ../RND_PROJECT_MEMORY.md
 norcopy    ../bootstrap-test.sh
+norcopy    ../install.sh
 
 # ─── mechanism: replaced wholesale on upgrade ────────────────────────────────
 mechanism  check.sh

@@ -767,14 +767,15 @@ over the following weeks, in ordinary sessions. A section that reads as though t
 running this system by the end of the day sets up the opposite expectation, and the cost of that
 is a bootstrap declared finished while the intake file quietly becomes furniture.
 
-**1. Copy the structure.** `skeleton/README.md` steps 1 and 2 are the authority for what gets
-copied and in what order: everything in `skeleton/` except that `README.md`, then rename
-`gitignore.template` to `.gitignore`, then install the hooks. Anything that already exists is
-merged, not overwritten — step 3 is what "merged" turns out to mean.
+**1. Copy the structure.** `./install.sh <destination> <project-name> [user-email]` does it:
+the copy set, the `gitignore.template` rename, the hooks, the token substitution and
+`.template-version`. **Read the script rather than looking for prose describing those steps —
+there is none, deliberately.** Anything that already exists is merged, not overwritten, and the
+inventory step below is what "merged" turns out to mean.
 
 Install the hooks before any *new* material arrives. On an existing project that guard cannot
-reach what is already committed, and no later edit can supply it retroactively; step 2 is the one
-moment where that gap is still cheap to act on.
+reach what is already committed, and no later edit can supply it retroactively; the install is
+the one moment where that gap is still cheap to act on.
 
 Record which release you took in `.template-version`, which ships in the skeleton with its format
 as placeholders:
@@ -846,7 +847,8 @@ checkpoint most of the time — but it is a thread's file, named for the work, n
 `AGENTS.md` does carry one thing besides the project description: the per-clone setup section the
 skeleton ships, *First run in a new clone*. **Keep it.** It is the only route by which a second
 contributor is ever told to install the secret-scan hook — `skeleton/README.md` is not copied into
-the project, so they never see step 2 — and `AGENTS.md` is the one file loaded into every session.
+the project, so they never see its *Per clone* section, and `install.sh` configures only the clone
+it runs in — and `AGENTS.md` is the one file loaded into every session.
 
 **Then go through §5's list of automatically loaded paths** — `.github/copilot-instructions.md`,
 `.github/instructions/**`, `CLAUDE.md`, `.claude/CLAUDE.md`, `GEMINI.md` — and reduce any that
@@ -947,8 +949,8 @@ noting at the bottom of `DATA_ENVIRONMENT.md` what stayed behind and why. A proj
 experience may also already keep a traps register of its own; that is step 3's inventory question,
 not a licence to maintain two.
 
-**11. Finish the blanks.** Return to `skeleton/README.md` step 3 for every file this section
-never sent you to. Its three classes matter more on an existing project than on an empty one,
+**11. Finish the blanks.** Return to `skeleton/README.md`, *What it leaves for you*, for every
+file this section never sent you to. Its three classes matter more on an existing project than on an empty one,
 because a bootstrap touches a fraction of the tree and leaves the rest exactly as it shipped:
 
 - **Mechanical tokens** — `<PROJECT_NAME>` and `<DATE>`, around twenty files, one command. Files
@@ -959,7 +961,7 @@ because a bootstrap touches a fraction of the tree and leaves the rest exactly a
   `docs/` are example field syntax, not blanks, and roughly a hundred and seventy of them ship
   deliberately. An instruction to "replace every placeholder" reads as covering all three, which
   is how an install destroys `ai-sandbox/INDEX.md`'s routing table while believing it is
-  finishing step 3.
+  finishing the substitution.
 
 `ai-sandbox/INDEX.md` is the file that matters most here: it is `@`-imported into every session,
 so anything left in it is loaded, silently, forever. Leaving a file's *content* empty is fine and

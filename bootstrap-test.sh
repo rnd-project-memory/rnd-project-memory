@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# Installs skeleton/ into a scratch repository exactly as skeleton/README.md says, then runs the
-# check.sh that landed there. Unlike check.sh, this one FAILS — it is a release gate, not advice.
+# Runs ./install.sh into a scratch repository, then runs the check.sh that landed there.
+# Unlike check.sh, this one FAILS — it is a release gate, not advice.
+#
+# It calls the installer rather than reproducing it. Until 2026-08-26 it reproduced it, and
+# EXP-2026-08-26-prose-script-restatement measured what that cost: one install step written twice
+# in two different texts, and one step written in neither. A gate that reimplements what it gates
+# tests its own copy, and passes while the thing it stands in for is wrong.
 #
 # It exists because this repository cannot test itself here. Self-hosting vendors the skeleton's
 # files in place: nothing is renamed, no placeholder is filled, the copy set is never chosen. Every
@@ -23,36 +28,14 @@ ok()  { echo "  ok    $1"; }
 dest=$(mktemp -d) || exit 1
 trap 'rm -rf "$dest"' EXIT
 
-say "Installing skeleton/ per skeleton/README.md into $dest"
-
-# Step 1 — copy the contents, except this README.md.
-cp -r skeleton/. "$dest"/ || exit 1
-rm -f "$dest/README.md"
-
-# Step 2 — rename, then install the hooks.
-mv "$dest/gitignore.template" "$dest/.gitignore" 2>/dev/null
-git -C "$dest" init -q .
-git -C "$dest" config core.hooksPath .githooks
-git -C "$dest" config user.email test@example.invalid
+# The install itself, performed by the file an adopter is pointed at. Anything wrong in here is
+# wrong for them too, which is the property this gate exists to have.
+./install.sh "$dest" bootstrap-test test@example.invalid >/dev/null 2>&1 \
+  || bad "install.sh did not complete"
 git -C "$dest" config user.name "bootstrap-test"
 
-# Step 3 — replace the placeholders. _TEMPLATE.md files are copied per entry, not filled in
-# place, so they keep theirs.
-while IFS= read -r f; do
-  case "$(basename "$f")" in _TEMPLATE.md) continue;; esac
-  sed -i "s/<PROJECT_NAME>/bootstrap-test/g; s/<DATE>/$(date +%F)/g" "$f"
-done < <(grep -rlI --exclude-dir=.git -e '<PROJECT_NAME>' -e '<DATE>' "$dest" 2>/dev/null)
-
-# The version file the adopter writes. Its format is the skeleton's own, with the placeholders
-# filled the way step 3 fills every other file.
-if [ -f "$dest/.template-version" ]; then
-  sed -i "s/<VERSION>/$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)/; \
-          s/<SHA>/$(git log -1 --format=%h -- skeleton/)/; s/<DATE>/$(date +%F)/" \
-      "$dest/.template-version"
-fi
-
 # Step 3b — the blanks a human answers, marked <<FILL: ...>>. An adopter writes real sentences
-# here; this stands in for that, because what is being tested is that step 3 leaves nothing
+# here; this stands in for that, because what is being tested is that the install leaves nothing
 # marked behind, not the quality of the prose. Counted before and after: a step that silently
 # finds nothing to do would pass this gate for the wrong reason.
 # check.sh is excluded exactly as its own blank check excludes itself: it names the marker in
@@ -115,13 +98,13 @@ else
 fi
 
 [ "$pre_fill" -gt 0 ] \
-  && ok "step 3b had $pre_fill files to answer" \
-  || bad "no <<FILL>> markers shipped — step 3b tests nothing and check.sh's blank check is inert"
+  && ok "the install left $pre_fill files carrying blanks to answer" \
+  || bad "no <<FILL>> markers shipped — this gate tests nothing and check.sh's blank check is inert"
 
 post_fill=$(marked | wc -l)
 [ "$post_fill" -eq 0 ] \
   && ok "no install blank left unanswered" \
-  || bad "$post_fill files still carry <<FILL>> — a marker step 3's grep does not reach"
+  || bad "$post_fill files still carry <<FILL>> — a marker the install's grep does not reach"
 
 # The failure the three classes exist to prevent, and the only one that is silent: an install told
 # to "replace every placeholder" replaces the example syntax too, and takes the routing table in
@@ -139,7 +122,7 @@ left=$(grep -rlI --exclude-dir=.git '<PROJECT_NAME>' "$dest" 2>/dev/null \
        | grep -v '_TEMPLATE\.md$' | wc -l)
 [ "$left" -eq 0 ] \
   && ok "no <PROJECT_NAME> left outside the _TEMPLATE.md files" \
-  || bad "$left installed files still say <PROJECT_NAME> after step 3"
+  || bad "$left installed files still say <PROJECT_NAME> after install.sh ran"
 
 say "Result"
 [ "$fail" -eq 0 ] && echo "  pass" || echo "  FAIL — an adopter following the instructions gets the above"
