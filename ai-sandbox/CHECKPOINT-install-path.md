@@ -45,8 +45,13 @@ and needs no release, `install.sh` being `norcopy`.
 *Template repository* has been unticked and the button is gone, verified visually. The warning was
 re-aimed rather than deleted, because **the switch is a repository setting that no check here can
 read and that turning back on restores silently** — the first surface this project depends on that
-nothing in it can watch. Reading the rendered landing page is the one remaining pre-experiment
-check and it can only happen **after** the push: the remote is still `v3.0.1`.
+nothing in it can watch. Published. The adopter's first move was then rehearsed from an environment with no credentials:
+`git clone https://…` over HTTPS succeeds anonymously — the SSH `origin` in the author's own clone
+is a property of that clone, not of the repository — and `install.sh` from the fresh clone records
+`v3.1.1` correctly. The rehearsal found one defect and it was on the landing page: the clone
+command read `git clone <this repository>`, an angle-bracket placeholder, in the project whose
+last release was about angle brackets being misread. Fixed with the literal URL; it would have
+stopped the experiment on its first command.
 
 ### Gap 2 — the experiment this thread exists to enable (priority: high)
 
