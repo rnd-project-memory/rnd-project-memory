@@ -3,8 +3,8 @@
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
 - **Resume from:** the placeholder class is fixed, the filename rule is corrected and now checked,
-  and `bootstrap-test.sh` passes. Two commits are in — `d974970` and the counter check — nothing is
-  released, and the other three install defects are named but untouched.
+  and `bootstrap-test.sh` passes. Three commits are in, nothing is released, and the install
+  defects now number four — the fourth found by measurement rather than by attempting an install.
   **Do not do until re-verified:** do not claim the new-project path works. It has been tested by
   `bootstrap-test.sh`, which is this repository installing its own skeleton — the same blind spot
   `ADR-008` exists for, one level up. No person has followed the rewritten step 3 from a clean
@@ -69,6 +69,25 @@ It performs the whole mechanical install and now the blanks too. Extracting `ins
 would take the assistant out of the step where it is least useful and most likely to invent. Held
 here rather than done because it is the first concrete piece of `Q-who-keeps-the-history`, and
 doing it before that question has a shape would answer it by accident.
+
+`EXP-2026-08-26-prose-script-restatement` measured what the current arrangement costs: step 3a is
+implemented twice in two different texts, and step 4 is implemented nowhere. That the extraction
+*collapses* the duplication is not established — it is the next experiment, and its shape is
+already known: make one change to the install twice, before and after, and count the texts that
+had to be edited.
+
+### Gap 4 — step 4 is unexercised, and `check.sh` reports the evidence as `ok` (priority: medium)
+
+Independent of any argument about prose and scripts. A by-the-book scripted install leaves
+`ai-sandbox/CHECKPOINT-thread.md` unrenamed, and the adopter's first `check.sh` prints
+`ok    ai-sandbox/CHECKPOINT-thread.md: 68`. Two checks whose exemptions overlap: the line limit
+counts lines without asking what the file is, and the `Held by:` comparison skips placeholder
+values deliberately, so that a clean adoption does not open on a mismatch. Neither is wrong.
+
+Two decisions are owed, and the second is not obvious. `bootstrap-test.sh` should perform step 4.
+Whether `check.sh` should recognise an unrenamed `CHECKPOINT-thread.md` at all is the harder one:
+the file is `scaffold`, so upstream cannot rely on the name surviving a correct adoption — a check
+keyed to it would be keyed to a name the adopter is instructed to destroy.
 
 ---
 
