@@ -1,9 +1,10 @@
 # 2026-08-26 · Extracting the installer, and measuring what it changed
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Participants:** author — claude-opus-5 · high effort
 - **Signed off:** no
+- **Tags:** `#template` `#adoption`
 
 > Opened at the start this time, and deliberately kept open across the extraction commit so that
 > the experiment that follows belongs to the same session. The three preceding records were each
@@ -66,3 +67,66 @@ added, nine references repaired) is not the recurring cost of changing the insta
 second is what the hypothesis is about. Conflating them would repeat exactly the error that cost
 the `RETIRED` claim yesterday.
 
+### What the experiment returned
+
+**It failed on its own metric, and the prediction was wrong by two.** Gap 4 required three files
+where the baseline change required two: `install.sh` implements the step, `skeleton/README.md`
+says what the install now does rather than leaves, `bootstrap-test.sh` asserts the result. The
+prediction of one accounted for the implementation and forgot that changing what a script *does*
+changes what the guide must *say*, and that a new behaviour needs a gate.
+
+The handbook needed no edit, which was checked rather than assumed: it never mentions
+`CHECKPOINT-thread.md`.
+
+A second count, taken after the fact and recorded as weaker for that reason, points the other way:
+the mechanical procedure appeared as one command block in `skeleton/README.md` and three
+operations in `bootstrap-test.sh` before extraction, and appears in `install.sh` alone after. So
+copies of one fact fell from two places to one while files touched by a change rose from two to
+three.
+
+Both can be true because **the metric was the wrong one**, and it was wrong in a way that was
+visible in advance and not seen: counting files conflates duplicated facts with separated
+concerns, and extraction moves cost in the second direction while removing it in the first. A
+metric that rewards keeping concerns tangled cannot answer a question about duplication.
+
+The correct response is not to swap in the second count and declare success. It was chosen after
+seeing the first result, which is the manoeuvre that makes an experiment worth nothing. The
+question it belongs to is pre-registered in the record instead: does a change to the install's
+*mechanism alone* — no instruction changed, no behaviour added — touch one file where it touched
+two? Gap 4 could never answer that, because it added a behaviour.
+
+## Decisions
+
+- **`install.sh` extracted**, `bootstrap-test.sh` calls it, `skeleton/README.md` points at it and
+  describes no mechanical step in prose. Registered `norcopy` in `MANIFEST`.
+- **Gap 4 closed.** The install performs the checkpoint rename when given a thread slug, refuses
+  it when the clone has no identity rather than writing a holder it guessed, and
+  `bootstrap-test.sh` gates the result. Independent of the measurement, and correct regardless of
+  how it came out.
+- **`EXP-2026-08-26-install-extraction-cost` recorded, verdict `contradicts`**, marked
+  `not verified`. The file-count metric is retired for this question, in the record, with the
+  reason.
+- **`Q-who-keeps-the-history` is not advanced by this run.** That mechanics belong to a script may
+  still be right; this experiment does not support it, and the question's Progress says so rather
+  than quietly keeping the extraction as evidence.
+
+## Found along the way
+
+- **The self-naming marker caught a third tool.** `install.sh` counted `check.sh` among the files
+  carrying `<<FILL>>`, because `check.sh` names the marker in order to count it. `check.sh`
+  excludes itself; `bootstrap-test.sh` learned the same exclusion this morning; the installer
+  learned it this afternoon. Three tools, three independent rediscoveries, no shared mechanism —
+  and each was found by running the tool, never by reading it.
+- **Removing README's numbered steps broke nine cross-references** in three files. Repaired, but
+  it is the concrete shape of how extraction can relocate cost rather than remove it, and it is
+  why the kill criterion was a live possibility rather than a formality.
+- **Keeping the session file open across a commit worked.** The three preceding records were each
+  forced by a close that turned out not to be the end. One instance is not a repair, but it is the
+  first evidence `Q-session-boundary` has.
+
+## Next
+
+- The pre-registered question: a mechanism-only change to the install, counted.
+- The bump, still undecided, now over three mechanism changes and two rule changes.
+- Of the original four install defects, one remains: GitHub's *Use this template* copying this
+  repository's own memory. The other three are closed or addressed.

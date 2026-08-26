@@ -2,9 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the placeholder class is fixed, the filename rule is corrected and now checked,
-  and `bootstrap-test.sh` passes. Three commits are in, nothing is released, and the install
-  defects now number four — the fourth found by measurement rather than by attempting an install.
+- **Resume from:** `install.sh` exists and is what the guide points at; Gap 4 is closed and gated;
+  the extraction's one measurement came out against the reasoning that motivated it. Four commits
+  are in, nothing is released, one install defect of the original four remains.
   **Do not do until re-verified:** do not claim the new-project path works. It has been tested by
   `bootstrap-test.sh`, which is this repository installing its own skeleton — the same blind spot
   `ADR-008` exists for, one level up. No person has followed the rewritten step 3 from a clean
@@ -25,6 +25,8 @@
 | `bootstrap-test.sh` | passes, 8 gates, 3 of them new | run 2026-08-26 |
 | Session filenames | no counter; a suffix breaks a collision only | `checkpoint.md`, §4 |
 | Enforcement of that rule | `check.sh`, pending files only | `sessions/2026-08-26-session-counter-check.md` |
+| The install | `install.sh`, called by the gate, pointed at by the guide | `3c0da3d` |
+| Extraction's measured cost | 3 files vs 2 — `contradicts` | `EXP-2026-08-26-install-extraction-cost` |
 | Release | none cut; bump undecided | — |
 
 ---
@@ -33,63 +35,35 @@
 
 ### Gap 1 — the bump is undecided (priority: high)
 
-The change splits across layers and the layers disagree about who it reaches. `AGENTS.md`,
-`ai-sandbox/INDEX.md` and `docs/problem.md` are `scaffold`: new adoptions only, and an existing
-project's copies are already filled, so there is genuinely nothing for it to do. `check.sh` is
-`mechanism` and arrives at the next upgrade carrying a new advisory section, which is behaviour a
-consumer did not have.
+Three mechanism files have changed (`check.sh`, and the playbook `checkpoint.md`, plus the
+installer and gate which are `norcopy` and reach nobody) and two behavioural rules with them: the
+session filename carries no counter, and `<<FILL: …>>` marks an install-time blank. `ADR-004`
+requires a release touching the rules to name each changed one in its notes, and `v2.3.0`'s
+precedent settled a near-identical case as MINOR on the consumer's obligation. The remaining doubt
+is only whether the two new advisory sections, both of which print `ok` on an already-filled
+project, add anything. `ADR-011` bounds the discriminator to inert-or-expiring and has not been
+applied.
 
-`v2.3.0` settled a near-identical case as MINOR on the consumer's obligation — *PATCH says
-"nothing to do", and this ships a behavioural rule*. That precedent now bites directly:
-`playbooks/checkpoint.md` changed how a session file is **named**, which is a behavioural rule
-arriving by wholesale file replacement, and `ADR-004` requires a release touching the rules to
-name each changed one in its notes. The remaining doubt is narrower than it was — whether the
-`check.sh` blank check, which prints `ok` on every already-filled project, adds anything to that.
-The second commit adds a second advisory section on the same footing, so it does not move the
-argument — but the release notes now owe two named rule changes rather than one.
-`ADR-011` bounds the discriminator to inert-or-expiring and has not been applied yet.
+### Gap 2 — one install defect left of the original four (priority: medium)
 
-### Gap 2 — three install defects remain, and it is unclear whether they are one change (priority: medium)
+GitHub's *Use this template* copies the whole repository, this project's own live memory included.
+`ADR-003` says distribution is a vendored copy, so the button is the wrong mechanism and nothing
+says so. The other three are closed: the placeholder class, the guide that asked to be deleted
+while being followed, and the absent path for a project with no history — `./install.sh <dest>
+<name>` is that path and it `git init`s a destination that is not yet a repository.
 
-Found by the same failed attempt that produced the placeholder fix:
+Untested by anyone but this repository. `bootstrap-test.sh` installing the skeleton is still
+self-hosting one level up.
 
-1. GitHub's *Use this template* copies the whole repository, this project's own live memory
-   included. `ADR-003` already says distribution is a vendored copy, so the button is the wrong
-   mechanism and nothing says so.
-2. `skeleton/README.md` step 1 instructs the reader to delete the file they are reading.
-3. There is no path for a project with **no** history. §11 is written for one already underway;
-   the new-project case has only the numbered steps in the install guide.
+### Gap 3 — the pre-registered next measurement (priority: medium)
 
-They may be one change — *how a project starts* — or three unrelated ones. Deciding that is the
-work, not implementing them.
+`EXP-2026-08-26-install-extraction-cost` came out `contradicts` and retired its own metric.
+The question it leaves, registered before it can be chosen to fit an answer: **does a change to
+the install's mechanism alone — no instruction changed, no behaviour added — touch one file after
+extraction where it touched two before?** Gap 4 could not answer it, having added a behaviour.
 
-### Gap 3 — `bootstrap-test.sh` is an installer named as a test (priority: medium)
-
-It performs the whole mechanical install and now the blanks too. Extracting `install.sh` from it
-would take the assistant out of the step where it is least useful and most likely to invent. Held
-here rather than done because it is the first concrete piece of `Q-who-keeps-the-history`, and
-doing it before that question has a shape would answer it by accident.
-
-`EXP-2026-08-26-prose-script-restatement` measured what the current arrangement costs: step 3a is
-implemented twice in two different texts, and step 4 is implemented nowhere. That the extraction
-*collapses* the duplication is not established — it is the next experiment, and its shape is
-already known: make one change to the install twice, before and after, and count the texts that
-had to be edited.
-
-### Gap 4 — step 4 is unexercised, and `check.sh` reports the evidence as `ok` (priority: medium)
-
-Independent of any argument about prose and scripts. A by-the-book scripted install leaves
-`ai-sandbox/CHECKPOINT-thread.md` unrenamed, and the adopter's first `check.sh` prints
-`ok    ai-sandbox/CHECKPOINT-thread.md: 68`. Two checks whose exemptions overlap: the line limit
-counts lines without asking what the file is, and the `Held by:` comparison skips placeholder
-values deliberately, so that a clean adoption does not open on a mismatch. Neither is wrong.
-
-Two decisions are owed, and the second is not obvious. `bootstrap-test.sh` should perform step 4.
-Whether `check.sh` should recognise an unrenamed `CHECKPOINT-thread.md` at all is the harder one:
-the file is `scaffold`, so upstream cannot rely on the name surviving a correct adoption — a check
-keyed to it would be keyed to a name the adopter is instructed to destroy.
-
----
+Not urgent. It needs a mechanism-only change to arrive on its own rather than be invented, which
+is the same discipline that made Gap 4 a usable subject.
 
 ## Promotion candidates
 
