@@ -47,7 +47,7 @@ template's own rule says content that instructs falsely is worse than content th
 
 ## Threads
 
-| Thread | Held by | Status | Since |
+| Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
 | *(none open)* | | | |
 
@@ -59,26 +59,29 @@ condition under which a checkpoint is not opened.
 
 ## Current focus
 
-`v2.4.0` has shipped and the root memory runs on it. It came out of a question about the owner
-token — with two contributors, whose token appears in `Held by:`? — which exposed something larger
-than the thing it asked about.
+`v3.0.0` has shipped and the root memory runs on it. Two releases in two days from one question —
+with two contributors, whose name belongs in a thread's `Held by:`?
 
-Two things worth carrying:
+- **`v2.4.0`** — `git clone` does not copy `.git/config`. The secret-scan hook is a tracked file
+  and travels; `core.hooksPath`, which runs it, does not. So it protected the adopter and nobody
+  who cloned from them, silently, for six releases. `AGENTS.md` now carries the per-clone commands,
+  `check.sh` reports them first, `session-start.md` has step 0a.
+- **`v3.0.0`** — the declared per-person token is retired. `Held by:` is the exact output of
+  `git config user.email` in the clone where the work happens (`ADR-012`, extending `ADR-007`).
+  A per-person value in a per-project file has one slot and N contributors, and the obvious repair
+  merges *cleanly* the wrong way.
 
-- **`git clone` does not copy `.git/config`.** The hook *file* travels with the repository; the
-  setting that runs it does not. So every contributor except the adopter has `.githooks/pre-commit`
-  sitting inert in their working tree, with no warning from git, and `skeleton/README.md` — where
-  the install instruction lives — is `norcopy`, so it never reaches them either. Demonstrated in a
-  scratch repository rather than argued. `v2.4.0` puts the two commands in `AGENTS.md`, the check
-  first in `check.sh`, and step 0a in `session-start.md`.
-- **A fix's reach is decided by its layer, not by its intent.** The `AGENTS.md` section was the
-  point of the change and reaches new adoptions only, because `AGENTS.md` is `scaffold`. The
-  `check.sh` section was the supporting half and is `mechanism`, so it is the part that actually
-  reaches an existing project's second contributor. Worth asking of the next fix before writing it.
+Three things worth carrying:
 
-`Q-held-by-identity-binding` 🟡 is queued and evaluated: retire the owner token, bind `Held by:`
-to `git config user.email`. MAJOR, deliberately not bundled with `v2.4.0` — the security half was
-separable and should not have waited for it.
+- **A fix's reach is decided by its layer, not its intent.** `AGENTS.md` is `scaffold` and reaches
+  new adoptions only; `check.sh` and the playbooks are `mechanism` and reach projects already
+  running. Twice now the supporting half turned out to be the half that protects anyone.
+- **Delete the shared field rather than manage it.** The roster that mapped tokens to identities
+  worked and was the first draft; binding to a value each clone already has removes the field
+  instead, which is why it is the better answer.
+- **The retired-vocabulary check matches strings, not meanings.** `docs/glossary.md` carried the
+  pre-`v2.0.0` definition for four releases because it paraphrased the retired idea in words no
+  migration had listed. Fixed on 2026-08-26; not mechanised, on one instance.
 
 `Q-unexercised-components` 🟡 is untouched by this release;
 `Q-oss-intake` and `Q-contribution-flow` 🟢 still need answers from outside this repository.

@@ -28,10 +28,11 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-`v2.4.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+`v3.0.0`. The memory half — sections 1–14 of the handbook — has been run against a real
 single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: eight releases, `v1.0.0` through `v2.4.0`, including one real structural migration
-(`v1.2.0` → `v2.0.0`, a checkpoint-axis rename rather than a mechanism-file swap).
+exercised too: nine releases, `v1.0.0` through `v3.0.0`, including two real structural migrations
+(`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared per-person
+token in favour of the clone's git identity).
 
 **The system has now been adopted once by someone other than its author**, into a project already
 three months old with its own working memory, following only the public documentation. That trial
@@ -60,7 +61,7 @@ first thing to break belongs to whoever wrote it. `v2.3.0` came from exactly tha
 the previous release exposed in its own rollout, one found by running the upgrade and one by
 closing the session that recorded it.
 
-`v2.4.0` came from a different direction — a question, not a failure. Asked which contributor's
+`v2.4.0` and `v3.0.0` came from a different direction — a question, not a failure. Asked which contributor's
 token belongs in a thread's `Held by:` field, the answer was already in the rules; what was not
 was that **`git clone` does not copy `.git/config`**. The secret-scan hook is a tracked file and
 travels with the repository, but `core.hooksPath`, which runs it, does not — so it protects the

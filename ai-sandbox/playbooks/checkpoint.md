@@ -40,7 +40,8 @@ If there is something left, decide whether this is a **new** thread or a continu
 that already has a file:
 
 - **New thread** — name it for what is being worked on, not who is doing it
-  (`CHECKPOINT-<thread-slug>.md`). Set `Held by:` to your token.
+  (`CHECKPOINT-<thread-slug>.md`). Set `Held by:` to the exact output of
+  `git config user.email` in this clone — if it is empty, stop and ask rather than choosing one.
 - **Continuing** — write only `CHECKPOINT-<thread-slug>.md` for a thread you hold. Other
   people's threads are read-only to you; taking one over is an event (see `RULES.md`), not a
   silent edit here.

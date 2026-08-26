@@ -56,12 +56,6 @@ never infer it from commit history or from another file.
 If the project has CI, run the same secret scan there as well. It is the only layer that does not
 depend on how an individual clone is configured.
 
-## Owner token
-
-`esdevop` — the value that appears in `Held by:` on any thread checkpoint I currently hold.
-A thread's checkpoint is named for what is being worked on
-(`ai-sandbox/CHECKPOINT-<thread-slug>.md`), not for this token.
-
 ## Commits
 
 Conventional Commits. Types used here: `docs`, `feat`, `fix`, `refactor`, `chore`, `exp`.

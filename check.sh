@@ -40,6 +40,26 @@ else
   echo "            git config user.email \"you@example.org\""
 fi
 
+# Held by: is bound to this identity (ADR-012). Placeholder values are skipped: an unfilled
+# template is not a mismatch, and reporting one would put a failure on the first line of output an
+# adopter ever sees. Advisory by design — the same false-positive tolerance that keeps this out of
+# .githooks/pre-commit, whose override is shared with the secret scan. It catches the honest
+# mistake (a checkpoint still naming someone else) and cannot catch a careless take-over, which
+# rewrites the field to the committer's own address and therefore passes.
+if [ -n "$em" ]; then
+  for f in "$SB"/CHECKPOINT-*.md; do
+    [ -e "$f" ] || continue
+    hb=$(grep -m1 -oE '^[-*] \*\*Held by:\*\*[^·]*' "$f" | sed 's/^[-*] \*\*Held by:\*\*[[:space:]]*//; s/[[:space:]]*$//')
+    case "$hb" in
+      ''|*'<'*) continue;;                     # absent, or an unfilled placeholder
+      "$em")   echo "  ok    $(basename "$f"): held by you";;
+      *)       echo "  ?     $(basename "$f"): Held by: $hb — not this clone's user.email."
+               echo "        A colleague's thread reads as this; your own does not. Taking it over"
+               echo "        is an event: log it, do not just edit the field.";;
+    esac
+  done
+fi
+
 n "Mechanism files against their released hashes"
 # .template-hashes ships with each release and lists every file upstream owns. Comparing
 # against it needs no network and no copy of the template — which is the whole point of
@@ -72,6 +92,8 @@ RETIRED=(
   'CHECKPOINT-<owner>'
   'one per person'
   'per-owner'
+  'owner token'
+  '<owner>'
 )
 RE=$(IFS='|'; echo "${RETIRED[*]}")
 hits=$(grep -rlIE \
