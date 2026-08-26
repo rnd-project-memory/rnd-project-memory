@@ -42,9 +42,11 @@ be re-cut, so the question is only whether anything else should ride with them. 
 that question — running `install.sh` from a clone — found the shallow-clone defect, which is fixed
 and needs no release, `install.sh` being `norcopy`.
 
-Two things to settle on GitHub, before the experiment and not during it: whether the repository is
-still marked *Template repository* — removing the button is better than warning about it — and how
-the rendered `README.md` reads, since until today it never mentioned that an installer exists.
+*Template repository* has been unticked and the button is gone, verified visually. The warning was
+re-aimed rather than deleted, because **the switch is a repository setting that no check here can
+read and that turning back on restores silently** — the first surface this project depends on that
+nothing in it can watch. Reading the rendered landing page is the one remaining pre-experiment
+check and it can only happen **after** the push: the remote is still `v3.0.1`.
 
 ### Gap 2 — the experiment this thread exists to enable (priority: high)
 

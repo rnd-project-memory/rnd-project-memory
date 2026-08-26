@@ -6,11 +6,15 @@ the handbook wins** — fix the skeleton, not the handbook.
 
 ## Use
 
-**Do not use GitHub's *Use this template* button.** It copies the whole repository, and this one
-hosts the system on itself (`ADR-006`): alongside the artefact sits the template's *own* live
-memory — its sessions, its open questions, its decisions. You would start with a project whose
-history is somebody else's. Distribution here is a vendored copy of `skeleton/`, not a git
-relationship (`ADR-003`), and the button offers the wrong one.
+**This repository is deliberately not a GitHub template**, and its *Use this template* button is
+switched off. That button copies the whole repository, and this one hosts the system on itself
+(`ADR-006`): alongside the artefact sits the template's *own* live memory — its sessions, its open
+questions, its decisions. You would start with a project whose history is somebody else's.
+Distribution here is a vendored copy of `skeleton/`, not a git relationship (`ADR-003`).
+
+The switch is a repository setting. It is not in this repository, no check can see it, and turning
+it back on restores the button silently — which is why this paragraph stays after the button is
+gone rather than being deleted with it.
 
 Clone this repository, then run the installer against a directory that is not it:
 
