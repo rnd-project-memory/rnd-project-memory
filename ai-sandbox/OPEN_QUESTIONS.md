@@ -22,6 +22,11 @@ resolve to a different question. A slug, once assigned, is never changed.
 
 - **Priority:** 🔴 high · 🟡 medium · 🟢 low
 
+> **`Owner:` takes a human name, not a git address.** It names who is accountable for the
+> entry — a possession that outlives any clone — and is deliberately not the `Held by:`
+> value, which names a temporary write claim and is bound to `git config user.email`
+> (`ADR-012`).
+>
 > **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
 > claimed this* — the signal the field exists to carry. If solo-era entries are left
 > blank, that meaning is destroyed the day a second person joins.
@@ -30,7 +35,7 @@ resolve to a different question. A slug, once assigned, is never changed.
 
 ## Q-unexercised-components · How do the never-exercised components get validated? 🟡
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Source:** ADR-006
 - **Question:** `experiments/` with `run-experiment.md`, `DATA_ENVIRONMENT.md`, `ingest-source.md`
   with `SOURCES.md`, and the `pre-commit` secret scan are exercised by neither this repository nor
@@ -54,7 +59,7 @@ resolve to a different question. A slug, once assigned, is never changed.
 
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
 
-- **Raised:** 2026-08-19 · **Owner:** esdevop
+- **Raised:** 2026-08-19 · **Owner:** esdevop (human)
 - **Source:** ADR-005; the remaining part of the retired `Q-enterprise-access`
 - **Question:** Is there a process for taking external open-source material into company work, and
   does an MIT-licensed documentation template need to pass it?
@@ -66,7 +71,7 @@ resolve to a different question. A slug, once assigned, is never changed.
 
 ## Q-contribution-flow · How do colleague improvements reach upstream? 🟢
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Source:** ADR-005
 - **Question:** A colleague improves the mechanism in an enterprise copy. By what route does that
   improvement reach this repository, given it was authored on company time and is company IP?
@@ -76,26 +81,3 @@ resolve to a different question. A slug, once assigned, is never changed.
   question does not arise; or obtain explicit permission per change. Blocks nothing until a second
   adopter exists. Not a question to answer from first principles — it needs whoever owns the
   employment agreement.
-
-## Q-held-by-identity-binding · Should `Held by:` be bound to `git config user.email`? 🟡
-
-- **Raised:** 2026-08-26 · **Owner:** esdevop
-- **Source:** `sessions/2026-08-26-clone-local-settings.md`
-- **Question:** Retire the owner token and make `Held by:` the exact output of
-  `git config user.email` in the clone where the work happens, rather than initials declared once
-  in `AGENTS.md`.
-- **Why it matters:** The declared token is a per-person value in a per-project file. With two
-  contributors it has one slot, and the second either leaves a thread attributed to the first or
-  overwrites a shared line — which merges cleanly the wrong way, so whoever merges last silently
-  erases the other's identity. Binding to the git identity deletes the shared field instead of
-  managing it, and makes the correct value the cheapest one to obtain rather than something an
-  assistant infers from history.
-- **Progress:** Evaluated in full; the breakage analysis is in the session record. MAJOR — every
-  live `Held by:` value becomes invalid and the migration rewrites active checkpoints and the
-  `INDEX.md` thread table. Known costs, none blocking: `Owner:` on register entries is a different
-  concept (a possession, not a write claim) and needs redefining as a human name rather than
-  inheriting the token; `docs/glossary.md:17` still carries the pre-`v2.0.0` definition and is
-  rewritten by the same change; one human with several clone identities (work, personal, GitHub
-  noreply) becomes several holders unless identity is set per clone, which `v2.4.0` now instructs.
-  Deliberately not bundled with `v2.4.0`: the security half of that session was separable and
-  should not have waited for a MAJOR.

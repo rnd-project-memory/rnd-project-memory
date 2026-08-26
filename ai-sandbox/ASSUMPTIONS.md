@@ -16,6 +16,11 @@
 > `OPEN_QUESTIONS.md`: deletion pits a numbered sequence and old cross-references silently
 > point at the wrong entry.
 
+> **`Owner:` takes a human name, not a git address.** It names who is accountable for the
+> entry — a possession that outlives any clone — and is deliberately not the `Held by:`
+> value, which names a temporary write claim and is bound to `git config user.email`
+> (`ADR-012`).
+>
 > **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
 > claimed this* — the signal the field exists to carry. If solo-era entries are left
 > blank, that meaning is destroyed the day a second person joins.
@@ -24,7 +29,7 @@
 
 ## A-vendor-no-drift · Consumers will not edit files they do not own — `ASSUMED`
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Basis:** ADR-002/ADR-003 reasoning. The whole no-conflict argument rests on manifest-owned files
   being untouched downstream.
 - **If false:** Upgrades stop being delete-and-copy and become merges, at which point they stop
@@ -36,7 +41,7 @@
 
 ## A-prose-migrations · An assistant executes prose migrations reliably — `ASSUMED`
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Basis:** ADR-004. Assumed, not demonstrated; no migration has ever been run. What rests on this
   **decreased** the same day: rules moved into a mechanism file, so the common rule change is a file
   replacement rather than a migration, and the withdrawn preamble fences no longer need an assistant
@@ -50,7 +55,7 @@
 
 ## A-misdirection-criterion · Content that does not instruct falsely is safe to leave — `ASSUMED`
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Basis:** `EXP-2026-08-17-pattern-list-extraction` and `EXP-2026-08-17-misdirection-recheck`. The
   criterion was formulated during the first of those, on the two files it exonerated, and it has
   since reduced the design's scope twice. That provenance is a reason to hold it loosely.
@@ -64,7 +69,7 @@
 
 ## A-dogfood-coverage · The half dogfooding exercises is the half most likely to be wrong — `INFERRED`
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Basis:** Inferred from where design churn has concentrated: routing, checkpoint discipline,
   promotion, and the upgrade machinery — all exercised by this repository. The unexercised components
   (data environment, source ingestion, secret scanning) have been comparatively stable.
@@ -84,7 +89,7 @@
 
 ## A-personal-provenance · The core is personal work, not work-for-hire — `ASSUMED`
 
-- **Raised:** 2026-08-17 · **Owner:** esdevop
+- **Raised:** 2026-08-17 · **Owner:** esdevop (human)
 - **Basis:** ADR-001, restated the same day after reading the first commit instead of assuming it.
   The history does **not** show the system predating its use at work — that was the first, wrong
   reading. It shows six generic templates brought *from* the work project, deleted wholesale, and the
@@ -100,3 +105,19 @@
   Not resolvable by reasoning here — this entry records that the system is betting on it, not that
   the bet is safe. The scan of the superseded files (ADR-001) addresses confidentiality and is not
   evidence either way on this question; do not let the clean scan stand in for the answer.
+
+## A-identity-is-the-person · The git identity in a clone is the person working in it — `ASSUMED`
+
+- **Raised:** 2026-08-26 · **Owner:** esdevop (human)
+- **Basis:** `ADR-012`. `Held by:` is bound to `git config user.email`, so every layer that checks
+  a holder is really checking a clone's configuration. Two of the three ways an identity goes wrong
+  fail safe — unset returns empty, and a fabricated or unfamiliar address does not match anyone —
+  but an address configured for somebody else resolves cleanly and looks correct everywhere.
+- **If false:** A thread is attributed to a person who never held it, with no signal anywhere: the
+  git log, the checkpoint and `INDEX.md` all agree, because they are all reading the same wrong
+  configuration. `RULES.md` then grants the write right to the wrong person, and the next session
+  reads it as fact. The concrete case is one contributor working from another's machine.
+- **What would settle it:** Signed commits with per-person keys, which is the only mechanism that
+  binds a commit to a person rather than to a configuration. Judged disproportionate for a project
+  of this size; recorded here as the stated boundary of the binding rather than as an open question,
+  because nothing about it is unresolved — the cost was weighed and the risk accepted.
