@@ -90,6 +90,30 @@ resolve to a different question. A slug, once assigned, is never changed.
   performed with an assistant. Until that number exists, "a human can pick it up from any point"
   is an assertion, and the design cannot be steered by it.
 
+## Q-session-boundary · Is closing a session the same gesture as saving one? 🟡
+
+- **Raised:** 2026-08-26 · **Owner:** esdevop (human)
+- **Source:** `sessions/2026-08-26-testing-the-restatement-claim.md`; three instances on one day
+- **Question:** `checkpoint.md` is described as runnable "at the end of a session, or at any point
+  a reliable save is wanted", and it also sets the session file to `closed`, after which the file
+  is immutable. So one gesture means both *save* and *end*, and nothing distinguishes them at the
+  moment of use. What should a save point that turns out not to be the end actually do?
+- **Why it matters:** On 2026-08-26 it went wrong three times. A record was closed at what looked
+  like the end and then written into — a rule violation nothing could have caught. A second record
+  was opened for four lines of shell, and a third for one experiment, because the rules say work
+  after a close belongs to a new session. The first failure corrupts the archive quietly; the
+  other two make the archive granular enough that a day's work reads as three unrelated
+  fragments. Both directions are costs, and the design currently prices neither.
+- **Progress:** None beyond the observation. Two shapes are visible and both look wrong on first
+  inspection, which is why this is a question and not a change:
+  - **Licensing reopening a closed record** removes the only guarantee the archive has, and it is
+    the guarantee the whole system is built on. Almost certainly not this.
+  - **Splitting the gesture** — a save that does not close, and a separate close — is the obvious
+    repair, but `checkpoint.md`'s steps 4 and 5 (registers, `LOG.md`, `INDEX.md`) are the useful
+    half of a save and are written as though the session is over.
+- **What would answer it:** a week's sessions recorded under each shape, counting how often a
+  "final" save turns out not to be final. One day's three instances is a rate, not a design.
+
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
 
 - **Raised:** 2026-08-19 · **Owner:** esdevop (human)
