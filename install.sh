@@ -37,10 +37,26 @@ mkdir -p "$dest" || die "cannot create $dest"
 dest=$(cd "$dest" && pwd)
 [ "$dest" != "$src" ] || die "destination is the template repository itself"
 
-# The release being installed. Recorded in .template-version below, and the only thing that lets
-# an upgrade later know what it is upgrading from.
-version=$(cd "$src" && git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0-untagged")
-sha=$(cd "$src" && git log -1 --format=%h -- skeleton/ 2>/dev/null || echo unknown)
+# The release being installed. Recorded in .template-version, which is the only thing that lets an
+# upgrade later know what it is upgrading from — so a wrong value here is not a cosmetic defect,
+# it is a project that can never be upgraded correctly.
+#
+# Both facts come from the clone's history, and a shallow clone has neither. `git clone --depth 1`
+# fetches no tags at all, so `git describe` finds nothing, and the path-limited log returns the one
+# commit it has rather than the commit skeleton/ last changed. Neither failure announces itself:
+# the first draft fell back to "v0.0.0-untagged" and reported it as ok, which is the shape this
+# whole system exists to refuse — a plausible answer where the honest one is "I cannot tell".
+# Refused before anything is copied, so the destination is left untouched.
+if [ "$(cd "$src" && git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
+  die "this is a shallow clone, so its history cannot say which release it holds.
+       Fix:  git -C $src fetch --unshallow --tags"
+fi
+version=$(cd "$src" && git describe --tags --abbrev=0 2>/dev/null) || version=""
+[ -n "$version" ] || die "this clone has no tags, so nothing can say which release it holds, and
+       .template-version would record a version that does not exist.
+       Fix:  git -C $src fetch --tags"
+sha=$(cd "$src" && git log -1 --format=%h -- skeleton/ 2>/dev/null)
+[ -n "$sha" ] || die "cannot find the commit skeleton/ was last changed at in this clone"
 today=$(date +%F)
 
 say "Installing $version into $dest"
