@@ -60,32 +60,37 @@ is undecided.
 
 ## Current focus
 
-**`v3.1.0` is released and the root memory runs on it.** The install stops being prose: mechanical
-steps live in `install.sh`, which `skeleton/README.md` points at and `bootstrap-test.sh` calls;
-blanks only a person can answer are marked `<<FILL:` and counted; session filenames carry no
-counter. Details in the tag.
+**`v3.1.0` and `v3.1.1` are released, the root runs on `v3.1.1`, and nothing is pushed.** The
+install stops being prose — `install.sh` performs what has one correct answer, `skeleton/README.md`
+points at it, `bootstrap-test.sh` calls it. Blanks only a person can answer are marked `<<FILL:`
+and counted; session filenames carry no counter. All four defects that a failed attempt to start a
+new project turned up are closed.
 
-**The next thing is an alignment audit**, before any new project is started from the template — the
-same pass `v3.0.1` was, and for the same reason: a release changes what the system does, and the
-documents that *instruct* are the layer replacement does not reach.
+**The next move is the one this whole thread exists to enable and cannot perform**: a new project
+started from the template by a session with no access to this one. Its design is in
+`CHECKPOINT-install-path.md`, Gap 2, and the parts that must be fixed before it starts are fixed
+there rather than decided during it.
 
-Three things worth carrying:
+Four things worth carrying:
 
-- **The release's own procedure found three defects that reading found none of.** Two in
-  `upgrade-template.md`, which never said to copy `.template-hashes` and diffed `RULES.md` alone
-  while this release delivered two rules through a playbook. Both had been handled correctly by
-  hand every previous time and written down at none.
-- **A check can be right for the adopter and wrong for the author.** The blank check matched prose
-  about the marker, so it was noisy only in the repository that ships it. That is the usual
-  self-hosting asymmetry reversed, and worse for it: the person able to fix a false alarm is the
-  one being taught to ignore it. Anchoring to the line start is the same repair the `.gitignore`
-  check already carried.
-- **Two instruments, two blind spots, neither redundant.** `bootstrap-test.sh` passed throughout
-  and could not have caught that: a scratch install contains no prose about the marker. It took
-  running the upgrade here.
+- **A symmetric defect is invisible from one side.** `upgrade-template.md` step 5 diffed only
+  `RULES.md`; so did `MIGRATIONS.md` step 4. Repairing the receiving end in the morning made the
+  sending end *less* likely to be noticed, because nothing failed any more. Only an audit reading
+  both found it.
+- **Every defect the alignment audit's *reading* found was in text written that same day** — a
+  duplicated line, a run-on paragraph, square brackets offered for typing in the guide about which
+  brackets are literal. No check could catch them and none was subtle. They were invisible because
+  the author wrote them.
+- **A check can be right for the adopter and wrong for the author**, which is the usual
+  self-hosting asymmetry reversed and worse for it: the person able to fix a false alarm is the
+  one being taught to ignore it.
+- **The two instruments have different blind spots.** `bootstrap-test.sh` passed all day while
+  `check.sh` was reporting nine false positives here, because a scratch install contains no prose.
+  Neither is redundant.
 
-`Q-who-keeps-the-history` and `Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched;
-`Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside this repository.
+`Q-who-keeps-the-history` and `Q-session-boundary` 🟡 open — the first is answered by the
+unassisted arm of that experiment. `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
+`Q-contribution-flow` 🟢 need answers from outside this repository.
 
 ## What a new session does
 
