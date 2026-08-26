@@ -86,6 +86,11 @@ resolve to a different question. A slug, once assigned, is never changed.
     checkpoint rewrite. Safe against this system's central failure only because both are
     immutable once written — a later assistant may structure around them but never restates them,
     which is the re-summarising the whole design exists to prevent.
+  On 2026-08-26 the mechanical install was in fact extracted (`install.sh`), and
+  `EXP-2026-08-26-install-extraction-cost` **did not support** the reasoning behind it: the change
+  it was measured on touched more files afterwards, not fewer. The extraction stands on its own
+  merits — a gate that reimplements what it gates tests its own copy — but it is deliberately not
+  counted as evidence here, because the one measurement taken of it came out against.
 - **What would answer it:** the manual path timed on a real session, against the same session
   performed with an assistant. Until that number exists, "a human can pick it up from any point"
   is an assertion, and the design cannot be steered by it.

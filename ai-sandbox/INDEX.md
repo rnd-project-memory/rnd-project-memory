@@ -60,42 +60,36 @@ is undecided.
 
 ## Current focus
 
-**Starting a project from the skeleton, and who does the work.** A real attempt to start a new
-project from the template failed, and the failure was in the install rather than in the system:
-`skeleton/README.md` step 3 said *replace every `<PROJECT_NAME>` and `<PLACEHOLDER>`*, and there
-is no such token — it occurred exactly once, in that sentence, where it looked like a string to
-grep for.
+**The install is now a script the guide points at, and the one measurement taken of that came out
+against it.** `install.sh` performs what has one correct answer — copy set, rename, this clone's
+settings, token substitution, `.template-version`, and the first thread when one is named — and
+reports what it deliberately leaves. `bootstrap-test.sh` calls it instead of reproducing it;
+`skeleton/README.md` describes no mechanical step in prose at all.
 
-Underneath it, one syntax carrying three things with three lifetimes:
+`EXP-2026-08-26-install-extraction-cost` **contradicts**. Replaying a queued change (Gap 4) touched
+three files where the pre-extraction baseline touched two, against a prediction of one and a kill
+criterion of two.
 
-| Class | Count | Lifetime |
-|---|---|---|
-| Mechanical token — `<PROJECT_NAME>`, `<DATE>` | 20 files | a `sed`, no decisions |
-| Blank only a person can answer — now `<<FILL: …>>` | 7 | before the first commit |
-| Example syntax and section prompts — `<slug>`, `<thread>` | ~170 | **never touched** |
+Four things worth carrying:
 
-`ai-sandbox/INDEX.md` carries all three within twenty lines. An install told to "replace every
-placeholder" correctly destroys its routing table, and this file is loaded into every session, so
-the damage reads as instruction from then on. `bootstrap-test.sh` now gates exactly that.
+- **The metric was wrong, and visibly so before the run.** Counting files conflates copies of one
+  fact with separate concerns. Extraction removes the first and increases the second, so the count
+  rewards keeping concerns tangled. A post-hoc count showing the procedure fall from two places to
+  one is recorded as weaker and its question pre-registered — not swapped in to rescue the result.
+- **The extraction stands, the reasoning for it does not.** A gate that reimplements what it gates
+  tests its own copy; that argument is unaffected. `Q-who-keeps-the-history` is explicitly *not*
+  advanced, and says so, rather than quietly keeping the extraction as evidence.
+- **The `<<FILL>>` marker names itself, and caught a third tool.** `check.sh`, then
+  `bootstrap-test.sh`, then `install.sh` — three independent rediscoveries in one day, each found
+  by running the tool, never by reading it.
+- **A rule stated in prose and re-implemented in a script diverges here, undetected**
+  (`EXP-2026-08-26-prose-script-restatement`) — but the `RETIRED` array, the oldest instance of
+  that pattern, has not drifted at all. One positive, one clean negative. Not a law.
 
-Three things worth carrying:
-
-- **The question the failure raised is not about installing.** Ownership of the record is settled
-  — `Held by:` is a human's git identity, `Owner:` a human name, an `ADR-` needs a human's
-  sign-off, and the assistant is nowhere a subject of record. *Execution* is not settled, and a
-  monthly credit ceiling turns that into an availability dependency nobody declared.
-  `Q-who-keeps-the-history` 🟡 asks for a timing, not an argument.
-- **The executor is not binary.** Judgement is a person's, mechanics belong to a script, routing
-  either. `bootstrap-test.sh` already performs the whole mechanical install — the hardest step is
-  scripted today, in a file named as a test.
-- **A marker is checkable; a category is not.** Nothing could have flagged `<PLACEHOLDER>`,
-  because it named a class rather than a string. `<<FILL: …>>` exists to be counted, and its
-  boundary — *the install cannot proceed without a human answer* — is what keeps `check.sh` from
-  printing a permanent `todo` at every young project that has not yet discovered its method.
-
-Unreleased: the change above sits in the tree, the bump is undecided, and `check.sh` at the root
-still runs `v3.0.1`. `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
-`Q-contribution-flow` 🟢 still need answers from outside this repository.
+Unreleased: three mechanism changes and two rule changes sit in the tree, the bump is undecided,
+and `check.sh` at the root still runs `v3.0.1`. `Q-who-keeps-the-history` and `Q-session-boundary`
+🟡 open; `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need
+answers from outside this repository.
 
 ## What a new session does
 

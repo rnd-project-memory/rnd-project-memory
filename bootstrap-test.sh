@@ -30,7 +30,7 @@ trap 'rm -rf "$dest"' EXIT
 
 # The install itself, performed by the file an adopter is pointed at. Anything wrong in here is
 # wrong for them too, which is the property this gate exists to have.
-./install.sh "$dest" bootstrap-test test@example.invalid >/dev/null 2>&1 \
+./install.sh "$dest" bootstrap-test test@example.invalid first-thread >/dev/null 2>&1 \
   || bad "install.sh did not complete"
 git -C "$dest" config user.name "bootstrap-test"
 
@@ -105,6 +105,22 @@ post_fill=$(marked | wc -l)
 [ "$post_fill" -eq 0 ] \
   && ok "no install blank left unanswered" \
   || bad "$post_fill files still carry <<FILL>> — a marker the install's grep does not reach"
+
+# README step 4 — the rename — went unexercised until 2026-08-26 because the gate reimplemented
+# the install and simply omitted it. Nothing reported that: check.sh's line-limit check counts
+# lines without asking what the file is, and its Held by: check skips placeholder values so that a
+# clean adoption does not open on a mismatch. Two correct checks whose exemptions overlap.
+if [ -f "$dest/ai-sandbox/CHECKPOINT-first-thread.md" ]; then
+  hb=$(grep -m1 'Held by:' "$dest/ai-sandbox/CHECKPOINT-first-thread.md")
+  case "$hb" in
+    *test@example.invalid*) ok "the named thread was opened and Held by: filled from the clone";;
+    *) bad "CHECKPOINT-first-thread.md exists but Held by: is $hb";;
+  esac
+elif [ -f "$dest/ai-sandbox/CHECKPOINT-thread.md" ]; then
+  bad "the install was given a thread slug and left CHECKPOINT-thread.md unrenamed"
+else
+  bad "neither CHECKPOINT-thread.md nor CHECKPOINT-first-thread.md exists after the install"
+fi
 
 # The failure the three classes exist to prevent, and the only one that is silent: an install told
 # to "replace every placeholder" replaces the example syntax too, and takes the routing table in

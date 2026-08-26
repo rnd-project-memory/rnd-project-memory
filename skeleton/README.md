@@ -7,7 +7,7 @@ the handbook wins** — fix the skeleton, not the handbook.
 ## Use
 
 ```bash
-./install.sh ../my-project my-project you@example.org
+./install.sh ../my-project my-project you@example.org [first-thread-slug]
 ```
 
 Run from a clone of the template repository. `install.sh` performs every part of the install that
@@ -51,8 +51,13 @@ its routing table stays. An instruction to "replace every placeholder" reads as 
 destroys the routing table every session then loads. Files named `_TEMPLATE.md` keep everything —
 they are copied per entry, not filled in place.
 
-**2. Your first thread.** Rename `ai-sandbox/CHECKPOINT-thread.md` to
-`CHECKPOINT-<what-you're-working-on>.md` and set `Held by:` to the address the install configured.
+**2. Your first thread — unless you named it.** Naming a thread is a judgement: it says what the
+work is about. Give the install a fourth argument and it performs the rename and fills `Held by:`
+from this clone's identity; give it none and `ai-sandbox/CHECKPOINT-thread.md` is left for you to
+rename to `CHECKPOINT-<what-you're-working-on>.md` by hand. Without an identity it refuses either
+way rather than writing a holder it guessed — a checkpoint naming nobody reads as unattended, and
+an unattended thread is one anyone may take over.
+
 There is nothing to declare in `AGENTS.md`: a thread's holder is named by the identity that signs
 this clone's commits, never by a token (`ADR-012`).
 

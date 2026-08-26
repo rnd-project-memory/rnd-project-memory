@@ -12,7 +12,7 @@
 # was written twice — as a pipeline in skeleton/README.md and as a loop in bootstrap-test.sh —
 # and changing the step meant editing both by hand.
 #
-# Usage:  ./install.sh <destination> <project-name> [user-email]
+# Usage:  ./install.sh <destination> <project-name> [user-email] [first-thread-slug]
 #
 # norcopy: belongs to the template repository. Never copied into an adopting project.
 
@@ -26,8 +26,9 @@ left(){ printf '  todo  %s\n' "$1"; }
 dest=${1:-}
 name=${2:-}
 mail=${3:-}
+slug=${4:-}
 
-[ -n "$dest" ] && [ -n "$name" ] || die "usage: ./install.sh <destination> <project-name> [user-email]"
+[ -n "$dest" ] && [ -n "$name" ] || die "usage: ./install.sh <destination> <project-name> [user-email] [first-thread-slug]"
 
 src=$(git rev-parse --show-toplevel 2>/dev/null) || die "run this from a clone of the template repository"
 [ -d "$src/skeleton" ] || die "no skeleton/ in $src — this is not the template repository"
@@ -88,6 +89,24 @@ if [ -f "$dest/.template-version" ]; then
   did ".template-version records $version, skeleton @ $sha, applied $today"
 fi
 
+# ─── Step 4 — the first thread, only when one is named ───────────────────────
+# The slug is a judgement — it names what the work is about — so the install performs this step
+# only when told the answer, and leaves it otherwise. Held by: comes from the clone's identity and
+# from nowhere else; without one the rename is refused rather than done with a placeholder holder,
+# because a checkpoint naming nobody reads as unattended and is a thread anyone may take over.
+cp="$dest/ai-sandbox/CHECKPOINT-thread.md"
+if [ -n "$slug" ] && [ -f "$cp" ]; then
+  held=$(git -C "$dest" config user.email 2>/dev/null)
+  if [ -z "$held" ]; then
+    printf '  todo  thread "%s" not opened: no user.email in this clone, and Held by: is never\n' "$slug"
+    printf '        inferred. Set it, then rename ai-sandbox/CHECKPOINT-thread.md by hand.\n'
+  else
+    sed -i "s/<thread>/$slug/g; s|<your \`git config user.email\`>|$held|" "$cp"
+    mv "$cp" "$dest/ai-sandbox/CHECKPOINT-$slug.md"
+    did "thread opened: ai-sandbox/CHECKPOINT-$slug.md, held by $held"
+  fi
+fi
+
 say "Left for you — this script does none of it on purpose"
 
 # ─── Step 3b — the blanks only a person can answer ───────────────────────────
@@ -107,7 +126,8 @@ fi
 
 [ -z "$mail" ] && left "git -C $dest config user.email \"you@example.org\" — never inferred; it is what Held by: takes"
 
-left "rename ai-sandbox/CHECKPOINT-thread.md for your first thread, and set Held by:"
+[ -f "$dest/ai-sandbox/CHECKPOINT-thread.md" ] \
+  && left "name your first thread: rerun with a fourth argument, or rename ai-sandbox/CHECKPOINT-thread.md by hand and set Held by:"
 left "delete sources/ and src/ if the project already keeps those somewhere, under any name"
 left "verify instruction loading in a fresh assistant session — it cannot be checked from"
 echo "        inside the session that wrote AGENTS.md, which is why no script does it"
