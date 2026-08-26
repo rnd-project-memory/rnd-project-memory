@@ -8,6 +8,38 @@ cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" || exit 0
 SB=ai-sandbox
 n() { printf '\n\033[1m%s\033[0m\n' "$1"; }
 
+n "This clone's settings (git clone does not copy them)"
+# core.hooksPath and user.email live in .git/config, which is never cloned. The hook FILE travels
+# with the repository; the setting that runs it does not — so a second contributor has the secret
+# scan sitting in their working tree, inert, with no warning from git that anything is off. This
+# section is first because it is the only one reporting on something a later edit cannot repair:
+# every other check here describes a document, and a document can be rewritten.
+hp=$(git config core.hooksPath 2>/dev/null)
+if [ "$hp" = ".githooks" ]; then
+  if [ -x .githooks/pre-commit ]; then
+    echo "  ok    core.hooksPath=.githooks — the secret scan runs in this clone"
+  else
+    echo "  OFF   core.hooksPath=.githooks, but .githooks/pre-commit is not executable, so git"
+    echo "        skips it and says so only as a hint. Fix:  chmod +x .githooks/pre-commit"
+  fi
+elif [ -z "$hp" ]; then
+  echo "  OFF   core.hooksPath is not set in this clone — the secret scan is not running."
+  echo "        The hook file is present and inert. Fix, once per clone:"
+  echo "            git config core.hooksPath .githooks"
+else
+  echo "  ?     core.hooksPath=$hp — not this template's .githooks. Fine if that path runs the"
+  echo "        same secret scan; if it does not, nothing is scanning your commits."
+fi
+
+em=$(git config user.email 2>/dev/null)
+if [ -n "$em" ]; then
+  echo "  ok    user.email=$em"
+else
+  echo "  none  user.email is not set in this clone. Git will fabricate username@hostname at"
+  echo "        commit time, or refuse the commit. Fix, once per clone:"
+  echo "            git config user.email \"you@example.org\""
+fi
+
 n "Mechanism files against their released hashes"
 # .template-hashes ships with each release and lists every file upstream owns. Comparing
 # against it needs no network and no copy of the template — which is the whole point of

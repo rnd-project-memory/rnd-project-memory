@@ -1,6 +1,6 @@
 # rnd-project-memory — Open Questions
 
-- **Updated:** 2026-08-19
+- **Updated:** 2026-08-26
 
 > **Open questions only.** A question leaves this file in one of two ways, and both are
 > deletions — status `Resolved` is never used, because a register of resolved entries is one
@@ -76,3 +76,26 @@ resolve to a different question. A slug, once assigned, is never changed.
   question does not arise; or obtain explicit permission per change. Blocks nothing until a second
   adopter exists. Not a question to answer from first principles — it needs whoever owns the
   employment agreement.
+
+## Q-held-by-identity-binding · Should `Held by:` be bound to `git config user.email`? 🟡
+
+- **Raised:** 2026-08-26 · **Owner:** esdevop
+- **Source:** `sessions/2026-08-26-clone-local-settings.md`
+- **Question:** Retire the owner token and make `Held by:` the exact output of
+  `git config user.email` in the clone where the work happens, rather than initials declared once
+  in `AGENTS.md`.
+- **Why it matters:** The declared token is a per-person value in a per-project file. With two
+  contributors it has one slot, and the second either leaves a thread attributed to the first or
+  overwrites a shared line — which merges cleanly the wrong way, so whoever merges last silently
+  erases the other's identity. Binding to the git identity deletes the shared field instead of
+  managing it, and makes the correct value the cheapest one to obtain rather than something an
+  assistant infers from history.
+- **Progress:** Evaluated in full; the breakage analysis is in the session record. MAJOR — every
+  live `Held by:` value becomes invalid and the migration rewrites active checkpoints and the
+  `INDEX.md` thread table. Known costs, none blocking: `Owner:` on register entries is a different
+  concept (a possession, not a write claim) and needs redefining as a human name rather than
+  inheriting the token; `docs/glossary.md:17` still carries the pre-`v2.0.0` definition and is
+  rewritten by the same change; one human with several clone identities (work, personal, GitHub
+  noreply) becomes several holders unless identity is set per clone, which `v2.4.0` now instructs.
+  Deliberately not bundled with `v2.4.0`: the security half of that session was separable and
+  should not have waited for a MAJOR.

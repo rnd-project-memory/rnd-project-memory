@@ -19,6 +19,26 @@ which is the one file that describes it in detail.>
 
 @ai-sandbox/INDEX.md
 
+## First run in a new clone
+
+`core.hooksPath` and `user.email` live in `.git/config`, which **`git clone` never copies**. The
+hook *file* travels with the repository; the setting that runs it does not. A fresh clone has
+`.githooks/pre-commit` sitting in the working tree doing nothing, and git gives no warning that
+anything is off. Every contributor runs these once, per clone:
+
+```bash
+git config core.hooksPath .githooks        # runs the secret scan — nothing else does
+git config user.email "you@example.org"    # this clone's identity
+```
+
+**Assistant: check both at session start**, before other work. `./check.sh` reports them in its
+first section. If the hooks path is unset, say so and stop there — until it is set, the one check
+whose failure a later edit cannot repair is not running. If `user.email` is empty, ask for it;
+never infer it from commit history or from another file.
+
+If the project has CI, run the same secret scan there as well. It is the only layer that does not
+depend on how an individual clone is configured.
+
 ## Owner token
 
 `<owner>` — the value that appears in `Held by:` on any thread checkpoint I currently hold.
