@@ -1,6 +1,6 @@
 # <PROJECT_NAME> — Checkpoint · <thread>
 
-- **Held by:** <token> · since <DATE>
+- **Held by:** <your `git config user.email`> · since <DATE>
 - **Status:** active | paused
 - **Plan:** <path to a plan file, if this thread has one — omit the line if it does not>
 - **Resume from:** <the single fact that says where the break is — not "what's done", the state
@@ -9,7 +9,8 @@
   danger of interrupted work is resuming from the wrong point, not forgetting to resume>
 
 > **This file belongs to one thread, named for what is being worked on, not who is doing it.**
-> Only whoever this file names as `Held by:` writes it; other `CHECKPOINT-*.md` files are
+> `Held by:` is the exact output of `git config user.email` in your clone — never initials,
+> never inferred. Only whoever this file names writes it; other `CHECKPOINT-*.md` files are
 > colleagues' threads and are read-only to you. Taking over a thread is an event — record it in
 > your session file and in `sessions/LOG.md`, don't just edit the field.
 >

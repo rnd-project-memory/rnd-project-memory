@@ -40,7 +40,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 
 ## Threads
 
-| Thread | Held by | Status | Since |
+| Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
 | | | | |
 

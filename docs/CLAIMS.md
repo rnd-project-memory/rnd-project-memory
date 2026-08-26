@@ -1,6 +1,6 @@
 # rnd-project-memory — Claims Index
 
-- **Updated:** 2026-08-23
+- **Updated:** 2026-08-26
 
 > **An index, not a second copy.** One line per claim: a shorthand, the file it lives in, when
 > it landed, and what it rests on. The claim's actual wording stays in its file — restating it
@@ -67,6 +67,7 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | A rule change is MAJOR only if existing entries stop conforming | `docs/method.md` | 2026-08-17 | `ADR-004` |
 | Handbook and skeleton share one tag | `docs/method.md` | 2026-08-17 | `ADR-004` |
 | A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `docs/method.md` | 2026-08-23 | `ADR-007` |
+| A holder is named by the clone's git identity, never by a token declared in a shared file | `docs/method.md` | 2026-08-26 | `ADR-012` |
 | Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `docs/method.md` | 2026-08-23 | `ADR-007` |
 | The hash list holds only files installed verbatim | `docs/method.md` | 2026-08-25 | `ADR-008` |
 | Self-check sees the settled state and is blind to the transition | `docs/method.md` | 2026-08-25 | `ADR-008` |

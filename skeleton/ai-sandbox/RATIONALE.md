@@ -56,6 +56,19 @@ instead a field, `Held by:` — deliberately not `Owner:`, because it names a te
 a possession — with one rule enforcing it: only the holder writes, everyone else reads, and
 taking over is a logged event, not a silent edit.
 
+**The holder's name is the clone's git identity** — the exact output of `git config user.email` —
+not initials declared in a shared file. A declared token is a per-person value living in a
+per-project file: it has one slot and a project has N contributors, so the second contributor
+either leaves a thread attributed to the first or overwrites a line someone else owns. That
+overwrite merges *cleanly*, last writer winning, with no conflict marker — the silent divergence
+this whole design exists to prevent, moved one level up. Binding to the git identity deletes the
+shared field rather than managing it, and it makes the correct value the *cheapest* value: one
+command with unambiguous output, instead of a lookup with a plausible wrong answer sitting beside
+it. Empty output is a stop, because the ways an identity goes missing — a fresh clone, a new
+machine, a first contribution — are exactly the cases where every available wrong answer (the one
+token in the file, the one address in the log) points at somebody else. `Owner:` on a register
+entry still takes a human name: it is a possession and outlives any clone. See `ADR-012`.
+
 ### Files in `sessions/` and `experiments/` are immutable once closed
 
 A record's value is that it captures what was believed *at the time*, including what turned out

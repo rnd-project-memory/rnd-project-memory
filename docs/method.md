@@ -58,6 +58,7 @@ its own memory at the root, vendored from a released tag.
 | A rule change is MAJOR only if existing entries stop conforming | `ADR-004` |
 | Handbook and skeleton share one tag | `ADR-004` |
 | A thread's checkpoint belongs to whoever it names `Held by:`, not to a filename | `ADR-007` |
+| A holder is named by the clone's git identity, never by a token declared in a shared file | `ADR-012` |
 | Negative knowledge (distrust, scope limits, legitimate absence) needs its own field, not prose | `ADR-007` |
 | The hash list holds only files installed verbatim; a transformed file cannot be hashed at either path | `ADR-008` |
 | Self-check sees the settled state and is blind to the transition — for any self-installing system | `ADR-008` |

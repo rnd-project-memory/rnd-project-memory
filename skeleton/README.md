@@ -25,10 +25,11 @@ the handbook wins** — fix the skeleton, not the handbook.
    `ai-sandbox/INDEX.md`, which is loaded into every session. `.template-version` takes the
    release you copied, the commit `skeleton/` was at, and today's date; its first field is what
    `check.sh` reports. Files named `_TEMPLATE.md` keep their placeholders.
-4. Pick an **owner token** (your initials) and declare it in `AGENTS.md`. It identifies who can
-   hold a thread — it no longer names a file. Rename `ai-sandbox/CHECKPOINT-thread.md` to
-   `CHECKPOINT-<what-you're-working-on>.md` for your first thread, and set `Held by: <token>` in
-   its header.
+4. Set this clone's identity if it is not set already — `git config user.email "you@example.org"`.
+   It is what `Held by:` takes: a thread's holder is named by the address that signs this clone's
+   commits, and there is nothing to declare in `AGENTS.md`. Rename
+   `ai-sandbox/CHECKPOINT-thread.md` to `CHECKPOINT-<what-you're-working-on>.md` for your first
+   thread, and set `Held by:` to that address.
 5. Delete `sources/` and `src/` if the project already keeps code and source material somewhere —
    **under any name.** The condition is whether these already have a home, not whether a directory
    of that exact name exists; creating them beside the project's own equivalents gives it two
@@ -62,8 +63,10 @@ system is in this directory.
 
 Nothing to change. The structure is already concurrency-safe: checkpoints are per thread and
 only their holder writes them, no identifier uses a shared counter, and every other file is
-append-only or edited in localised spots. A second contributor picks their own owner token and
-either takes over an unattended thread (an event, logged — see `RULES.md`) or opens a new one.
+append-only or edited in localised spots. A second contributor sets `user.email` in their own
+clone — which they need in order to commit at all — and either takes over an unattended thread
+(an event, logged — see `RULES.md`) or opens a new one. Nothing about a person is declared in a
+shared file, so there is no line for two people to overwrite (`ADR-012`).
 
 Only one thing changes, and it doesn't touch a file:
 
