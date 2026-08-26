@@ -28,9 +28,9 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-`v3.0.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+`v3.0.1`. The memory half — sections 1–14 of the handbook — has been run against a real
 single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: nine releases, `v1.0.0` through `v3.0.0`, including two real structural migrations
+exercised too: ten releases, `v1.0.0` through `v3.0.1`, including two real structural migrations
 (`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared per-person
 token in favour of the clone's git identity).
 
