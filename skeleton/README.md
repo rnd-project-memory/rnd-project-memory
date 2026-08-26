@@ -24,10 +24,41 @@ the handbook wins** — fix the skeleton, not the handbook.
    in. `AGENTS.md`'s "First run in a new clone" section is where the project keeps them for
    whoever clones next; this file never reaches them. If the project has CI, run the same secret
    scan there: it is the one layer that does not depend on how an individual clone is configured.
-3. Replace every `<PROJECT_NAME>` and `<PLACEHOLDER>` — around twenty files carry one, including
-   `ai-sandbox/INDEX.md`, which is loaded into every session. `.template-version` takes the
-   release you copied, the commit `skeleton/` was at, and today's date; its first field is what
-   `check.sh` reports. Files named `_TEMPLATE.md` keep their placeholders.
+3. Fill in the project's own details. **Three different things in this tree wear angle brackets**
+   and only two of them are yours to touch. Treating them as one class is how an install goes
+   wrong, whoever or whatever performs it.
+
+   **a. Mechanical tokens — `<PROJECT_NAME>` and `<DATE>`.** Twenty files, no decisions:
+
+   ```bash
+   grep -rlI --exclude-dir=.git -e '<PROJECT_NAME>' -e '<DATE>' . \
+     | grep -v '_TEMPLATE\.md$' \
+     | xargs sed -i "s/<PROJECT_NAME>/your-project/g; s/<DATE>/$(date +%F)/g"
+   ```
+
+   That leaves `.template-version` needing two fields by hand — the release you copied and the
+   commit `skeleton/` was at. Its first field is what `check.sh` reports.
+
+   **b. Blanks only a human can answer — written `<<FILL: …>>`.** Seven of them, in three files:
+
+   ```bash
+   grep -rn '<<FILL' .
+   ```
+
+   Answer each and delete the marker, including the angle brackets. `AGENTS.md` and
+   `ai-sandbox/INDEX.md` are loaded into every session, so a marker left in either is not an
+   empty section — it is text the assistant reads as instruction. `check.sh` counts what is
+   left. An assistant may fill these only from what you actually told it: a plausible paragraph
+   about a project nobody described is worse than the marker it replaced.
+
+   **c. Everything else in angle brackets stays.** Around a hundred and seventy occurrences of
+   `<slug>`, `<thread>`, `<YYYY-MM-DD>` and the section prompts in `docs/` are example field
+   syntax and headings waiting for content — not blanks. `ai-sandbox/INDEX.md` carries all three
+   classes within twenty lines of each other: `<PROJECT_NAME>` in its title goes,
+   `CHECKPOINT-<thread>.md` in its routing table stays. Replacing the second destroys the table.
+
+   Files named `_TEMPLATE.md` keep everything, including their `<PROJECT_NAME>` and `<DATE>` —
+   they are copied per entry, not filled in place, which is why the command above skips them.
 4. Rename `ai-sandbox/CHECKPOINT-thread.md` to `CHECKPOINT-<what-you're-working-on>.md` for your
    first thread, and set `Held by:` to the address you configured in step 2. There is nothing to
    declare in `AGENTS.md`: a thread's holder is named by the identity that signs this clone's
@@ -44,8 +75,6 @@ the handbook wins** — fix the skeleton, not the handbook.
 7. Follow `RND_PROJECT_MEMORY.md` §11 to bootstrap from existing material. **On a project that is
    already underway, read §11 before starting here** — it re-orders these steps and adds several
    that only apply when the repository already has history in it.
-
-Files named `_TEMPLATE.md` are copied per entry, not filled in place.
 
 `ai-sandbox/ASSISTANT_PROFILE.md` is optional; if you fill it in, `@`-import it from
 `AGENTS.md` or it will sit there having no effect.

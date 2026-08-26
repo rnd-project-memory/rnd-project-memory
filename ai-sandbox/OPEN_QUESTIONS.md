@@ -57,6 +57,39 @@ resolve to a different question. A slug, once assigned, is never changed.
   this repository never takes — and that region now has an instrument (`bootstrap-test.sh`,
   `ADR-008`). The four components above remain unexercised; the trial did not reach them.
 
+## Q-who-keeps-the-history · Who executes the record when the assistant is unavailable? 🟡
+
+- **Raised:** 2026-08-26 · **Owner:** esdevop (human)
+- **Source:** `sessions/2026-08-26-who-keeps-the-history.md`
+- **Question:** Every write mode in this system — the rewritten checkpoint, the contemporaneous
+  session file, the register deletions, the `LOG.md` row — is described as work an assistant does
+  with a human steering. What happens to the record when the assistant is not available: a monthly
+  credit ceiling reached, an outage, a workplace that withdraws the tool? Is there a defined
+  reduced mode a human executes alone, and what does it cost?
+- **Why it matters:** Ownership is already settled and is not what is at risk: `Held by:` is a
+  human's `git config user.email` (`ADR-012`), `Owner:` is a human name, and an `ADR-` needs a
+  named human's sign-off — the assistant is nowhere a subject of record. What is unsettled is
+  execution. If the only practical path to a valid record runs through an assistant, the system
+  has an availability dependency it never declared, and the failure is quiet: nobody writes a
+  worse record, they write none, and the gap is indistinguishable from a quiet fortnight.
+- **Progress:** Three candidate pieces, none tested.
+  - **The executor is not binary.** Judgement (what has settled, what is unverified) is a human's;
+    mechanics (`LOG.md` rows, dates, tags, the 150-line count, placeholder substitution) belong to
+    a script and to nothing else; routing sits between and either can do it from §2's table. The
+    ceiling only bites where mechanics still require an assistant — and `bootstrap-test.sh`
+    already performs the whole mechanical install, so at least one such step is scripted today in
+    a file labelled as a test.
+  - **A criterion worth testing:** switching the assistant off makes the work *slower, not
+    different*. Where the manual path yields a different artefact rather than a rougher one, the
+    assistant is load-bearing rather than accelerating.
+  - **A reduced mode, unspecified:** a session file in bullets, one `LOG.md` row, a rough
+    checkpoint rewrite. Safe against this system's central failure only because both are
+    immutable once written — a later assistant may structure around them but never restates them,
+    which is the re-summarising the whole design exists to prevent.
+- **What would answer it:** the manual path timed on a real session, against the same session
+  performed with an assistant. Until that number exists, "a human can pick it up from any point"
+  is an assertion, and the design cannot be steered by it.
+
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
 
 - **Raised:** 2026-08-19 · **Owner:** esdevop (human)
