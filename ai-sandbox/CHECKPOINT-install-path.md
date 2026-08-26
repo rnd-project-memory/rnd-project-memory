@@ -2,7 +2,8 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the placeholder class is fixed and `bootstrap-test.sh` passes; nothing is
+- **Resume from:** the placeholder class is fixed, the filename rule is corrected and now checked,
+  and `bootstrap-test.sh` passes. Two commits are in — `d974970` and the counter check — nothing is
   released, and the other three install defects are named but untouched.
   **Do not do until re-verified:** do not claim the new-project path works. It has been tested by
   `bootstrap-test.sh`, which is this repository installing its own skeleton — the same blind spot
@@ -23,6 +24,7 @@
 | `check.sh` | counts unanswered markers; not yet at the root, which runs `v3.0.1` | `skeleton/check.sh` |
 | `bootstrap-test.sh` | passes, 8 gates, 3 of them new | run 2026-08-26 |
 | Session filenames | no counter; a suffix breaks a collision only | `checkpoint.md`, §4 |
+| Enforcement of that rule | `check.sh`, pending files only | `sessions/2026-08-26-session-counter-check.md` |
 | Release | none cut; bump undecided | — |
 
 ---
@@ -43,6 +45,8 @@ consumer did not have.
 arriving by wholesale file replacement, and `ADR-004` requires a release touching the rules to
 name each changed one in its notes. The remaining doubt is narrower than it was — whether the
 `check.sh` blank check, which prints `ok` on every already-filled project, adds anything to that.
+The second commit adds a second advisory section on the same footing, so it does not move the
+argument — but the release notes now owe two named rule changes rather than one.
 `ADR-011` bounds the discriminator to inert-or-expiring and has not been applied yet.
 
 ### Gap 2 — three install defects remain, and it is unclear whether they are one change (priority: medium)
