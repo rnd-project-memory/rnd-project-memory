@@ -60,6 +60,41 @@ if [ -n "$em" ]; then
   done
 fi
 
+n "Unfilled install blanks"
+# README.md splits what wears angle brackets into three classes and gives only one of them
+# a marker: <<FILL: ...>> is an answer no install can produce, as against the project-name and
+# date tokens (a sed does those) and slug-style example syntax (never touched). Only the marked
+# class is checkable, which is the reason it is marked. Neither token is spelled out anywhere in
+# this file: it is a mechanism file installed verbatim, so a literal one here would be rewritten
+# by step 3 and would then fail its own hash on every correct adoption. A marker surviving in AGENTS.md or ai-sandbox/INDEX.md is not
+# an empty section — both are loaded into every session, so its own text is read as instruction,
+# and an assistant asked to fill it from nothing will write something plausible instead.
+# Excluded: _TEMPLATE.md files, copied per entry rather than filled in place, and skeleton/, where
+# an unfilled marker is the shipped artefact rather than a defect.
+#
+# **Anchored to the start of a line**, which is where every real marker sits. A file that mentions
+# the marker in prose or matches on it in code is documenting it, not carrying one — the same
+# distinction the .gitignore block check below makes, and for the same reason. Unanchored, this
+# section reported nine files in the repository that *ships* the marker, including `INDEX.md`
+# under the loud heading, while being correct for every adopter, who has prose about none of it.
+# That asymmetry is this project's own blind spot pointed the other way: the author sees noise the
+# consumer never sees, and the temptation is to edit the prose rather than aim the check.
+fill=$(grep -rlI --exclude-dir=.git --exclude-dir=skeleton \
+         -- '^<<FILL:' . 2>/dev/null | grep -v '_TEMPLATE\.md$')
+if [ -z "$fill" ]; then
+  echo "  ok    no install blanks left unanswered"
+else
+  echo "$fill" | while IFS= read -r f; do
+    c=$(grep -c '^<<FILL:' "$f")
+    case "$f" in
+      ./AGENTS.md|./ai-sandbox/INDEX.md)
+        echo "  TODO  $f: $c unanswered — loaded into every session, so it instructs";;
+      *)
+        echo "  todo  $f: $c unanswered";;
+    esac
+  done
+fi
+
 n "Mechanism files against their released hashes"
 # .template-hashes ships with each release and lists every file upstream owns. Comparing
 # against it needs no network and no copy of the template — which is the whole point of
@@ -226,6 +261,46 @@ else
   else
     echo "  ↑ $ncount note(s); no applied date in .template-version to weigh them against"
   fi
+fi
+
+n "Session filename counters (pending files only)"
+# §4: a session is identified by its date and slug, with no counter. A numeric suffix is
+# legitimate only where it breaks a genuine collision — a second session on the same date with the
+# same slug, which happens when a topic is reopened the same day. Numbering the day's sessions in
+# order of arrival is a different thing wearing the same clothes: it is allocated by scanning the
+# directory for the highest number, so it needs a lookup and two contributors compute the same
+# one, which is the shared counter the constraints forbid.
+#
+# Only files not yet committed are examined. Records are never renamed — a slug once assigned is
+# never changed, and LOG.md links every one — so an older filename is history, not a task, and
+# reporting it every run would put a permanent complaint in the output and teach that this section
+# is noise. Checking what is about to be written catches the mistake at the one moment it is free
+# to fix, and it works whether the file was written by an assistant or by hand.
+#
+# Expect a false positive where a slug genuinely ends in a number ("...-under-500"). Advisory, as
+# everything here is: the question it asks is "did you mean a collision?", not "this is wrong".
+pending=$(git status --porcelain -- "$SB/sessions" 2>/dev/null \
+          | awk '{print $NF}' | grep -E '/[0-9]{4}-[0-9]{2}-[0-9]{2}-.*\.md$')
+if [ -z "$pending" ]; then
+  echo "  none  no uncommitted session files"
+else
+  seen=0
+  for f in $pending; do
+    b=$(basename "$f" .md)
+    case "$b" in
+      *-[0-9]|*-[0-9][0-9])
+        sib="$SB/sessions/${b%-*}.md"
+        if [ -e "$sib" ]; then
+          echo "  ok    $(basename "$f"): suffix breaks a collision with $(basename "$sib")"
+        else
+          echo "  ?     $(basename "$f"): carries a suffix, but no $(basename "$sib") exists to"
+          echo "        collide with. If this is the day's Nth session rather than a second"
+          echo "        session on one slug, the suffix is a counter — drop it (§4)."
+        fi
+        seen=1;;
+    esac
+  done
+  [ "$seen" -eq 0 ] && echo "  ok    no counters on pending session files"
 fi
 
 n "Session files without a LOG.md row"

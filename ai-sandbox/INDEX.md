@@ -60,36 +60,32 @@ is undecided.
 
 ## Current focus
 
-**The install is now a script the guide points at, and the one measurement taken of that came out
-against it.** `install.sh` performs what has one correct answer — copy set, rename, this clone's
-settings, token substitution, `.template-version`, and the first thread when one is named — and
-reports what it deliberately leaves. `bootstrap-test.sh` calls it instead of reproducing it;
-`skeleton/README.md` describes no mechanical step in prose at all.
+**`v3.1.0` is released and the root memory runs on it.** The install stops being prose: mechanical
+steps live in `install.sh`, which `skeleton/README.md` points at and `bootstrap-test.sh` calls;
+blanks only a person can answer are marked `<<FILL:` and counted; session filenames carry no
+counter. Details in the tag.
 
-`EXP-2026-08-26-install-extraction-cost` **contradicts**. Replaying a queued change (Gap 4) touched
-three files where the pre-extraction baseline touched two, against a prediction of one and a kill
-criterion of two.
+**The next thing is an alignment audit**, before any new project is started from the template — the
+same pass `v3.0.1` was, and for the same reason: a release changes what the system does, and the
+documents that *instruct* are the layer replacement does not reach.
 
-Four things worth carrying:
+Three things worth carrying:
 
-- **The metric was wrong, and visibly so before the run.** Counting files conflates copies of one
-  fact with separate concerns. Extraction removes the first and increases the second, so the count
-  rewards keeping concerns tangled. A post-hoc count showing the procedure fall from two places to
-  one is recorded as weaker and its question pre-registered — not swapped in to rescue the result.
-- **The extraction stands, the reasoning for it does not.** A gate that reimplements what it gates
-  tests its own copy; that argument is unaffected. `Q-who-keeps-the-history` is explicitly *not*
-  advanced, and says so, rather than quietly keeping the extraction as evidence.
-- **The `<<FILL>>` marker names itself, and caught a third tool.** `check.sh`, then
-  `bootstrap-test.sh`, then `install.sh` — three independent rediscoveries in one day, each found
-  by running the tool, never by reading it.
-- **A rule stated in prose and re-implemented in a script diverges here, undetected**
-  (`EXP-2026-08-26-prose-script-restatement`) — but the `RETIRED` array, the oldest instance of
-  that pattern, has not drifted at all. One positive, one clean negative. Not a law.
+- **The release's own procedure found three defects that reading found none of.** Two in
+  `upgrade-template.md`, which never said to copy `.template-hashes` and diffed `RULES.md` alone
+  while this release delivered two rules through a playbook. Both had been handled correctly by
+  hand every previous time and written down at none.
+- **A check can be right for the adopter and wrong for the author.** The blank check matched prose
+  about the marker, so it was noisy only in the repository that ships it. That is the usual
+  self-hosting asymmetry reversed, and worse for it: the person able to fix a false alarm is the
+  one being taught to ignore it. Anchoring to the line start is the same repair the `.gitignore`
+  check already carried.
+- **Two instruments, two blind spots, neither redundant.** `bootstrap-test.sh` passed throughout
+  and could not have caught that: a scratch install contains no prose about the marker. It took
+  running the upgrade here.
 
-Unreleased: three mechanism changes and two rule changes sit in the tree, the bump is undecided,
-and `check.sh` at the root still runs `v3.0.1`. `Q-who-keeps-the-history` and `Q-session-boundary`
-🟡 open; `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need
-answers from outside this repository.
+`Q-who-keeps-the-history` and `Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched;
+`Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside this repository.
 
 ## What a new session does
 
