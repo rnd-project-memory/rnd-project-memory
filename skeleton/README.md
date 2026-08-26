@@ -6,11 +6,20 @@ the handbook wins** — fix the skeleton, not the handbook.
 
 ## Use
 
+**Do not use GitHub's *Use this template* button.** It copies the whole repository, and this one
+hosts the system on itself (`ADR-006`): alongside the artefact sits the template's *own* live
+memory — its sessions, its open questions, its decisions. You would start with a project whose
+history is somebody else's. Distribution here is a vendored copy of `skeleton/`, not a git
+relationship (`ADR-003`), and the button offers the wrong one.
+
+Clone this repository, then run the installer against a directory that is not it:
+
 ```bash
 ./install.sh ../my-project my-project you@example.org [first-thread-slug]
 ```
 
-Run from a clone of the template repository. `install.sh` performs every part of the install that
+Run from a clone of the template repository. The destination need not exist or be a repository —
+it is created and `git init`ed if not. Nothing is written into this repository. `install.sh` performs every part of the install that
 has one correct answer — the copy set, the `gitignore.template` rename, this clone's
 `core.hooksPath` and `user.email`, the token substitution across twenty files, and
 `.template-version` — then prints what it did, and after that what it deliberately did not.
