@@ -28,47 +28,49 @@ follow `skeleton/README.md` to install the structure into a project.
 
 ## Status
 
-`v3.0.1`. The memory half — sections 1–14 of the handbook — has been run against a real
+`v3.1.0`. The memory half — sections 1–14 of the handbook — has been run against a real
 single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: ten releases, `v1.0.0` through `v3.0.1`, including two real structural migrations
-(`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared per-person
-token in favour of the clone's git identity).
+exercised too: eleven releases, `v1.0.0` through `v3.1.0`, including two real structural migrations
+(`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared
+per-person token in favour of the clone's git identity).
 
-**The system has now been adopted once by someone other than its author**, into a project already
+**The system has been adopted once by someone other than its author**, into a project already
 three months old with its own working memory, following only the public documentation. That trial
 produced a friction log rather than a tidy adoption, which was the point, and `v2.2.0` is what came
-out of it. Roughly half its findings were acted on; the rest were judged specific to that project's
-shape rather than to the template, and re-opening them needs a second adopter rather than more
-reasoning about the first.
+out of it.
 
 The sharpest thing it found was not in the log. Three defects had shipped through four releases
 because they live in the **installation** — a rename, a placeholder fill, a choice of what to
 copy — and a repository that hosts the system on itself never installs anything. Its own checks
 reported `ok` while every adopter would have seen a failure on the first line of output. The
-general form is worth stating plainly, because it is not specific to this project: **a system that
-checks itself sees the settled state and is blind to the transition.** `bootstrap-test.sh` now
-performs that transition at release time.
+general form is worth stating plainly: **a system that checks itself sees the settled state and is
+blind to the transition.** `bootstrap-test.sh` now performs that transition at release time.
+
+`v3.1.0` came from an attempt to start a *new* project from the template, which failed on the
+install guide rather than on the system. Its instruction to *"replace every `<PROJECT_NAME>` and
+`<PLACEHOLDER>`"* named a token that does not exist — one syntax was carrying three things with
+three lifetimes: 20 mechanical tokens, 7 blanks only a person can answer, and around 170
+occurrences of example field syntax that must never be touched. An install following it destroys
+`ai-sandbox/INDEX.md`'s routing table, which every session loads. The blanks are now marked
+`<<FILL: …>>` and counted; the mechanical steps have moved out of prose entirely into `install.sh`,
+which the guide points at rather than describes; and `bootstrap-test.sh` runs that installer rather
+than reproducing it, having previously reproduced it and thereby tested its own copy.
+
+**What that release does not claim.** Extracting the installer was measured, and the measurement
+came out against the reasoning behind it: replaying a queued change afterwards touched more files,
+not fewer (`EXP-2026-08-26-install-extraction-cost`, `contradicts`). The extraction stands on a
+different argument — a gate that reimplements what it gates cannot detect the two disagreeing —
+and the metric that failed is retired in the record rather than replaced with one chosen after the
+result.
 
 What is still narrow: one adopter, one project, and multi-user behaviour reasoned from the design
-rather than observed — though reasoning about it carefully is what produced `v2.4.0`, so the gap is
-not inert. Upgrades are still performed by the person who writes the migrations, which
-is the setup least likely to catch a subtle mistake — one slipped through `v2.0.0`'s own rollout
-and was closed out in `v2.1.0`, which added mechanical checks so that class of miss is caught
-rather than found by hand.
+rather than observed. Upgrades are still performed by the person who writes the migrations, which
+is the setup least likely to catch a subtle mistake. And **no new project has yet been started
+from this template by anyone**, which is the next thing to find out rather than something the
+release notes can settle.
 
 This repository runs the system on itself and upgrades itself first, deliberately, so that the
-first thing to break belongs to whoever wrote it. `v2.3.0` came from exactly that: two defects
-the previous release exposed in its own rollout, one found by running the upgrade and one by
-closing the session that recorded it.
-
-`v2.4.0` and `v3.0.0` came from a different direction — a question, not a failure. Asked which contributor's
-token belongs in a thread's `Held by:` field, the answer was already in the rules; what was not
-was that **`git clone` does not copy `.git/config`**. The secret-scan hook is a tracked file and
-travels with the repository, but `core.hooksPath`, which runs it, does not — so it protects the
-person who adopted the template and no one who clones from them, silently, because git issues no
-warning when hooks are off. Six releases had shipped over that. The general form is the same one
-`bootstrap-test.sh` was built for: **the state a system can inspect is not the state its users are
-in.**
+first thing to break belongs to whoever wrote it.
 
 ## Licence
 
