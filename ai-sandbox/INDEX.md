@@ -49,42 +49,53 @@ template's own rule says content that instructs falsely is worse than content th
 
 | Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
-| *(none open)* | | | |
+| `install-path` | esdevop@gmail.com | active | 2026-08-26 |
 
-No thread has been open since `v2.0.0` shipped on 2026-08-23. `v2.1.0` and `v2.2.0` were both
-released without one: everything each session produced either shipped or had a home, which is the
-condition under which a checkpoint is not opened.
+The first thread open since `v2.0.0` shipped on 2026-08-23. Six releases were cut without one,
+because everything each session produced either shipped or had a home. This one does not: an
+unreleased change sits in the tree, three install defects are named but untouched, and the bump
+is undecided.
 
 ---
 
 ## Current focus
 
-`v3.0.0` has shipped and the root memory runs on it. Two releases in two days from one question —
-with two contributors, whose name belongs in a thread's `Held by:`?
+**Starting a project from the skeleton, and who does the work.** A real attempt to start a new
+project from the template failed, and the failure was in the install rather than in the system:
+`skeleton/README.md` step 3 said *replace every `<PROJECT_NAME>` and `<PLACEHOLDER>`*, and there
+is no such token — it occurred exactly once, in that sentence, where it looked like a string to
+grep for.
 
-- **`v2.4.0`** — `git clone` does not copy `.git/config`. The secret-scan hook is a tracked file
-  and travels; `core.hooksPath`, which runs it, does not. So it protected the adopter and nobody
-  who cloned from them, silently, for six releases. `AGENTS.md` now carries the per-clone commands,
-  `check.sh` reports them first, `session-start.md` has step 0a.
-- **`v3.0.0`** — the declared per-person token is retired. `Held by:` is the exact output of
-  `git config user.email` in the clone where the work happens (`ADR-012`, extending `ADR-007`).
-  A per-person value in a per-project file has one slot and N contributors, and the obvious repair
-  merges *cleanly* the wrong way.
+Underneath it, one syntax carrying three things with three lifetimes:
+
+| Class | Count | Lifetime |
+|---|---|---|
+| Mechanical token — `<PROJECT_NAME>`, `<DATE>` | 20 files | a `sed`, no decisions |
+| Blank only a person can answer — now `<<FILL: …>>` | 7 | before the first commit |
+| Example syntax and section prompts — `<slug>`, `<thread>` | ~170 | **never touched** |
+
+`ai-sandbox/INDEX.md` carries all three within twenty lines. An install told to "replace every
+placeholder" correctly destroys its routing table, and this file is loaded into every session, so
+the damage reads as instruction from then on. `bootstrap-test.sh` now gates exactly that.
 
 Three things worth carrying:
 
-- **A fix's reach is decided by its layer, not its intent.** `AGENTS.md` is `scaffold` and reaches
-  new adoptions only; `check.sh` and the playbooks are `mechanism` and reach projects already
-  running. Twice now the supporting half turned out to be the half that protects anyone.
-- **Delete the shared field rather than manage it.** The roster that mapped tokens to identities
-  worked and was the first draft; binding to a value each clone already has removes the field
-  instead, which is why it is the better answer.
-- **The retired-vocabulary check matches strings, not meanings.** `docs/glossary.md` carried the
-  pre-`v2.0.0` definition for four releases because it paraphrased the retired idea in words no
-  migration had listed. Fixed on 2026-08-26; not mechanised, on one instance.
+- **The question the failure raised is not about installing.** Ownership of the record is settled
+  — `Held by:` is a human's git identity, `Owner:` a human name, an `ADR-` needs a human's
+  sign-off, and the assistant is nowhere a subject of record. *Execution* is not settled, and a
+  monthly credit ceiling turns that into an availability dependency nobody declared.
+  `Q-who-keeps-the-history` 🟡 asks for a timing, not an argument.
+- **The executor is not binary.** Judgement is a person's, mechanics belong to a script, routing
+  either. `bootstrap-test.sh` already performs the whole mechanical install — the hardest step is
+  scripted today, in a file named as a test.
+- **A marker is checkable; a category is not.** Nothing could have flagged `<PLACEHOLDER>`,
+  because it named a class rather than a string. `<<FILL: …>>` exists to be counted, and its
+  boundary — *the install cannot proceed without a human answer* — is what keeps `check.sh` from
+  printing a permanent `todo` at every young project that has not yet discovered its method.
 
-`Q-unexercised-components` 🟡 is untouched by this release;
-`Q-oss-intake` and `Q-contribution-flow` 🟢 still need answers from outside this repository.
+Unreleased: the change above sits in the tree, the bump is undecided, and `check.sh` at the root
+still runs `v3.0.1`. `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
+`Q-contribution-flow` 🟢 still need answers from outside this repository.
 
 ## What a new session does
 

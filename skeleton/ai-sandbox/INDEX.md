@@ -48,7 +48,8 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 
 ## Current focus
 
-<2–4 lines: the live question, and what is blocking it.>
+<<FILL: 2–4 lines — the live question, and what is blocking it. On day one that is what the
+project is setting out to find out.>>
 
 ---
 

@@ -51,6 +51,20 @@ if [ -f "$dest/.template-version" ]; then
       "$dest/.template-version"
 fi
 
+# Step 3b — the blanks a human answers, marked <<FILL: ...>>. An adopter writes real sentences
+# here; this stands in for that, because what is being tested is that step 3 leaves nothing
+# marked behind, not the quality of the prose. Counted before and after: a step that silently
+# finds nothing to do would pass this gate for the wrong reason.
+# check.sh is excluded exactly as its own blank check excludes itself: it names the marker in
+# order to look for it. Rewriting it here also replaced its mode with the temp file's, which is
+# how a check that describes a check stops being executable.
+marked() { grep -rlI --exclude-dir=.git --exclude=check.sh -- '<<FILL' "$dest" 2>/dev/null; }
+pre_fill=$(marked | wc -l)
+while IFS= read -r f; do
+  awk 'BEGIN{RS="\0"} {gsub(/<<FILL:[^>]*>>/, "answered by bootstrap-test"); printf "%s", $0}' \
+      "$f" > "$f.bt" && cat "$f.bt" > "$f" && rm -f "$f.bt"
+done < <(marked)
+
 git -C "$dest" add -A >/dev/null 2>&1
 git -C "$dest" commit -qm "adopt the skeleton" >/dev/null 2>&1 \
   || bad "the first commit was rejected — the hook blocks a clean install"
@@ -98,6 +112,27 @@ if [ "$count" -le 1 ]; then
 else
   echo "$marked" | sed 's/^/        /'
   bad "$count files carry a region marker — ADR-009 permits one, and only where no include exists"
+fi
+
+[ "$pre_fill" -gt 0 ] \
+  && ok "step 3b had $pre_fill files to answer" \
+  || bad "no <<FILL>> markers shipped — step 3b tests nothing and check.sh's blank check is inert"
+
+post_fill=$(marked | wc -l)
+[ "$post_fill" -eq 0 ] \
+  && ok "no install blank left unanswered" \
+  || bad "$post_fill files still carry <<FILL>> — a marker step 3's grep does not reach"
+
+# The failure the three classes exist to prevent, and the only one that is silent: an install told
+# to "replace every placeholder" replaces the example syntax too, and takes the routing table in
+# ai-sandbox/INDEX.md with it. That file is loaded into every session, so the damage is read as
+# instruction from then on. Nothing above would notice: it hashes to nothing, holds no marker, and
+# reads as prose.
+if grep -q 'CHECKPOINT-<thread>\.md' "$dest/ai-sandbox/INDEX.md" 2>/dev/null; then
+  ok "example syntax survived the install (INDEX.md still documents CHECKPOINT-<thread>.md)"
+else
+  bad "ai-sandbox/INDEX.md no longer documents CHECKPOINT-<thread>.md — the install consumed the"
+  echo "        example syntax along with the placeholders, and every session now loads the result"
 fi
 
 left=$(grep -rlI --exclude-dir=.git '<PROJECT_NAME>' "$dest" 2>/dev/null \

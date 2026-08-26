@@ -351,6 +351,13 @@ arrives having already chosen the other way.
 `S07` was one character from the source prefix `S-007` — two unrelated namespaces that looked
 alike in prose. The filename is the identifier.
 
+One exception, and it is not a counter: **a numeric suffix breaks a genuine collision** — a
+second session on the same date with the same slug, which happens when a topic is reopened the
+same day. That is allocated by asking whether one filename exists, not by scanning for the
+highest number, so it survives two people doing it at once. **Numbering the day's sessions in
+order of arrival is the thing this rule forbids**, and it is the failure to watch for, because
+it looks identical in a directory listing and is a shared counter in every way that matters.
+
 Two consequences worth internalising:
 
 - **No ID requires a lookup to allocate.** Counters force you to scan the register for the
@@ -940,12 +947,26 @@ noting at the bottom of `DATA_ENVIRONMENT.md` what stayed behind and why. A proj
 experience may also already keep a traps register of its own; that is step 3's inventory question,
 not a licence to maintain two.
 
-**11. Finish the placeholders.** Return to `skeleton/README.md` step 3 and replace every
-`<PROJECT_NAME>` and `<PLACEHOLDER>` in the files this section never sent you to — there are
-around twenty, and `_TEMPLATE.md` files keep theirs, being copied per entry rather than filled in
-place. `ai-sandbox/INDEX.md` is the one that matters: it is `@`-imported into every session, so an
-unfilled one is loaded, silently, forever. Leaving a file's *content* empty is fine and expected;
-leaving its title saying `<PROJECT_NAME>` is not.
+**11. Finish the blanks.** Return to `skeleton/README.md` step 3 for every file this section
+never sent you to. Its three classes matter more on an existing project than on an empty one,
+because a bootstrap touches a fraction of the tree and leaves the rest exactly as it shipped:
+
+- **Mechanical tokens** — `<PROJECT_NAME>` and `<DATE>`, around twenty files, one command. Files
+  named `_TEMPLATE.md` keep theirs, being copied per entry rather than filled in place.
+- **Blanks only a person can answer**, marked `<<FILL: …>>` — seven of them. `grep -rn '<<FILL' .`
+  lists them and `check.sh` counts what is left.
+- **Everything else in angle brackets stays.** `<slug>`, `<thread>` and the section prompts in
+  `docs/` are example field syntax, not blanks, and roughly a hundred and seventy of them ship
+  deliberately. An instruction to "replace every placeholder" reads as covering all three, which
+  is how an install destroys `ai-sandbox/INDEX.md`'s routing table while believing it is
+  finishing step 3.
+
+`ai-sandbox/INDEX.md` is the file that matters most here: it is `@`-imported into every session,
+so anything left in it is loaded, silently, forever. Leaving a file's *content* empty is fine and
+expected; leaving its title saying `<PROJECT_NAME>` is not, and leaving a `<<FILL: …>>` in a
+loaded file is worse than either — an empty section says nothing, while a marker's own text is
+read as instruction, and an assistant asked to resolve one from nothing will write something
+plausible instead of stopping.
 
 Do **not** try to fill everything at once. `OPEN_QUESTIONS.md` and `ASSUMPTIONS.md` populate
 naturally as sessions run; forcing entries produces filler that trains everyone to skim.
@@ -1034,7 +1055,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | Mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · session files missing a `LOG.md` row · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
+| `check.sh` | This clone's `core.hooksPath` and `user.email`, reported first · each checkpoint's `Held by:` against this clone's identity · unfilled `<<FILL: …>>` install blanks · mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · the `.gitignore` upstream block · credential patterns supplied by the profile layer · checkpoint line limits · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · adoption notes · session files missing a `LOG.md` row · sessions left open · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —

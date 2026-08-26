@@ -60,6 +60,33 @@ if [ -n "$em" ]; then
   done
 fi
 
+n "Unfilled install blanks"
+# README.md step 3 splits what wears angle brackets into three classes and gives only one of them
+# a marker: <<FILL: ...>> is an answer no install can produce, as against the project-name and
+# date tokens (a sed does those) and slug-style example syntax (never touched). Only the marked
+# class is checkable, which is the reason it is marked. Neither token is spelled out anywhere in
+# this file: it is a mechanism file installed verbatim, so a literal one here would be rewritten
+# by step 3 and would then fail its own hash on every correct adoption. A marker surviving in AGENTS.md or ai-sandbox/INDEX.md is not
+# an empty section — both are loaded into every session, so its own text is read as instruction,
+# and an assistant asked to fill it from nothing will write something plausible instead.
+# Excluded: check.sh, which describes the check; _TEMPLATE.md files, copied per entry rather than
+# filled in place; and skeleton/, where an unfilled marker is the shipped artefact, not a defect.
+fill=$(grep -rlI --exclude-dir=.git --exclude-dir=skeleton --exclude=check.sh \
+         -- '<<FILL' . 2>/dev/null | grep -v '_TEMPLATE\.md$')
+if [ -z "$fill" ]; then
+  echo "  ok    no install blanks left unanswered"
+else
+  echo "$fill" | while IFS= read -r f; do
+    c=$(grep -c '<<FILL' "$f")
+    case "$f" in
+      ./AGENTS.md|./ai-sandbox/INDEX.md)
+        echo "  TODO  $f: $c unanswered — loaded into every session, so it instructs";;
+      *)
+        echo "  todo  $f: $c unanswered";;
+    esac
+  done
+fi
+
 n "Mechanism files against their released hashes"
 # .template-hashes ships with each release and lists every file upstream owns. Comparing
 # against it needs no network and no copy of the template — which is the whole point of
