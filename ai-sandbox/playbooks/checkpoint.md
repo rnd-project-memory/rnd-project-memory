@@ -19,7 +19,12 @@ If no session file exists — the session began without `session-start.md` — c
 say so plainly in the record, because what it holds is a reconstruction rather than a
 contemporaneous account, and a later reader should know which they are looking at.
 
-Several sessions in one day get a numeric suffix (`-2`).
+**No counter.** The date and slug are the identifier (§4). A numeric suffix is added only to
+break a genuine collision — a second session on the *same date* with the *same slug*, which
+happens when a topic is reopened the same day. Several sessions in one day are not a
+collision: their slugs already differ, and numbering them by order of arrival is a counter
+allocated by scanning the directory for the highest number, which is the friction §4 removed
+and the shared counter `docs/constraints.md` forbids. Two people would compute the same one.
 
 ## 2. Decide what graduates to `docs/`
 
