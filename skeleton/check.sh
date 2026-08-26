@@ -255,6 +255,46 @@ else
   fi
 fi
 
+n "Session filename counters (pending files only)"
+# §4: a session is identified by its date and slug, with no counter. A numeric suffix is
+# legitimate only where it breaks a genuine collision — a second session on the same date with the
+# same slug, which happens when a topic is reopened the same day. Numbering the day's sessions in
+# order of arrival is a different thing wearing the same clothes: it is allocated by scanning the
+# directory for the highest number, so it needs a lookup and two contributors compute the same
+# one, which is the shared counter the constraints forbid.
+#
+# Only files not yet committed are examined. Records are never renamed — a slug once assigned is
+# never changed, and LOG.md links every one — so an older filename is history, not a task, and
+# reporting it every run would put a permanent complaint in the output and teach that this section
+# is noise. Checking what is about to be written catches the mistake at the one moment it is free
+# to fix, and it works whether the file was written by an assistant or by hand.
+#
+# Expect a false positive where a slug genuinely ends in a number ("...-under-500"). Advisory, as
+# everything here is: the question it asks is "did you mean a collision?", not "this is wrong".
+pending=$(git status --porcelain -- "$SB/sessions" 2>/dev/null \
+          | awk '{print $NF}' | grep -E '/[0-9]{4}-[0-9]{2}-[0-9]{2}-.*\.md$')
+if [ -z "$pending" ]; then
+  echo "  none  no uncommitted session files"
+else
+  seen=0
+  for f in $pending; do
+    b=$(basename "$f" .md)
+    case "$b" in
+      *-[0-9]|*-[0-9][0-9])
+        sib="$SB/sessions/${b%-*}.md"
+        if [ -e "$sib" ]; then
+          echo "  ok    $(basename "$f"): suffix breaks a collision with $(basename "$sib")"
+        else
+          echo "  ?     $(basename "$f"): carries a suffix, but no $(basename "$sib") exists to"
+          echo "        collide with. If this is the day's Nth session rather than a second"
+          echo "        session on one slug, the suffix is a counter — drop it (§4)."
+        fi
+        seen=1;;
+    esac
+  done
+  [ "$seen" -eq 0 ] && echo "  ok    no counters on pending session files"
+fi
+
 n "Session files without a LOG.md row"
 for f in "$SB"/sessions/*.md; do
   b=$(basename "$f"); case "$b" in LOG.md|_TEMPLATE.md) continue;; esac
