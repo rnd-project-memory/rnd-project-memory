@@ -52,8 +52,10 @@ them once here means not deciding it separately later.
    renames, substitutes into, or fills placeholders in cannot be hashed at the path it lands on,
    and listing it anyway puts a permanent `FAILED` on the first line of output every adopter sees.
 
-2a. **Run `./bootstrap-test.sh`. It must pass.** It installs `skeleton/` into a scratch repository
-   exactly as `skeleton/README.md` says and runs the `check.sh` that lands there. This repository's
+2a. **Run `./bootstrap-test.sh`. It must pass.** It runs `./install.sh` into a scratch repository
+   — the same installer an adopter is pointed at, not a copy of it — and then the `check.sh` that
+   lands there. Anything wrong in the installer is wrong for them, which is the property this gate
+   exists to have and did not have while it reproduced the install itself. This repository's
    own `check.sh` cannot see any of that: self-hosting vendors the skeleton's files in place, so
    nothing is renamed, no placeholder is filled, and the copy set is never chosen. Every defect
    living in the transformation from skeleton to consumer is invisible here and unavoidable there.
@@ -95,9 +97,15 @@ them once here means not deciding it separately later.
    has actually been exercised, and what is still narrow. It is not release notes; the tag carries
    those.
 
-4. Tag, with notes that **name every changed rule** if the diff touches `ai-sandbox/RULES.md`, one
-   line per rule, at any bump level. If it does not, say so explicitly: "no rule changes" is
-   information, and its absence is indistinguishable from an oversight.
+4. Tag, with notes that **name every changed rule**, one line per rule, at any bump level. Look in
+   `ai-sandbox/RULES.md` **and in `ai-sandbox/playbooks/`** — `v3.1.0` shipped two behavioural
+   rules through `checkpoint.md` and none through `RULES.md`, so this step keyed to `RULES.md`
+   alone would have declared "no rule changes" and been wrong. A rule is whatever binds the next
+   session, not whatever sits in the file named for rules. `upgrade-template.md` step 5 had the
+   same blind spot on the receiving end; both were fixed together, because a rule nobody names on
+   the way out is a rule nobody diffs on the way in. If there genuinely are none, say so
+   explicitly: "no rule changes" is information, and its absence is indistinguishable from an
+   oversight.
 5. Add the section here if the bump is MAJOR.
 
 ## Partial application

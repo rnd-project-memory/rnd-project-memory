@@ -139,8 +139,8 @@ if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
 
 # Only meaningful where this repository carries both its own skeleton/ artefact and a
 # .template-version for itself — the self-hosting case from ADR-006. An ordinary consumer never
-# has a local skeleton/ directory (README.md's step 1 copies the directory's *contents* out, not
-# the directory), so the whole section is skipped there rather than printing an empty heading.
+# has a local skeleton/ directory (the install copies the directory's *contents* out, not the
+# directory), so the whole section is skipped there rather than printing an empty heading.
 if [ -d skeleton ] && [ -f .template-version ]; then
   n "skeleton/ vs .template-version"
   recorded=$(grep -oE 'skeleton @ [0-9a-f]+' .template-version | awk '{print $NF}')
