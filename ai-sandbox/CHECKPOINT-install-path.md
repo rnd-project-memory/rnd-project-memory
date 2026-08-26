@@ -36,9 +36,15 @@
 
 ### Gap 1 — nothing is published (priority: high)
 
-Two tags and eleven commits are local. `v3.1.0` was re-cut once before publication, which the
+Two tags and twelve commits are local. `v3.1.0` was re-cut once before publication, which the
 `v1.2.0` precedent licenses, and `v3.1.1` followed as the alignment pass. Once pushed, neither can
-be re-cut, so the question is only whether anything else should ride with them.
+be re-cut, so the question is only whether anything else should ride with them. The rehearsal that closed
+that question — running `install.sh` from a clone — found the shallow-clone defect, which is fixed
+and needs no release, `install.sh` being `norcopy`.
+
+Two things to settle on GitHub, before the experiment and not during it: whether the repository is
+still marked *Template repository* — removing the button is better than warning about it — and how
+the rendered `README.md` reads, since until today it never mentioned that an installer exists.
 
 ### Gap 2 — the experiment this thread exists to enable (priority: high)
 
