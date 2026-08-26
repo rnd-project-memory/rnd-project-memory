@@ -247,3 +247,108 @@ a check and changed no structure it needed a migration for.
 
 This file existed before it was needed on purpose: the format was easier to agree on when
 nothing was at stake than in the moment a real migration was due.
+
+---
+
+## v2.4.0 → v3.0.0
+
+### Reason
+
+`ADR-007` made ownership a field, `Held by:`, and did not say where its value comes from.
+`AGENTS.md` answered with an **owner token** — initials, declared once, in a file that is
+committed and shared. That has one slot, and a project has N contributors.
+
+The failure is not the missing slot; it is what the obvious repair does. A second contributor who
+edits the declared value produces a one-line change to a shared file, which merges *cleanly* — last
+writer wins, no conflict marker, and the other person's identity is gone. That is the
+silently-diverging-copies failure `ADR-002` and `ADR-007` both exist to prevent, one level up.
+
+Underneath it: the token is a value an assistant must *supply*, and one that cannot resolve it has
+three plausible wrong answers within reach — the only declared token, the only `Held by:` already
+present, the commit log. All three name the project's first contributor. A newcomer is therefore
+the case most likely to be misattributed, and `RULES.md` grants the write right to whoever the
+field names, so a wrong value is a false authority claim rather than a wrong byline.
+
+`Held by:` is now the exact output of `git config user.email` in the clone where the work happens.
+The owner token is retired.
+
+**Terminology retired** (fed into `check.sh`'s `RETIRED` array by step 3 of "Cutting a release"):
+`owner token`, `<owner>`.
+
+### Steps
+
+1. **Set the clone's identity, if `v2.4.0`'s step did not already.**
+
+   ```bash
+   git config user.email        # if this prints nothing:
+   git config user.email "you@example.org"
+   ```
+
+   Do this before anything below — every step that writes a `Held by:` needs it, and an empty
+   result is a stop rather than a value to invent.
+
+2. **Rewrite `Held by:` in every live checkpoint.** For each `ai-sandbox/CHECKPOINT-*.md`, replace
+   the initials with the holder's git address. **Ask who holds each thread rather than deriving
+   it** — the commit log names whoever last *committed* the file, which on a two-person project is
+   frequently not its holder, and a wrong answer here silently transfers the write right.
+
+   ```
+   - **Held by:** es · since 2026-08-24
+   - **Held by:** es@example.org · since 2026-08-24
+   ```
+
+   `since` is unchanged: the holder did not change, only how the record names them. This is **not**
+   a take-over and gets no `sessions/LOG.md` row.
+
+3. **Update the `## Threads` table in `ai-sandbox/INDEX.md`** to the same addresses, and widen the
+   column header to name the field's source (`Held by (user.email)`). The table and the checkpoint headers must agree —
+   `session-start.md` reads the table to decide what a session may write.
+
+4. **Delete the `## Owner token` section from `AGENTS.md`.** Nothing replaces it. If the project
+   added prose elsewhere explaining its token, delete that too; a retired concept left described in
+   a loaded instruction file misdirects in `ADR-002`'s sense.
+
+5. **Convert `Owner:` on register entries to human names.** In `ai-sandbox/ASSUMPTIONS.md` and
+   `ai-sandbox/OPEN_QUESTIONS.md`, entries reading `**Owner:** es` become `**Owner:** <the
+   person's name>`. This field is **not** the git address: it names who is accountable for the
+   entry, which is a possession and outlives any clone, where `Held by:` names a temporary write
+   claim. One token becomes two conventions, deliberately — see `ADR-012`.
+
+6. **Replace the mechanism files** as usual (`ai-sandbox/RULES.md`, `RATIONALE.md`, the playbooks,
+   `check.sh`), then verify against `.template-hashes`.
+
+### Exceptions
+
+- **Session and experiment records are immutable.** A `Held by: es` inside `sessions/*.md` or
+  `experiments/EXP-*.md` stays exactly as written. It records what the field held at the time,
+  which is the archive working correctly.
+- **ADRs are historical.** `ADR-007` receives one pointer edit — `extended by ADR-012` on its
+  `Status:` line — and its body is not touched. No other ADR changes.
+- **`MIGRATIONS.md` keeps the retired vocabulary on purpose**, in this section and in earlier
+  ones. It is how a reader arriving from an old version finds the term they know.
+- **`docs/` claims that survive are not restated.** *A thread's checkpoint belongs to whoever it
+  names `Held by:`, not to a filename* is unchanged by this release; only the provenance of the
+  value changes.
+- **Do not add an equality check to `.githooks/pre-commit`.** It is absent in every clone but the
+  adopter's (`core.hooksPath` is per-clone and never cloned), so it would enforce nothing for the
+  population this release is about, and a false positive there is answered with `--no-verify`,
+  which also disables the secret scan sharing that hook.
+
+### Verification
+
+`./check.sh` should report:
+
+- **This clone's settings** — `user.email` present, and one line per live checkpoint reading
+  `held by you` or naming a colleague's address. No line should show initials.
+- **Retired vocabulary** — `clean`. A hit means `owner token` or `<owner>` survives in prose
+  somewhere the hash check cannot see; that is the class of miss `v2.1.0` was cut to catch.
+- **Mechanism files** — `all match v3.0.0`.
+
+A correct diff touches checkpoints, `INDEX.md`, `AGENTS.md`, both registers, and the mechanism
+files. It touches nothing under `sessions/`, `experiments/`, or `docs/decisions/` except the one
+pointer edit on `ADR-007`.
+
+**The check is weaker than it looks, by design.** It compares `Held by:` to this clone's identity,
+so it catches a checkpoint still naming someone else — and passes for anyone who rewrites the
+field to their own address, which is exactly an unlogged take-over. It reports the honest mistake;
+the careless one remains a matter of the rule, not the check.

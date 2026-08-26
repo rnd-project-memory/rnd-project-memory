@@ -451,7 +451,7 @@ delivery. The copies are gone.
 
 | File | Purpose |
 |------|---------|
-| `AGENTS.md` | Auto-loaded entry point: project description, owner token, `@` imports. Yours — never overwritten |
+| `AGENTS.md` | Auto-loaded entry point: project description, per-clone setup, `@` imports. Yours — never overwritten |
 | `ai-sandbox/RULES.md` | The behavioural rules and the playbook list. Upstream's — replaced on upgrade |
 | `ai-sandbox/INDEX.md` | Session entry point: routing rule, artifact list, current focus, thread table |
 | `ai-sandbox/CHECKPOINT-<thread>.md` | One per thread; in-flight reasoning, rewritten, ≤150 lines, written only by whoever it names `Held by:` |
@@ -827,11 +827,14 @@ asks for it.
 **4. Write `AGENTS.md`, and empty every other loaded instruction file.** The project description
 only — **do not write the working rules.** They ship in `ai-sandbox/RULES.md`, which `AGENTS.md`
 imports and which an upgrade replaces wholesale; rules typed into `AGENTS.md` are outside that
-mechanism and drift silently from the version everything else assumes. Pick an **owner token** —
-your initials are fine — and declare it in `AGENTS.md`. It is not a filename: it is the value you
-put in `Held by:` on any thread checkpoint you currently hold. Working alone that is still, in
-practice, one active checkpoint most of the time — but it is a thread's file, named for the work,
-not a file that is "yours".
+mechanism and drift silently from the version everything else assumes.
+
+There is no identity to declare. **`Held by:` is the exact output of `git config user.email` in
+the clone where the work happens** (`ADR-012`) — so set that if it is not set, and nothing about a
+person goes into `AGENTS.md` at all. It is not a filename: it is the value you put in `Held by:`
+on any thread checkpoint you currently hold. Working alone that is still, in practice, one active
+checkpoint most of the time — but it is a thread's file, named for the work, not a file that is
+"yours".
 
 **Then go through §5's list of automatically loaded paths** — `.github/copilot-instructions.md`,
 `.github/instructions/**`, `CLAUDE.md`, `.claude/CLAUDE.md`, `GEMINI.md` — and reduce any that
@@ -1113,7 +1116,7 @@ simply n = 1:
 
 | Decision | Where | Solo cost |
 |----------|-------|-----------|
-| One checkpoint per thread, held by one person at a time | §3 | one file per active thread; holding it just means your token is in `Held by:` |
+| One checkpoint per thread, held by one person at a time | §3 | one file per active thread; holding it just means your `user.email` is in `Held by:` |
 | No shared counters in any ID | §4 | none — it removed a register lookup |
 | Entries written for someone who was not there | §3 | none — that reader is you, later |
 | Resolutions named in `LOG.md` | §3 | none, same reason |
@@ -1123,7 +1126,7 @@ simply n = 1:
 | Session configuration named on every record | §8 | one line, usually "Solo" |
 
 Adding a person is therefore close to a no-op: they either take over an unattended thread — a
-logged event, not a silent edit — or open a new one with their token in `Held by:`. Nothing is
+logged event, not a silent edit — or open a new one with their own address in `Held by:`. Nothing is
 renamed, no playbook changes, and no existing file moves. The one place solo use genuinely differs
 from multi-person use is upstream of this table: a single person running several agents in
 parallel already produces several concurrent threads, which is exactly why the axis is the thread

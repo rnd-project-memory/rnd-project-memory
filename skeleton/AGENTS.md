@@ -39,14 +39,6 @@ never infer it from commit history or from another file.
 If the project has CI, run the same secret scan there as well. It is the only layer that does not
 depend on how an individual clone is configured.
 
-## Owner token
-
-`<owner>` — the value that appears in `Held by:` on any thread checkpoint I currently hold.
-
-Pick your initials and declare them here. A thread's checkpoint is named for what is being
-worked on (`CHECKPOINT-<thread-slug>.md`), not for this token — the token only identifies who
-currently holds it. This is the one value the rules refer to and cannot supply themselves.
-
 ## Commits
 
 Conventional Commits. Types used here: `docs`, `feat`, `fix`, `chore`, `exp`.

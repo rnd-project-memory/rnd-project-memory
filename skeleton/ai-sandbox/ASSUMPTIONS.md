@@ -18,6 +18,11 @@
 > and takes slugs for everything new — see §11; renumbering breaks citations in files this system
 > declares immutable.
 
+> **`Owner:` takes a human name, not a git address.** It names who is accountable for the
+> entry — a possession that outlives any clone — and is deliberately not the `Held by:`
+> value, which names a temporary write claim and is bound to `git config user.email`
+> (`ADR-012`).
+>
 > **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
 > claimed this* — the signal the field exists to carry. If solo-era entries are left
 > blank, that meaning is destroyed the day a second person joins.
@@ -36,7 +41,7 @@
 
 ## A-<slug> · <statement> — `ASSUMED`
 
-- **Raised:** <DATE> · **Owner:** <owner>
+- **Raised:** <DATE> · **Owner:** <human name>
 - **Basis:** <what it rests on — source ID, reasoning, or convention — or `—` if none exists>
 - **If false:** <what breaks, and how badly>
 - **What would settle it:** <the check that would confirm or kill it>

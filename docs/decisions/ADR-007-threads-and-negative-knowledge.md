@@ -1,6 +1,6 @@
 # ADR-007 · Threads replace owners; negative knowledge gets an explicit home
 
-**Date:** 2026-08-23 · **Status:** accepted
+**Date:** 2026-08-23 · **Status:** accepted · **extended by `ADR-012`**
 
 ## Context
 

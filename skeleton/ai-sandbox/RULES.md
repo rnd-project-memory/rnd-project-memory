@@ -9,6 +9,11 @@
   worked on, not who is working on it. Only whoever it names as `Held by:` writes it — everyone
   else reads. Taking over a thread is an event: write it into your session file and add a
   `sessions/LOG.md` row, not a silent edit of the field.
+- **`Held by:` is the exact output of `git config user.email` in this clone.** Never chosen, never
+  abbreviated, never copied from another entry, and never inferred — not from commit history, not
+  from a checkpoint already present, not from an address being the only one in the project. Empty
+  output is a **stop**: ask for it. `Owner:` on a register entry is a different field and takes a
+  human name.
 - **A thread's checkpoint exists only while something produced is not yet promoted and not yet
   closed.** If everything a session left behind already has a home in `docs/`, `CAVEATS.yaml`, or
   a playbook, there is no checkpoint to open for it.
