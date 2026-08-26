@@ -15,14 +15,17 @@ relationship (`ADR-003`), and the button offers the wrong one.
 Clone this repository, then run the installer against a directory that is not it:
 
 ```bash
-./install.sh ../my-project my-project you@example.org [first-thread-slug]
+./install.sh ../my-project my-project you@example.org
+./install.sh ../my-project my-project you@example.org latency-budget   # naming the first thread
 ```
 
 Run from a clone of the template repository. The destination need not exist or be a repository —
-it is created and `git init`ed if not. Nothing is written into this repository. `install.sh` performs every part of the install that
-has one correct answer — the copy set, the `gitignore.template` rename, this clone's
-`core.hooksPath` and `user.email`, the token substitution across twenty files, and
-`.template-version` — then prints what it did, and after that what it deliberately did not.
+it is created and `git init`ed if not, and nothing is written into this repository.
+
+`install.sh` performs every part of the install that has one correct answer — the copy set, the
+`gitignore.template` rename, this clone's `core.hooksPath` and `user.email`, the token
+substitution across twenty files, and `.template-version` — then prints what it did, and after
+that what it deliberately did not.
 
 **Read it before running it.** It is short and does nothing clever, and it is also the
 instruction: those steps are described in one place, so there is no second description to fall
@@ -45,8 +48,11 @@ brackets and only one of them is a blank:
 | Example field syntax and section prompts — `<slug>`, `<thread>` | ~170 | **never touched** |
 
 ```bash
-grep -rn '<<FILL' .
+grep -rn '^<<FILL' .
 ```
+
+Anchored at the start of a line, which is where every marker sits and where `check.sh` looks —
+so its count and yours agree.
 
 Answer each and delete the marker, brackets included. `AGENTS.md` and `ai-sandbox/INDEX.md` load
 into every session, so a marker left in either is not an empty section — it is text the assistant
@@ -103,8 +109,6 @@ git config user.email "you@example.org"    # what `Held by:` takes
 `AGENTS.md`'s "First run in a new clone" section is where the project keeps this for whoever
 clones next; **this file never reaches them.** If the project has CI, run the same secret scan
 there: it is the one layer that does not depend on how an individual clone is configured.
-
-Run `./check.sh` any time — it is advisory, always exits 0, and never blocks a commit.
 
 `ai-sandbox/ASSISTANT_PROFILE.md` is optional; if you fill it in, `@`-import it from
 `AGENTS.md` or it will sit there having no effect.

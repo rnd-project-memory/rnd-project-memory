@@ -18,19 +18,32 @@ compress.
 |------|-----------|
 | `RND_PROJECT_MEMORY.md` | The handbook — the whole system, read once by whoever sets it up |
 | `skeleton/` | The copyable starting structure, with `skeleton/README.md` as its install guide |
+| `install.sh` | Performs the install. Every step of it that has one correct answer |
 
 The handbook is the authority. Where the two disagree, fix the skeleton.
 
 ## Using it
 
-Read the handbook's sections 1–3 first — they are the whole idea, and the rest is mechanism. Then
-follow `skeleton/README.md` to install the structure into a project.
+Read the handbook's sections 1–3 first — they are the whole idea, and the rest is mechanism.
+
+```bash
+git clone <this repository> && cd rnd-project-memory
+./install.sh ../my-project my-project you@example.org
+```
+
+**Not GitHub's *Use this template*** — it copies the whole repository, this project's own live
+memory included, and you would start with a project whose history is somebody else's.
+
+`install.sh` does what has one correct answer and prints what it deliberately left: seven blanks
+only a person can answer, your first thread, and a check no script can perform. `skeleton/README.md`
+explains each and why. On a project that already has history, read the handbook's §11 first — it
+re-orders all of this.
 
 ## Status
 
-`v3.1.0`. The memory half — sections 1–14 of the handbook — has been run against a real
+`v3.1.1`. The memory half — sections 1–14 of the handbook — has been run against a real
 single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: eleven releases, `v1.0.0` through `v3.1.0`, including two real structural migrations
+exercised too: twelve releases, `v1.0.0` through `v3.1.1`, including two real structural migrations
 (`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared
 per-person token in favour of the clone's git identity).
 

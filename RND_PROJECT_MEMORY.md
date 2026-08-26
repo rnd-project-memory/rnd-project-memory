@@ -484,7 +484,7 @@ delivery. The copies are gone.
 | `docs/glossary.md` | Terms used with a specific meaning here |
 | `docs/techniques/_TEMPLATE.md` | Evaluation of a candidate technique, including rejected ones |
 | `docs/decisions/_TEMPLATE.md` | ADR: context, decision, alternatives, consequences |
-| `gitignore.template` | Rename to `.gitignore` — enforces the never-commit list |
+| `gitignore.template` | Installed as `.gitignore` — enforces the never-commit list |
 | `check.sh` · `.githooks/pre-commit` | Mechanical checks; secret scan — see §12 |
 
 Four fields are worth explaining rather than just copying, because their shape is not obvious:
@@ -777,15 +777,14 @@ Install the hooks before any *new* material arrives. On an existing project that
 reach what is already committed, and no later edit can supply it retroactively; the install is
 the one moment where that gap is still cheap to act on.
 
-Record which release you took in `.template-version`, which ships in the skeleton with its format
-as placeholders:
+`install.sh` writes `.template-version` — the release, the commit `skeleton/` was at, and the
+date — because all three are derivable from the clone it runs in and none is a judgement. Field one
+is the version `check.sh` reports. Without this file nothing can tell you whether an upgrade
+applies, and §15 has nothing to work from, so check that it landed:
 
+```bash
+cat .template-version
 ```
-<VERSION>  skeleton @ <SHA>  applied <DATE>
-```
-
-Field one is the version `check.sh` reports. Without this file nothing can tell you whether an
-upgrade applies, and §15 has nothing to work from.
 
 **2. Run the ignore list against what is already committed.** One command, and it is the only
 place in this section where §9's unrepairable rule can still be acted on cheaply:
@@ -890,7 +889,11 @@ already in history is where the time goes, and it is not clerical.
 
 **7. Write `docs/problem.md` first.** What is being solved, for whom, and what "done" means. If
 this cannot be stated crisply, that is the most valuable finding of the day — record the
-ambiguity in `OPEN_QUESTIONS.md`.
+ambiguity in `OPEN_QUESTIONS.md` **and say so in the file**: an answer naming its own uncertainty
+is a filled blank, an empty section is not.
+
+This step answers four of the seven `<<FILL:` markers the install left. Step 11 collects the
+rest.
 
 **8. Capture current understanding into an intake file.** Write it to
 `ai-sandbox/CHECKPOINT-intake.md` — its own thread, held by whoever is running the bootstrap —
@@ -953,10 +956,14 @@ not a licence to maintain two.
 file this section never sent you to. Its three classes matter more on an existing project than on an empty one,
 because a bootstrap touches a fraction of the tree and leaves the rest exactly as it shipped:
 
-- **Mechanical tokens** — `<PROJECT_NAME>` and `<DATE>`, around twenty files, one command. Files
-  named `_TEMPLATE.md` keep theirs, being copied per entry rather than filled in place.
-- **Blanks only a person can answer**, marked `<<FILL: …>>` — seven of them. `grep -rn '<<FILL' .`
-  lists them and `check.sh` counts what is left.
+- **Mechanical tokens** — `<PROJECT_NAME>` and `<DATE>`, around twenty files. **Step 1 already did
+  these**, and they are listed here only so that a token you *do* still find is recognised as a
+  file the install did not reach rather than one you are meant to fill by hand. Files named
+  `_TEMPLATE.md` keep theirs, being copied per entry rather than filled in place.
+- **Blanks only a person can answer**, marked `<<FILL:` at the start of a line — seven, of which
+  step 7 answered four. `grep -rn '^<<FILL' .` lists what remains and `check.sh` counts it. The
+  two that matter most are in `AGENTS.md` and `ai-sandbox/INDEX.md`, which load into every
+  session.
 - **Everything else in angle brackets stays.** `<slug>`, `<thread>` and the section prompts in
   `docs/` are example field syntax, not blanks, and roughly a hundred and seventy of them ship
   deliberately. An instruction to "replace every placeholder" reads as covering all three, which
@@ -1266,16 +1273,20 @@ a rule genuinely must reach you, it arrives through `RULES.md`, which is mechani
 
 ### Taking a version, and knowing which you took
 
-Adoption copies the whole of `skeleton/` except its `README.md`; an upgrade copies the paths
-`MANIFEST` marks `mechanism`. `MANIFEST` is an ownership map, not a copy list — that distinction
-is the difference between the two operations. No fork, no submodule, no subtree — **no git
+Adoption copies the whole of `skeleton/` except its `README.md`, which `install.sh` does; an
+upgrade copies the paths `MANIFEST` marks `mechanism`, **plus `.template-hashes`, which is not in
+the manifest because a file cannot carry its own hash** — leave it behind and every file the
+upgrade just replaced fails its own comparison against the list it is leaving. `MANIFEST` is an
+ownership map, not a copy list, and that distinction is the difference between the two
+operations. No fork, no submodule, no subtree — **no git
 relationship of any kind** between your project and the template.
 
 That is what makes your copy self-contained: it keeps working if the upstream repository is
 renamed, moved, or deleted. It also means there is no mechanism for pushing changes back, which is
 intentional.
 
-Two files come out of that. You write the first; the release supplies the second:
+Two files come out of that. The install writes the first from what it can derive; the release
+supplies the second:
 
 ```
 .template-version    v1.1.0  skeleton @ 8aee1f4  applied 2026-08-17

@@ -20,8 +20,8 @@
 #
 # Not "files nobody is told to edit" — the transformations differ in kind and the consequence is
 # the same. A file the install renames can never be found at the path the list names. A file a
-# profile substitutes into never matches the hash it shipped with. A file whose placeholders step
-# 3 fills is modified before its first commit. In all three the check reports FAILED on a correct
+# profile substitutes into never matches the hash it shipped with. A file whose tokens the install
+# substitutes is modified before its first commit. In all three the check reports FAILED on a correct
 # adoption, on the first line of output an adopter ever sees, and what it teaches is that failing
 # checks are normal — which costs more than the check was ever worth.
 #
