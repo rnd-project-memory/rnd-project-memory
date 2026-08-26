@@ -27,7 +27,8 @@ The handbook is the authority. Where the two disagree, fix the skeleton.
 Read the handbook's sections 1–3 first — they are the whole idea, and the rest is mechanism.
 
 ```bash
-git clone <this repository> && cd rnd-project-memory
+git clone https://github.com/rnd-project-memory/rnd-project-memory.git
+cd rnd-project-memory
 ./install.sh ../my-project my-project you@example.org
 ```
 
