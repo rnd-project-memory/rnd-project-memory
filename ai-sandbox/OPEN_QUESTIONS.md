@@ -91,9 +91,27 @@ resolve to a different question. A slug, once assigned, is never changed.
   it was measured on touched more files afterwards, not fewer. The extraction stands on its own
   merits — a gate that reimplements what it gates tests its own copy — but it is deliberately not
   counted as evidence here, because the one measurement taken of it came out against.
-- **What would answer it:** the manual path timed on a real session, against the same session
-  performed with an assistant. Until that number exists, "a human can pick it up from any point"
-  is an assertion, and the design cannot be steered by it.
+
+  **The number arrived on 2026-08-26** (`EXP-2026-08-26-green-start-manual`): **12 minutes 11
+  seconds**, unassisted, from the online documentation. A lower bound — the operator had seen the
+  project before — and the endpoint is *installed*, not *ready to work*: seven blanks were still
+  unanswered. What it settles is narrower than the question and worth stating exactly: **the
+  manual path is not the obstacle.** All four costs in that log are documentation defects, not
+  irreducible work.
+
+  What it does **not** settle is the recurring cost. Installing happens once; writing a session
+  record, rewriting a checkpoint and sweeping the registers happens every session, and none of
+  that has been timed by hand even once. The availability dependency this question is about lives
+  there, not in the install.
+
+  The assisted arm (`EXP-2026-08-26-green-start-assisted`) adds the other side and one warning: an
+  assistant given documentation and no answers produced a correct install and three honest open
+  questions, needing a person for nothing — but where it needed a person, it did not ask. It filled
+  a structured field with a forbidden value rather than stopping. Judgement did not transfer to
+  the one slot that offered no escape.
+- **What would answer it:** the **recurring** half, timed — one ordinary session's closing
+  performed by hand, against the same closing performed with an assistant. The install half is now
+  measured; this half is not, and it is the half that repeats.
 
 ## Q-session-boundary · Is closing a session the same gesture as saving one? 🟡
 

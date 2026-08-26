@@ -60,37 +60,40 @@ is undecided.
 
 ## Current focus
 
-**`v3.1.0` and `v3.1.1` are released, the root runs on `v3.1.1`, and nothing is pushed.** The
-install stops being prose — `install.sh` performs what has one correct answer, `skeleton/README.md`
-points at it, `bootstrap-test.sh` calls it. Blanks only a person can answer are marked `<<FILL:`
-and counted; session filenames carry no counter. All four defects that a failed attempt to start a
-new project turned up are closed.
+**The template has been installed from outside this repository for the first time**, twice: once
+by a fresh assistant given only the public URL, a title and one paragraph, and once by a person
+unassisted with a stopwatch. Both against `v3.1.1`. Records:
+`EXP-2026-08-26-green-start-assisted` (*supports, with one field failing*) and
+`EXP-2026-08-26-green-start-manual` (*supports*, **12:11**).
 
-**The next move is the one this whole thread exists to enable and cannot perform**: a new project
-started from the template by a session with no access to this one. Its design is in
-`CHECKPOINT-install-path.md`, Gap 2, and the parts that must be fixed before it starts are fixed
-there rather than decided during it.
+**Five findings, none acted on** — deliberately, so that what the experiments found and what was
+done about it stay separable. They are in `CHECKPOINT-install-path.md`, Gap 1.
 
 Four things worth carrying:
 
-- **A symmetric defect is invisible from one side.** `upgrade-template.md` step 5 diffed only
-  `RULES.md`; so did `MIGRATIONS.md` step 4. Repairing the receiving end in the morning made the
-  sending end *less* likely to be noticed, because nothing failed any more. Only an audit reading
-  both found it.
-- **Every defect the alignment audit's *reading* found was in text written that same day** — a
-  duplicated line, a run-on paragraph, square brackets offered for typing in the guide about which
-  brackets are literal. No check could catch them and none was subtle. They were invisible because
-  the author wrote them.
-- **A check can be right for the adopter and wrong for the author**, which is the usual
-  self-hosting asymmetry reversed and worse for it: the person able to fix a false alarm is the
-  one being taught to ignore it.
-- **The two instruments have different blind spots.** `bootstrap-test.sh` passed all day while
-  `check.sh` was reporting nine false positives here, because a scratch install contains no prose.
-  Neither is redundant.
+- **Prose gave the assistant an escape and it used it; a structured field gave it none and it
+  took the forbidden value.** Where the paragraph underdetermined the project, it wrote explicit
+  absences and opened three questions — exactly the documented pattern, with no operator input and
+  no questions asked. Then it stamped every one `Owner: <a git address>`, thirteen lines under a
+  bold rule forbidding that. The field carries *always filled in* and *not an address* and nothing
+  says **ask**.
+- **A fix that removes a false positive can install a false negative in the same stroke.** The
+  blank check was anchored to `^<<FILL:` in the morning to clear nine false positives here; by
+  evening two half-answered markers in the two session-loaded files were passing as `ok`. The
+  second failure is the more expensive: the first is loud, the second looks like success.
+- **The assistant beat the person at the one parameter whose documentation is ambiguous.** The
+  guide's example makes the destination path and the project name read as the same string; the
+  person supplied the folder name and got `# churn-signals`, the assistant read the title and got
+  `# Churn Signals`. Nothing checks it.
+- **Same-family evidence is weak evidence.** `CONFIGURATIONS.md` says so, the documentation was
+  written by an assistant, and the assisted arm ran on one of the same family. Cite it as nearer
+  self-review than a test until a second provider runs it.
 
-`Q-who-keeps-the-history` and `Q-session-boundary` 🟡 open — the first is answered by the
-unassisted arm of that experiment. `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
-`Q-contribution-flow` 🟢 need answers from outside this repository.
+`Q-who-keeps-the-history` 🟡 has its first number and a sharper remaining question: the install is
+measured, the **recurring** cost of keeping the record by hand is not, and that is where the
+availability dependency actually lives. `Q-session-boundary` 🟡 open;
+`Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers
+from outside this repository.
 
 ## What a new session does
 

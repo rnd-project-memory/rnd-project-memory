@@ -2,14 +2,14 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** `v3.1.0` and `v3.1.1` are released and the root runs on `v3.1.1`. All four
-  original install defects are closed, the documents have been audited against what the release
-  does, and nothing is pushed. The next move is the new-project experiment, which this thread
-  cannot perform.
-  **Do not do until re-verified:** do not claim the new-project path works. It has been tested by
-  `bootstrap-test.sh`, which is this repository installing its own skeleton — the same blind spot
-  `ADR-008` exists for, one level up. No person has followed the rewritten step 3 from a clean
-  start, and the one attempt that produced this thread was made against the *old* text.
+- **Resume from:** both green-start arms have run against `v3.1.1` and are recorded. Five findings
+  are named and none is acted on. The install path is now evidenced from outside this repository
+  for the first time.
+  **Do not do until re-verified:** do not cite the assisted arm as independent evidence. It ran on
+  a model of the same family as the documentation's author, which `CONFIGURATIONS.md` rates *weak*
+  — nearer self-review than a test. And do not read `12:11` as the cost of the manual path: it is
+  the cost of *installing*, by someone who had seen the project before, with seven blanks still
+  unanswered at the endpoint.
 
 > This file belongs to one thread, named for what is being worked on. Only whoever it names as
 > `Held by:` writes it. Rewritten, never appended; only what is unsettled.
@@ -34,57 +34,41 @@
 
 ## In progress
 
-### Gap 1 — nothing is published (priority: high)
+### Gap 1 — five findings from the green start, none acted on (priority: high)
 
-Two tags and twelve commits are local. `v3.1.0` was re-cut once before publication, which the
-`v1.2.0` precedent licenses, and `v3.1.1` followed as the alignment pass. Once pushed, neither can
-be re-cut, so the question is only whether anything else should ride with them. The rehearsal that closed
-that question — running `install.sh` from a clone — found the shallow-clone defect, which is fixed
-and needs no release, `install.sh` being `norcopy`.
+Deliberately left, so that what the experiments found and what was done about it stay separable.
+Ordered by what they cost, not by effort:
 
-*Template repository* has been unticked and the button is gone, verified visually. The warning was
-re-aimed rather than deleted, because **the switch is a repository setting that no check here can
-read and that turning back on restores silently** — the first surface this project depends on that
-nothing in it can watch. Published. The adopter's first move was then rehearsed from an environment with no credentials:
-`git clone https://…` over HTTPS succeeds anonymously — the SSH `origin` in the author's own clone
-is a property of that clone, not of the repository — and `install.sh` from the fresh clone records
-`v3.1.1` correctly. The rehearsal found one defect and it was on the landing page: the clone
-command read `git clone <this repository>`, an angle-bracket placeholder, in the project whose
-last release was about angle brackets being misread. Fixed with the literal URL; it would have
-stopped the experiment on its first command.
+1. **`Owner:` has two rules and no third exit** — *always filled in* and *not a git address* — and
+   nothing says *ask*. The assisted arm took the forbidden value. Needs the third exit written into
+   the register preamble and `RULES.md`, plus a check: `Owner:` containing `@`.
+2. **The `<<FILL:` marker can be half-removed.** Two of seven were answered leaving their closing
+   bracket, in the two files loaded into every session, and `check.sh` said `ok`. Both were
+   multi-line. A closing token on its own line makes a remnant visible and exactly checkable —
+   `>>` occurs nowhere else in the skeleton.
+3. **`install.sh`'s second argument is unclear**, and the guide's example
+   `./install.sh ../my-project my-project` makes the destination path and the project name read as
+   one string. The manual arm supplied the folder name and got `# churn-signals` where the
+   assisted arm got `# Churn Signals`. Nothing checks it.
+4. **Neither arm produced a project `README.md`**, nothing explains its absence, and only the
+   person noticed — after searching three documents.
+5. **Install guidance lives in three places**, one of which the install deletes. The same
+   duplication the installer extraction addressed, one level up.
 
-### Gap 2 — the experiment this thread exists to enable (priority: high)
+### Gap 2 — the assisted arm was same-family (priority: medium)
 
-A new project started from the template, by a session with no access to this one. It cannot be run
-from here: whoever ran today's work has read the whole skeleton, knows the three bracket classes,
-and wrote the installer, so a success measures memory rather than documentation — the same reason
-§11 step 5 cannot be run from inside the bootstrap session.
+`CONFIGURATIONS.md` rates a model of the same family as the documentation's author *weak*
+evidence, and the documentation was written by an assistant. A second assisted arm on a different
+provider costs nothing extra and moves the result a rung up the ladder. Until then the assisted
+result is nearer self-review than an independent test, and should be cited that way.
 
-Fixed in advance, or it measures nothing: the project paragraph written before either arm starts,
-so both get the same input; two arms, assisted and unassisted, the second timed, which is the
-number `Q-who-keeps-the-history` has been waiting for; and the primary measure is **invented
-content**, not time — confident statements about the project in the finished repository that
-nobody made.
+### Gap 3 — the pre-registered measurement, still waiting (priority: low)
 
-### Gap 3 — all four install defects are closed and none is verified (priority: medium)
-
-The placeholder class, the guide that asked to be deleted while being followed, the absent path
-for a project with no history, and the *Use this template* button. Every one closed by the person
-who found them, in the repository that cannot install anything.
-
-`bootstrap-test.sh` is self-hosting one level up: it installs into a scratch directory, which is
-why it passed all day while the blank check was reporting nine false positives here. Gap 2 is the
-only instrument that reaches this.
-
-### Gap 4 — the pre-registered next measurement (priority: low)
-
-`EXP-2026-08-26-install-extraction-cost` came out `contradicts` and retired its own metric.
-The question it leaves, registered before it can be chosen to fit an answer: **does a change to
-the install's mechanism alone — no instruction changed, no behaviour added — touch one file after
-extraction where it touched two before?** Gap 4 could not answer it, having added a behaviour.
-
-Not urgent. It needs a mechanism-only change to arrive on its own rather than be invented, which
-is the same discipline that made Gap 4 a usable subject.
+Does a change to the install's **mechanism alone** — no instruction changed, no behaviour added —
+touch one file after extraction where it touched two before? It needs such a change to arrive on
+its own rather than be invented. Finding 3 above may be it: renaming an argument changes the
+mechanism *and* the guide, so probably not. Finding 2 might be, if the marker's form changes
+without the instruction changing.
 
 ## Promotion candidates
 
