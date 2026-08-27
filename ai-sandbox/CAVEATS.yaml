@@ -1,8 +1,7 @@
 # rnd-project-memory — Caveats register
 #
-# Empty, and legitimately so: this project has no data environment (see AGENTS.md) and no
-# traps to find. Populated the day a real data or tool trap is found — an empty register here
-# is not a gap, the same way SOURCES.md being empty isn't.
+# This project has no data environment (see AGENTS.md), so the traps here are tool traps from
+# the experiment harness rather than data traps. The register stood empty until 2026-08-27.
 #
 # Data and tool traps: things that produce a plausible, wrong answer without an error.
 # Search by `subject` before touching what it names — this file is found, not read start to end.
@@ -23,3 +22,23 @@
 #   status    (optional) confirmed | inferred | unverified-by-design.
 #   verify    (optional) Required when status is `inferred`: the check that would settle it.
 #   corrected / superseded_by  (optional) How this was addressed, without deleting the record.
+
+- id: C-copilot-model-build
+  subject: GitHub Copilot CLI — the model identifier shown to the user
+  kind: tool
+  severity: critical
+  what: >
+    Copilot CLI v1.0.80 exposes a model *name* and no build. "GPT-5.6 Luna" in two runs a
+    fortnight apart may be two different models, and nothing in the interface says so. The
+    plausible wrong answer this produces is the one the green-start experiments are built on:
+    two runs are compared, they differ, and the difference is attributed to the change under
+    test when the model moved underneath. It fails silently in the exact sense this register
+    reserves `critical` for — there is no error, no warning, and the comparison looks sound.
+    What can be recorded is the name as displayed, the CLI version, and the timestamp; the
+    timestamp is the only proxy for the build, and it is a weak one.
+    Mitigation is design, not instrumentation: run the arms of a comparison close together, and
+    repeat one condition so that run-to-run variance and model drift land in the same measured
+    bucket rather than in an assumption.
+  found: 2026-08-27
+  basis: sessions/2026-08-27-adr-013-and-the-rule-it-withdraws.md
+  status: confirmed
