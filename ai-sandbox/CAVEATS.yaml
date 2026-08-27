@@ -24,7 +24,7 @@
 #   corrected / superseded_by  (optional) How this was addressed, without deleting the record.
 
 - id: C-copilot-model-build
-  subject: GitHub Copilot CLI — the model identifier shown to the user
+  subject: GitHub Copilot CLI — the model identifier, and the harness version under it
   kind: tool
   severity: critical
   what: >
@@ -42,3 +42,11 @@
   found: 2026-08-27
   basis: sessions/2026-08-27-adr-013-and-the-rule-it-withdraws.md
   status: confirmed
+  corrected: >
+    2026-08-28 — widened, because the confound that materialised was the one this entry did not
+    name. The CLI itself moved, v1.0.80 to v1.0.81, between a recorded baseline and the runs
+    compared against it (EXP-2026-08-28-probe-and-cause-a). That version *is* displayed, so it is
+    recordable and was recorded — but only because someone thought to look. **Record the harness
+    version with every run, not only the model name.** The entry was written about an invisible
+    build and the first thing to bite was a visible one nobody was watching, which is the more
+    general lesson: an unobservable confound gets a caveat, and an observable one gets forgotten.
