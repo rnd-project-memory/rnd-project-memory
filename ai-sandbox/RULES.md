@@ -5,6 +5,21 @@
 > belongs in `AGENTS.md`, which is yours. `RATIONALE.md` explains why each rule below exists;
 > read it on demand and do not import it.
 
+- **Never write a fact nobody supplied.** Where an entry, a section or a field calls for
+  something you were not told and cannot derive from this repository, **stop and ask**. Leaving it
+  unanswered is a legitimate outcome; recording the gap — an install marker left in place, an
+  `OPEN_QUESTIONS.md` entry, a sentence saying what is not yet decided — is a better one. (The
+  marker is not spelled out here on purpose: this file ships into projects, and a literal one
+  would read as an unanswered blank to every tool that counts them — the fourth time that has
+  caught something.) Writing
+  a plausible answer is not, and it is the failure this whole system is built to prevent: a
+  document that reads as settled, is not, and cannot be told apart from one that is. This binds
+  hardest at the moment a project is set up, when the person and the repository both have least
+  to say and the pressure to produce something complete is highest.
+- **A field that must not be blank and has no correct value available is a stop, not a guess.**
+  Two rules on one slot with no third exit is a defect in the rules; say so and ask, rather than
+  reaching for the nearest value that is merely available. `Owner:` is the known case — it takes a
+  human name, is never the git address, and stays empty until someone gives you one.
 - **A thread's checkpoint is `ai-sandbox/CHECKPOINT-<thread-slug>.md`**, named for what is being
   worked on, not who is working on it. Only whoever it names as `Held by:` writes it — everyone
   else reads. Taking over a thread is an event: write it into your session file and add a

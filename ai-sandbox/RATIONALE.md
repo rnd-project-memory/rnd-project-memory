@@ -21,6 +21,31 @@ assistant.
 
 ## The rules in `RULES.md`, and why
 
+### Never write a fact nobody supplied; a slot with no correct value is a stop
+
+**Failure mode:** a document that reads as settled, is not, and cannot be told apart from one that
+is — by any check, or by a reader in three months, or by the person who wrote it.
+
+This is the system's central failure wearing its least obvious clothes. Everywhere else it appears
+as *lossy re-summarising*: a real fact degraded over five retellings. Here it appears fully formed
+on day one, in prose that is fluent, plausible and about nothing.
+
+The pressure is highest exactly where the material is thinnest — a project being set up, where the
+person has said one paragraph and the structure asks for eight sections. Success criteria nobody
+agreed to, a second and third stakeholder nobody named, a scope boundary nobody drew: each is
+easier to write than to leave, and each reads afterwards as a decision that was taken.
+
+Two runs of the same setup on different assistants produced opposite behaviour from the same
+documents — one recorded the gaps, one filled them — and the mechanical checks reported both as
+clean. **A check can see that a blank was answered. It cannot see whether the answer is true.**
+That boundary is why this is a rule and not a check.
+
+The second half — a field that must not be blank and has no correct value is a stop — covers the
+narrower case where the rules themselves squeeze. `Owner:` must be filled, must be a human name,
+and no human name may be available; an assistant caught between the two took the git address,
+which is available and forbidden. Where two rules meet on one slot with no third exit, the defect
+is in the rules, and saying so is the correct move.
+
 ### `docs/` holds settled conclusions only; changes are reviewed before they land
 
 `docs/` is what the project will still believe in a year. Anything unreviewed that lands there
@@ -281,6 +306,8 @@ automates the mechanical half.
 | The assistant reads only head and tail of a file | That file mixes state with history | Split it |
 | The same fact in `docs/` and `ai-sandbox/` | A promotion copied instead of moved | Delete the sandbox copy |
 | `OPEN_QUESTIONS.md` full of `Resolved` entries | Statuses used instead of deletion | Delete them |
+| A young project's `docs/` reads as complete | Blanks answered from nothing at setup | Delete what nobody supplied; open questions in its place |
+| A field filled with a value from the wrong register | Two rules on one slot and no third exit | Empty it and ask; report the squeeze |
 | A register full of stale low-priority questions | No exit for questions that stopped mattering | Delete as obsolete; log the reason |
 | A register with no deletions for months | It has become a journal, not a registry | Resume deleting, or declare it a journal and split off current state |
 | A number in `docs/` with no date or source | Provenance discipline lapsed | Re-verify or remove it |
