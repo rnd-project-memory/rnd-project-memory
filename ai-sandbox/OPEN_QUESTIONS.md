@@ -27,9 +27,14 @@ resolve to a different question. A slug, once assigned, is never changed.
 > value, which names a temporary write claim and is bound to `git config user.email`
 > (`ADR-012`).
 >
-> **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
-> claimed this* — the signal the field exists to carry. If solo-era entries are left
-> blank, that meaning is destroyed the day a second person joins.
+> **Blank means nobody has claimed this**, and that is the signal the field exists to carry. So
+> **raise the entry anyway when you have no name to put here** — an unowned question in the
+> register is worth far more than a question that was never written down because one field could
+> not be filled.
+>
+> What blank must never mean is *the owner is known and nobody typed it*. Fill it as soon as
+> someone takes the entry; if solo-era entries that do have an owner are left blank out of habit,
+> the signal is destroyed the day a second person joins.
 
 ---
 

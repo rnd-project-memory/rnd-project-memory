@@ -1,6 +1,6 @@
 # rnd-project-memory — Claims Index
 
-- **Updated:** 2026-08-26
+- **Updated:** 2026-08-27
 
 > **An index, not a second copy.** One line per claim: a shorthand, the file it lives in, when
 > it landed, and what it rests on. The claim's actual wording stays in its file — restating it
@@ -77,3 +77,8 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | A note is owed only where conforming was impossible | `docs/method.md` | 2026-08-25 | `ADR-010` |
 | The bump level depends on the rule's wording because the wording is the consumer's obligation | `docs/method.md` | 2026-08-25 | `ADR-011` |
 | An exception that keeps a release MINOR must be inert or expiring | `docs/method.md` | 2026-08-25 | `ADR-011` |
+| The instrument is chosen by detectability, not by severity | `docs/method.md` | 2026-08-27 | `ADR-013` |
+| A rule enters `RULES.md` only through three gates: document property, no check possible, one home | `docs/method.md` | 2026-08-27 | `ADR-013` |
+| Failures generalise; successes do not | `docs/method.md` | 2026-08-27 | `ADR-013` |
+| Provider disagreement is signal; same-model run disagreement is noise until it recurs | `docs/method.md` | 2026-08-27 | `ADR-013` |
+| An advisory warning must be clearable, and is elevated to blocking, never to a rule | `docs/method.md` | 2026-08-27 | `ADR-013` |

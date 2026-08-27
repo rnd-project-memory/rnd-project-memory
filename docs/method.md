@@ -1,6 +1,6 @@
 # rnd-project-memory — Method
 
-- **Updated:** 2026-08-23
+- **Updated:** 2026-08-27
 
 > Current best understanding of how the template is built, versioned and delivered. **No history
 > here** — no "we used to think". Rationale for contested choices lives in `decisions/`; evidence
@@ -68,6 +68,11 @@ its own memory at the root, vendored from a released tag.
 | A note is owed only where conforming was impossible; the test is whether the record could have conformed when written | `ADR-010` |
 | The bump level depends on the rule's wording, because the wording is the consumer's obligation | `ADR-011` |
 | An exception that keeps a release MINOR must be inert or expiring; otherwise it is a deferred MAJOR | `ADR-011` |
+| The instrument is chosen by detectability: a rule only where no check can see the failure, a check where late detection is a remedy, a blocking hook plus a rule where it is not | `ADR-013` |
+| A rule enters `RULES.md` only if the defect is a property of the document, no check could catch it, and it is stated in one place | `ADR-013` |
+| Failures generalise and successes do not: one observed failure licenses a fix, one clean run never licenses "works" | `ADR-013` |
+| Disagreement between providers is evidence about the document; disagreement between runs of one model is noise until it recurs | `ADR-013` |
+| Every advisory warning must be clearable, and a warning is elevated to blocking, never to a rule | `ADR-013` |
 
 ## Known limitations
 
