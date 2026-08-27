@@ -241,6 +241,25 @@ hits=$(grep -rn 'Resolved\|RESOLVED\|~~' "$SB"/OPEN_QUESTIONS.md "$SB"/ASSUMPTIO
        | grep -vE ':[0-9]+:[[:space:]]*>' | cut -c1-160)
 if [ -n "$hits" ]; then echo "$hits" | sed 's/^/  /'; else echo "  clean"; fi
 
+n "Owner: taking an address instead of a name"
+# `Owner:` names who is accountable for a register entry and takes a human name; the git identity
+# is `Held by:`, a different field with a different lifetime (ADR-012). An adopting assistant put
+# the address here because it was the only value available to it.
+#
+# This is a check and not a rule, under ADR-013: a check catches the failure on every reader and
+# every run, while the rule that stood here in v3.2.0 was read, weighed, and cost more than it
+# saved — told to ask when no name was available, the next assistant judged that asking "could
+# block progress" and skipped raising entries at all. Late detection is a full remedy here, so the
+# check is the whole instrument.
+own=$(grep -rn --exclude-dir=.git --exclude-dir=sessions --exclude-dir=experiments \
+        -- '\*\*Owner:\*\*[^@]*@' "$SB" 2>/dev/null)
+if [ -n "$own" ]; then
+  echo "$own" | sed 's/^/  ?     /'
+  echo "        Owner: takes a human name. The address belongs in Held by:, on a checkpoint."
+else
+  echo "  ok    no Owner: field carries an address"
+fi
+
 n "Adoption notes"
 # A note records a divergence a file inherited at adoption and could not close. It is a bootstrap
 # artefact: notes belong to what the project brought with it, not to current work. Neither number
