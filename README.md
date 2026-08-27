@@ -42,7 +42,7 @@ re-orders all of this.
 
 ## Status
 
-`v3.3.0`. Fourteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.4.0`. Fifteen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -83,6 +83,12 @@ came out of that: the defect was structural, in a register preamble that said a 
 filled and that blank carries meaning; and a rule was the wrong instrument for something a
 one-line check detects. `ADR-013` now decides that choice in general — **the instrument follows
 detectability, and a rule is the last resort, for failures nothing can see.**
+
+**`v3.4.0` applies `ADR-013`'s third gate to the release before it**, removing a short form of one
+rule that `v3.2.0` had added at each of the seven install markers. One rule stated in one place,
+pointed at elsewhere, never restated. Whether the restatement was doing any work is the next
+measurement — a variance probe has already established that this instrument repeats itself on
+coarse outcomes, so a single comparison is readable.
 
 What is still narrow: one adopting project besides these three starts, multi-user behaviour
 reasoned from the design rather than observed, and upgrades still performed by whoever writes the
