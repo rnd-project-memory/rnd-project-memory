@@ -42,49 +42,43 @@ re-orders all of this.
 
 ## Status
 
-`v3.1.1`. The memory half — sections 1–14 of the handbook — has been run against a real
-single-author project. The delivery half (§15: ownership layers, versioning, migrations) has been
-exercised too: twelve releases, `v1.0.0` through `v3.1.1`, including two real structural migrations
-(`v1.2.0` → `v2.0.0`, a checkpoint-axis rename; `v2.4.0` → `v3.0.0`, retiring the declared
-per-person token in favour of the clone's git identity).
+`v3.2.0`. Thirteen releases. The memory half — sections 1–14 of the handbook — has been run
+against a real single-author project; the delivery half (§15) has been exercised across two real
+structural migrations.
 
-**The system has been adopted once by someone other than its author**, into a project already
-three months old with its own working memory, following only the public documentation. That trial
-produced a friction log rather than a tidy adoption, which was the point, and `v2.2.0` is what came
-out of it.
+**Three independent green starts have now been run against `v3.1.1`**, the first evidence about
+this template that does not come from the repository that ships it:
 
-The sharpest thing it found was not in the log. Three defects had shipped through four releases
-because they live in the **installation** — a rename, a placeholder fill, a choice of what to
-copy — and a repository that hosts the system on itself never installs anything. Its own checks
-reported `ok` while every adopter would have seen a failure on the first line of output. The
-general form is worth stating plainly: **a system that checks itself sees the settled state and is
-blind to the transition.** `bootstrap-test.sh` now performs that transition at release time.
+| Arm | Result |
+|---|---|
+| A person, unassisted, from the online documentation | installed in **12 minutes**, four documentation defects on the way |
+| An assistant, same model family as this documentation's author | recorded what it was not told, opened three questions, invented nothing |
+| An assistant, **a different provider** | filled every underdetermined section confidently and raised no questions |
 
-`v3.1.0` came from an attempt to start a *new* project from the template, which failed on the
-install guide rather than on the system. Its instruction to *"replace every `<PROJECT_NAME>` and
-`<PLACEHOLDER>`"* named a token that does not exist — one syntax was carrying three things with
-three lifetimes: 20 mechanical tokens, 7 blanks only a person can answer, and around 170
-occurrences of example field syntax that must never be touched. An install following it destroys
-`ai-sandbox/INDEX.md`'s routing table, which every session loads. The blanks are now marked
-`<<FILL: …>>` and counted; the mechanical steps have moved out of prose entirely into `install.sh`,
-which the guide points at rather than describes; and `bootstrap-test.sh` runs that installer rather
-than reproducing it, having previously reproduced it and thereby tested its own copy.
+The third outranks the second — the project's own independence ladder rates a same-family model
+*weak* evidence. So the honest reading of the pair is not one pass and one fail: **an instruction
+telling an assistant not to invent is not load-bearing across providers**, and one run agreeing
+with a rule is not evidence that the rule binds.
 
-**What that release does not claim.** Extracting the installer was measured, and the measurement
-came out against the reasoning behind it: replaying a queued change afterwards touched more files,
-not fewer (`EXP-2026-08-26-install-extraction-cost`, `contradicts`). The extraction stands on a
-different argument — a gate that reimplements what it gates cannot detect the two disagreeing —
-and the metric that failed is retired in the record rather than replaced with one chosen after the
-result.
+Two causes, both ours, and `v3.2.0` is what came out of them. The rule itself — *fill only from
+what you were told* — existed in exactly one file, the install guide, which is never copied into a
+project and so bound nobody after the install; it now lives in `ai-sandbox/RULES.md`, which every
+session loads. And `ai-sandbox/DATA_ENVIRONMENT.md` shipped asserting a Python/`uv` stack as fact
+while `AGENTS.md` instructed that the stack named must match it — so the assistant that "invented"
+a stack was obeying us. The handbook had forbidden exactly this for four releases: *shipping one
+full of instructions for a stack the project does not have is worse than shipping nothing*. The
+artefact was wrong and the authority was right, which is the direction that rule exists for.
 
-What is still narrow: one adopter, one project, and multi-user behaviour reasoned from the design
-rather than observed. Upgrades are still performed by the person who writes the migrations, which
-is the setup least likely to catch a subtle mistake. And **no new project has yet been started
-from this template by anyone**, which is the next thing to find out rather than something the
-release notes can settle.
+**What is still not solved, and is now measured rather than assumed:** `check.sh` reports clean on
+a repository of honest absences and on a repository of confident fiction. It can see that a blank
+was answered and not whether the answer is true. The design's answer has always been that a person
+reviews `docs/` before it lands — and on day one there is no such review, because the project has
+no history and nobody has read anything yet.
 
-This repository runs the system on itself and upgrades itself first, deliberately, so that the
-first thing to break belongs to whoever wrote it.
+What is still narrow: one adopting project besides these three starts, multi-user behaviour
+reasoned from the design rather than observed, and upgrades still performed by whoever writes the
+migrations. This repository runs the system on itself and upgrades itself first, deliberately, so
+that the first thing to break belongs to whoever wrote it.
 
 ## Licence
 
