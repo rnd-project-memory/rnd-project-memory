@@ -2,11 +2,12 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** three green-start arms have run against `v3.1.1` — two assisted, one manual —
-  and all are recorded. Eight findings are named and none is acted on.
+- **Resume from:** `ADR-013` is signed, `v3.3.0` is released and the root runs on it. Two runs are
+  pre-registered below and neither has been performed.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
-  lacks information. Two assisted arms disagree, and **the one that outranks the other is the one
-  that failed**. Do not read `12:11` as the cost of the manual path either — it is the cost of
+  lacks information. Two assisted arms disagree, the one that outranks the other is the one that
+  failed, and the one clean run is written up as *worked once*. Do not remove the marker flags
+  before Run 1 — that is the baseline they are the treatment against. Do not read `12:11` as the cost of the manual path either — it is the cost of
   *installing*, by someone who had seen the project before, with seven blanks unanswered at the
   endpoint. And do not treat `3.49 AIC` as a saving against it: the cheap run is the one that
   invented.
@@ -34,50 +35,50 @@
 
 ## In progress
 
-### Gap 1 — the two causes are fixed and unverified; six findings remain (priority: high)
+### Gap 1 — two runs, pre-registered before either is run (priority: high)
 
-Findings 1 and 2 shipped in `v3.2.0`. **Whether they change the behaviour they were written for is
-unknown from here**, and the measurement belongs to whoever runs it: the same prompt, the same
-provider, `v3.2.0`, with these two changes and nothing else. Six remain, untouched on purpose so
-that re-run has one treatment rather than a bundle:
+Written down now so that no more convenient outcome can be chosen after a result. Both runs use
+the frozen prompt, the same provider and interface as the recorded arms, close together in time,
+with the model version recorded.
 
-3. **`OPEN_QUESTIONS.md`'s example entry carries no marker.** An untouched register is
-   indistinguishable from a filled one to every check — predicted correctly by the independent arm
-   before it walked past it.
-4. **`Owner:` has two rules and no third exit** — *always filled in* and *not a git address* — and
-   nothing says *ask*. The same-family arm took the forbidden value. Needs the third exit written
-   down, plus a check on `@`.
-5. **The `<<FILL:` marker can be half-removed.** Two of seven left their closing bracket, in the
-   two files loaded into every session, and `check.sh` said `ok`. Both were multi-line. A closing
-   token on its own line makes a remnant visible and exactly checkable.
-6. **`install.sh`'s second argument is unclear**, and the guide's example makes the destination
-   path and the project name read as one string. The manual arm supplied the folder name.
-7. **No arm produced a project `README.md`** — three for three — nothing explains its absence, and
-   only the person noticed.
-8. **Install guidance lives in three places**, one of which the install deletes.
+| | State | Measures |
+|---|---|---|
+| **Run 1** | `v3.3.0` — cause A fixed, marker flags **present** | **A**, against the recorded `v3.2.0` run |
+| **Run 2** | Run 1's state with the marker flags **removed** | **B**, against Run 1 |
+
+**Two binary outcomes, and nothing finer.** At one run per cell anything more detailed is
+unreadable against the model's own variance:
+
+1. **Were entries raised in `OPEN_QUESTIONS.md`** — yes/no.
+2. **Was anything invented** — yes/no, judged by reading the seven answers against the frozen
+   paragraph.
+
+**Reading the result.** Runs 1 and 2 agreeing is decent evidence the flags do not matter — if they
+mattered, a difference was expected and none appeared. Runs 1 and 2 differing is *not* proof that
+they do: at n=1 per cell it cannot be separated from run-to-run variance, which `ADR-013` calls
+noise until it recurs.
+
+**Run 2 is not really about seven lines of marker text.** It is the first test of `ADR-013`'s third
+gate. If removing a restatement costs behaviour, the gate has a price, and that is worth knowing
+before it is applied again.
+
+**Why A had to ship first.** After A, the tree differs from `v3.2.0` by two things, so removing the
+flags now and comparing against the recorded run would measure A and B together — the mistake the
+`install.sh` extraction experiment already made.
 
 ### Gap 2 — what the mechanical layer cannot see (priority: high)
 
-`check.sh` is clean on a repository of honest absences and on a repository of confident fiction.
-That boundary is now measured rather than assumed, and no check proposed above closes it: finding 3
-catches an *untouched* register, and nothing catches a *confidently wrong* one.
+`check.sh` is clean on a repository of honest absences and on one of confident fiction. `ADR-013`
+turns this from an open task into a stated boundary: where neither a rule nor a check applies, the
+limit is recorded and left. Nothing in Gap 1 closes it.
 
-This is a limit to state in the handbook rather than a defect to fix. The design's answer has
-always been that a person reviews `docs/` before it lands; what the experiments show is that on
-day one there is no such review, because the project has no history and nobody has read anything
-yet.
+### Gap 3 — six findings from the green starts, still untouched (priority: medium)
 
-### Gap 3 — three variables, two runs (priority: medium)
-
-Provider, interface and prompt phrasing are confounded. The prompt says *"create a project"*,
-which invites completion; *"adopt this template"* might not, and that is untested and cheap to
-test. Copilot CLI approves each command separately and Claude Code does not. Nothing here
-separates the three.
-
-### Gap 4 — the pre-registered measurement, still waiting (priority: low)
-
-Does a change to the install's mechanism alone touch one file after extraction where it touched
-two before? Findings 1 and 2 change instructions, so neither is the subject. Finding 5 might be.
+`OPEN_QUESTIONS.md`'s example entry carries no marker, so an untouched register is
+indistinguishable from a filled one. `install.sh`'s second argument and its example. No arm has
+produced a project `README.md` — three for three. Install guidance in three places. The `<<FILL:`
+marker can be half-removed. And provider, interface and prompt phrasing remain confounded across
+the arms.
 
 ## Promotion candidates
 

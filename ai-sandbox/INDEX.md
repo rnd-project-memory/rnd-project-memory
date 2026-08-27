@@ -60,34 +60,31 @@ is undecided.
 
 ## Current focus
 
-**`v3.2.0` is released and the root runs on it.** It fixes the two green-start findings that could
-have changed the result, and only those, so that a re-run measures them rather than a bundle.
+**`ADR-013` is signed and `v3.3.0` is released.** The instrument follows **detectability**, not
+severity: a rule in `RULES.md` only where no check can see the failure, an advisory check where
+late detection is a remedy, a blocking hook plus a rule where it is not. Three gates for any new
+rule; two evidence asymmetries.
 
-- **The no-invention rule now reaches a project.** It lived in `skeleton/README.md` alone, which
-  is `norcopy` — an absent rule after the install, not a weak one. Now: authority in
-  `ai-sandbox/RULES.md`, pointer in the guide, short form at each marker. The marker form is
-  deliberately not relied on; one marker already carried its escape and the independent arm read
-  it and declined.
-- **`DATA_ENVIRONMENT.md` no longer asserts a stack**, and `AGENTS.md` no longer orders a match
-  against it. The assistant that named Python/`uv` for a project that never mentioned one **was
-  obeying us**.
+**It withdrew one of `v3.2.0`'s own rules a release later**, which is the point of having it.
 
-Three things worth carrying:
+Four things worth carrying:
 
-- **The artefact was wrong and the authority was right.** The handbook has forbidden shipping a
-  stack the project does not have for four releases; the skeleton shipped it anyway. First time
-  `skeleton/README.md`'s handbook-wins rule has run in that direction.
-- **A rule in a `norcopy` file binds nobody.** `v2.4.0` found the same shape with the secret-scan
-  hook. Reach is decided by layer, not by how emphatically a thing is written.
-- **What `check.sh` cannot see is now a stated boundary**, not an open task: it sees that a blank
-  was answered, never whether the answer is true. The design's reviewer is a person, and on day
-  one there is not one.
+- **A criterion is worth what it costs you, not what it costs others.** `ADR-013` flags two of the
+  five edits in the release that prompted it, and the one failing its second gate is the one that
+  regressed.
+- **A rule can cost more than the failure it prevents.** Told to ask when `Owner:` had no name
+  available, the next assistant judged that asking would block progress and skipped the register
+  entirely. One wrong value in one field, traded for an unused register.
+- **The defect under it was structural, not behavioural.** The preamble said the field is *always*
+  filled and that blank means *nobody has claimed this*. Both cannot hold. Fixing the sentence is
+  what removes the squeeze; the rule had been instructing people around it.
+- **Two runs are pre-registered before either is performed**, with two binary outcomes fixed in
+  advance — because after a result there is always a more convenient metric, and the file-count
+  experiment already made that mistake.
 
-**Nothing here is verified.** The two fixes are reasoning about a failure, not a measurement of a
-repair, and the thread says so. `Q-who-keeps-the-history` 🟡 — the manual half is measured, the
-assisted half is less settled than it was; `Q-session-boundary` 🟡 open;
-`Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers
-from outside this repository.
+`Q-who-keeps-the-history` 🟡 — install measured both ways, the recurring cost still not;
+`Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
+`Q-contribution-flow` 🟢 need answers from outside this repository.
 
 ## What a new session does
 

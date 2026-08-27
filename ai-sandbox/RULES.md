@@ -16,10 +16,6 @@
   document that reads as settled, is not, and cannot be told apart from one that is. This binds
   hardest at the moment a project is set up, when the person and the repository both have least
   to say and the pressure to produce something complete is highest.
-- **A field that must not be blank and has no correct value available is a stop, not a guess.**
-  Two rules on one slot with no third exit is a defect in the rules; say so and ask, rather than
-  reaching for the nearest value that is merely available. `Owner:` is the known case — it takes a
-  human name, is never the git address, and stays empty until someone gives you one.
 - **A thread's checkpoint is `ai-sandbox/CHECKPOINT-<thread-slug>.md`**, named for what is being
   worked on, not who is working on it. Only whoever it names as `Held by:` writes it — everyone
   else reads. Taking over a thread is an event: write it into your session file and add a
