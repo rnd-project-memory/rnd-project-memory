@@ -2,9 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the probe passed and cause A is supported and replicated
-  (`EXP-2026-08-28-probe-and-cause-a`). Run 2 is authorised under the pre-registered rule and has
-  not been performed.
+- **Resume from:** the probe passed, cause A is supported and replicated
+  (`EXP-2026-08-28-probe-and-cause-a`), and `v3.4.0` ships Run 2's treatment — the marker flags
+  removed under `ADR-013`'s third gate. Run 2 has not been performed.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms disagree, the one that outranks the other is the one that
   failed, and the one clean run is written up as *worked once*. Do not remove the marker flags
@@ -53,7 +53,7 @@ so a later reader can tell which this was.
 |---|---|---|
 | **Run 1** | `v3.3.0` — cause A fixed, marker flags **present** | **A** — done 2026-08-28, supports |
 | **Run 1′** | identical to Run 1, nothing changed | **the instrument** — done, **probe passes** |
-| **Run 2** | Run 1's state with the marker flags **removed** | **B**, against Run 1 — authorised, not yet run |
+| **Run 2** | `v3.4.0` — the marker flags **removed** | **B**, against Run 1 — authorised, state shipped, not yet run |
 
 In that order. The probe sits between them so that whatever it detects — the model's own variance,
 or a build that moved — is measured on the same days as the comparison it qualifies.

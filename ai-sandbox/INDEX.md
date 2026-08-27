@@ -60,34 +60,34 @@ is undecided.
 
 ## Current focus
 
-**`ADR-013` is signed and `v3.3.0` is released.** The instrument follows **detectability**, not
-severity: a rule in `RULES.md` only where no check can see the failure, an advisory check where
-late detection is a remedy, a blocking hook plus a rule where it is not. Three gates for any new
-rule; two evidence asymmetries.
+**The probe passed and cause A held.** Two runs of the identical condition, thirteen minutes
+apart, agreed on both pre-registered outcomes, so the stopping rule did not fire and Run 2 is
+authorised. Where the `v3.2.0` run left `OPEN_QUESTIONS.md` untouched, entries now appear in both
+runs with `Owner:` blank — the named mechanism, in the predicted field, twice
+(`EXP-2026-08-28-probe-and-cause-a`).
 
-**It withdrew one of `v3.2.0`'s own rules a release later**, which is the point of having it.
+**`v3.4.0` ships Run 2's treatment**: the seven marker flags removed under `ADR-013`'s third gate.
+Everything is in place; the run has not happened.
 
 Four things worth carrying:
 
-- **A criterion is worth what it costs you, not what it costs others.** `ADR-013` flags two of the
-  five edits in the release that prompted it, and the one failing its second gate is the one that
-  regressed.
-- **A rule can cost more than the failure it prevents.** Told to ask when `Owner:` had no name
-  available, the next assistant judged that asking would block progress and skipped the register
-  entirely. One wrong value in one field, traded for an unused register.
-- **The defect under it was structural, not behavioural.** The preamble said the field is *always*
-  filled and that blank means *nobody has claimed this*. Both cannot hold. Fixing the sentence is
-  what removes the squeeze; the rule had been instructing people around it.
-- **Three runs are pre-registered before any is performed**, with two binary outcomes fixed in
-  advance — because after a result there is always a more convenient metric, and the file-count
-  experiment already made that mistake. The third is a variance probe: the same condition run
-  twice. **The instrument has never been measured**, and Copilot CLI shows a model name without a
-  build (`C-copilot-model-build`), so run-to-run variance and an unobservable model update land in
-  one bucket. If the probe disagrees with itself, the comparison stops there.
+- **The choice of coarse outcomes decided the experiment.** The identical condition gave two
+  register entries in one run and one with merged scope in the other. A count metric would have
+  failed the probe and cancelled Run 2 **by the metric, not by the instrument** — and that could
+  never have been decided honestly after seeing it.
+- **The confound that materialised was the one nobody was watching.** `C-copilot-model-build` was
+  written about an *invisible* model build; the CLI moved *visibly*, v1.0.80 → v1.0.81, between
+  the baseline and the runs. An unobservable confound gets a caveat; an observable one gets
+  forgotten. Cause A is supported-with-a-confound, not clean.
+- **A pre-registration is worth most when it constrains you against your own interest.** The fine
+  outcome disagreed and was simply out of scope.
+- **Run 2 is not about seven lines of marker text.** It is the first test of `ADR-013`'s third
+  gate: if removing a restatement costs behaviour, the gate has a price worth knowing before it is
+  applied again.
 
 `Q-who-keeps-the-history` 🟡 — install measured both ways, the recurring cost still not;
-`Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and
-`Q-contribution-flow` 🟢 need answers from outside this repository.
+`Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 — `CAVEATS.yaml` has now run its full
+cycle, written and corrected; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside.
 
 ## What a new session does
 
