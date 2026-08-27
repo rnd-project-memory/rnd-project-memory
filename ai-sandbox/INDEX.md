@@ -78,9 +78,12 @@ Four things worth carrying:
 - **The defect under it was structural, not behavioural.** The preamble said the field is *always*
   filled and that blank means *nobody has claimed this*. Both cannot hold. Fixing the sentence is
   what removes the squeeze; the rule had been instructing people around it.
-- **Two runs are pre-registered before either is performed**, with two binary outcomes fixed in
+- **Three runs are pre-registered before any is performed**, with two binary outcomes fixed in
   advance — because after a result there is always a more convenient metric, and the file-count
-  experiment already made that mistake.
+  experiment already made that mistake. The third is a variance probe: the same condition run
+  twice. **The instrument has never been measured**, and Copilot CLI shows a model name without a
+  build (`C-copilot-model-build`), so run-to-run variance and an unobservable model update land in
+  one bucket. If the probe disagrees with itself, the comparison stops there.
 
 `Q-who-keeps-the-history` 🟡 — install measured both ways, the recurring cost still not;
 `Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and

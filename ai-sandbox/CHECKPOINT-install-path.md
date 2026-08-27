@@ -2,8 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** `ADR-013` is signed, `v3.3.0` is released and the root runs on it. Two runs are
-  pre-registered below and neither has been performed.
+- **Resume from:** `ADR-013` is signed, `v3.3.0` is released and the root runs on it. Three runs
+  are pre-registered below, including a variance probe with a stopping rule, and none has been
+  performed.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms disagree, the one that outranks the other is the one that
   failed, and the one clean run is written up as *worked once*. Do not remove the marker flags
@@ -35,16 +36,27 @@
 
 ## In progress
 
-### Gap 1 — two runs, pre-registered before either is run (priority: high)
+### Gap 1 — three runs, pre-registered before any is run (priority: high)
 
 Written down now so that no more convenient outcome can be chosen after a result. Both runs use
-the frozen prompt, the same provider and interface as the recorded arms, close together in time,
-with the model version recorded.
+the frozen prompt and the same provider and interface as the recorded arms.
+
+**Amended 2026-08-27, before either run.** The original text said to record the model version.
+Copilot CLI v1.0.80 does not expose one — only a name (`C-copilot-model-build`), so "GPT-5.6 Luna"
+in two runs may be two models with nothing saying so. What is recorded instead: the name as
+displayed, the CLI version, and the timestamp. **Run the arms close together in time** — adjacency
+is the only control available over a build that cannot be observed. An amendment made before any
+data exists is legitimate; the same amendment after a result would not be, and this note is here
+so a later reader can tell which this was.
 
 | | State | Measures |
 |---|---|---|
 | **Run 1** | `v3.3.0` — cause A fixed, marker flags **present** | **A**, against the recorded `v3.2.0` run |
+| **Run 1′** | identical to Run 1, nothing changed | **the instrument** — run-to-run variance, and drift |
 | **Run 2** | Run 1's state with the marker flags **removed** | **B**, against Run 1 |
+
+In that order. The probe sits between them so that whatever it detects — the model's own variance,
+or a build that moved — is measured on the same days as the comparison it qualifies.
 
 **Two binary outcomes, and nothing finer.** At one run per cell anything more detailed is
 unreadable against the model's own variance:
@@ -53,10 +65,26 @@ unreadable against the model's own variance:
 2. **Was anything invented** — yes/no, judged by reading the seven answers against the frozen
    paragraph.
 
-**Reading the result.** Runs 1 and 2 agreeing is decent evidence the flags do not matter — if they
-mattered, a difference was expected and none appeared. Runs 1 and 2 differing is *not* proof that
-they do: at n=1 per cell it cannot be separated from run-to-run variance, which `ADR-013` calls
-noise until it recurs.
+**The probe carries a stopping rule, and it is the point of having it.** *Agree* means both binary
+outcomes identical.
+
+- **Run 1 and Run 1′ agree** → the instrument is steady enough at n=1, and a difference at Run 2
+  may be read as the flags.
+- **Run 1 and Run 1′ disagree** → **stop. Do not perform Run 2.** The design cannot separate a
+  treatment from the instrument, and that is settled before any effort is spent interpreting a
+  result. The flags question then needs repeats per cell, not a one-run comparison, and that is
+  what gets recorded — a finding about the method, arrived at for the price of one run instead of
+  a false conclusion.
+
+Not performing Run 2 in that case is deliberate. A result one has pre-committed not to interpret
+is a temptation, not data.
+
+**Reading Run 2, if it happens.** Runs 1 and 2 agreeing is decent evidence the flags do not matter
+— if they mattered, a difference was expected and none appeared. Runs 1 and 2 differing is *not*
+proof that they do, even with a clean probe: one probe bounds the variance loosely, it does not
+eliminate it. **Unobservable model drift falls into that same bucket** rather than into an
+assumption, so this reading rule survives the instrument's limitation unchanged — it just has more
+in it.
 
 **Run 2 is not really about seven lines of marker text.** It is the first test of `ADR-013`'s third
 gate. If removing a restatement costs behaviour, the gate has a price, and that is worth knowing
