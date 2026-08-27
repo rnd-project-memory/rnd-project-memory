@@ -34,20 +34,13 @@
 
 ## In progress
 
-### Gap 1 — eight findings from the green start, none acted on (priority: high)
+### Gap 1 — the two causes are fixed and unverified; six findings remain (priority: high)
 
-Left deliberately, so that what the experiments found and what was done about it stay separable.
-The first two outrank the rest: they are why the independent arm failed, not consequences of it.
+Findings 1 and 2 shipped in `v3.2.0`. **Whether they change the behaviour they were written for is
+unknown from here**, and the measurement belongs to whoever runs it: the same prompt, the same
+provider, `v3.2.0`, with these two changes and nothing else. Six remain, untouched on purpose so
+that re-run has one treatment rather than a bundle:
 
-1. **The no-invention rule reaches no project.** *"An assistant may fill these only from what you
-   actually told it"* exists in exactly one file — `skeleton/README.md`, which `MANIFEST` marks
-   `norcopy`. The markers carry what to write and never the prohibition. It belongs where every
-   session loads it, which means `RULES.md`, and arguably in the marker text itself.
-2. **`DATA_ENVIRONMENT.md` ships a stack as fact.** *"Managed with `uv`"*, `uv sync`, *"`uv.lock`
-   is committed"* — not a placeholder, not an example. `AGENTS.md`'s marker then instructs that
-   the stack named must match that file, so an adopter without `uv` is told to assert one.
-   `ADR-002`'s own criterion, and this repository already applies it to itself by omitting the
-   file.
 3. **`OPEN_QUESTIONS.md`'s example entry carries no marker.** An untouched register is
    indistinguishable from a filled one to every check — predicted correctly by the independent arm
    before it walked past it.

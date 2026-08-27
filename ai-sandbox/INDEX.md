@@ -60,37 +60,34 @@ is undecided.
 
 ## Current focus
 
-**Three green-start arms have run against `v3.1.1` from outside this repository — and the two
-assisted ones disagree.** A same-family model produced honest absences and three open questions
-(`EXP-2026-08-26-green-start-assisted`, *supports*). A different provider filled every
-underdetermined section confidently and raised none
-(`EXP-2026-08-27-green-start-independent`, *contradicts*). `CONFIGURATIONS.md` rates the second
-higher. The manual arm completed in **12:11** (`EXP-2026-08-26-green-start-manual`, *supports*).
+**`v3.2.0` is released and the root runs on it.** It fixes the two green-start findings that could
+have changed the result, and only those, so that a re-run measures them rather than a bundle.
 
-**Eight findings, none acted on** — deliberately. They are in `CHECKPOINT-install-path.md`, Gap 1,
-and the first two are why the independent arm failed rather than consequences of it.
+- **The no-invention rule now reaches a project.** It lived in `skeleton/README.md` alone, which
+  is `norcopy` — an absent rule after the install, not a weak one. Now: authority in
+  `ai-sandbox/RULES.md`, pointer in the guide, short form at each marker. The marker form is
+  deliberately not relied on; one marker already carried its escape and the independent arm read
+  it and declined.
+- **`DATA_ENVIRONMENT.md` no longer asserts a stack**, and `AGENTS.md` no longer orders a match
+  against it. The assistant that named Python/`uv` for a project that never mentioned one **was
+  obeying us**.
 
-Four things worth carrying:
+Three things worth carrying:
 
-- **The rule the design rests on reaches no project.** *"An assistant may fill these only from
-  what you actually told it"* lives in `skeleton/README.md` alone, which is `norcopy`. The markers
-  say what to write and never the prohibition. `v2.4.0`'s shape exactly: the instruction that
-  protects the system sits where the reader never goes.
-- **One apparent hallucination was ours.** The skeleton ships `DATA_ENVIRONMENT.md` asserting
-  `uv` as fact, and `AGENTS.md`'s marker says the stack named must match that file. The model
-  obeyed a document that was wrong — `ADR-002`'s criterion turned on its author, who already
-  applies it here by omitting that file.
-- **`check.sh` is clean on a repository of honest absences and on one of confident fiction.** The
-  boundary of the mechanical layer is now measured rather than assumed, and none of the eight
-  findings closes it. On day one there is no reviewer either: the project has no history and
-  nobody has read anything yet.
-- **One run agreeing with a rule is not evidence that the rule binds.** The pair does not read as
-  one pass and one fail; it reads as *not load-bearing across providers*.
+- **The artefact was wrong and the authority was right.** The handbook has forbidden shipping a
+  stack the project does not have for four releases; the skeleton shipped it anyway. First time
+  `skeleton/README.md`'s handbook-wins rule has run in that direction.
+- **A rule in a `norcopy` file binds nobody.** `v2.4.0` found the same shape with the secret-scan
+  hook. Reach is decided by layer, not by how emphatically a thing is written.
+- **What `check.sh` cannot see is now a stated boundary**, not an open task: it sees that a blank
+  was answered, never whether the answer is true. The design's reviewer is a person, and on day
+  one there is not one.
 
-`Q-who-keeps-the-history` 🟡 — the manual half is measured, the assisted half is now **less**
-settled than it was yesterday, and the recurring cost of keeping the record by hand is still
-unmeasured. `Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched;
-`Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside this repository.
+**Nothing here is verified.** The two fixes are reasoning about a failure, not a measurement of a
+repair, and the thread says so. `Q-who-keeps-the-history` 🟡 — the manual half is measured, the
+assisted half is less settled than it was; `Q-session-boundary` 🟡 open;
+`Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers
+from outside this repository.
 
 ## What a new session does
 
