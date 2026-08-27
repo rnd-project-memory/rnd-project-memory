@@ -42,7 +42,7 @@ re-orders all of this.
 
 ## Status
 
-`v3.2.0`. Thirteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.3.0`. Fourteen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -74,6 +74,15 @@ a repository of honest absences and on a repository of confident fiction. It can
 was answered and not whether the answer is true. The design's answer has always been that a person
 reviews `docs/` before it lands — and on day one there is no such review, because the project has
 no history and nobody has read anything yet.
+
+**`v3.3.0` withdrew one of `v3.2.0`'s own rules, one release later.** It told an assistant to ask
+when a field it must fill has no correct value available. The next run read it, judged that asking
+would block the task, and avoided the whole register rather than raise an entry it could not
+complete — trading one wrong value in one field for an unused open-questions register. Two things
+came out of that: the defect was structural, in a register preamble that said a field is *always*
+filled and that blank carries meaning; and a rule was the wrong instrument for something a
+one-line check detects. `ADR-013` now decides that choice in general — **the instrument follows
+detectability, and a rule is the last resort, for failures nothing can see.**
 
 What is still narrow: one adopting project besides these three starts, multi-user behaviour
 reasoned from the design rather than observed, and upgrades still performed by whoever writes the
