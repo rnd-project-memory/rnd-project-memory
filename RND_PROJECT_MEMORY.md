@@ -691,11 +691,17 @@ re-verified rather than trusted. `session-start.md` includes this check.
 and verified run recipes. Data and tool traps live in `ai-sandbox/CAVEATS.yaml`, not here — see
 below.
 
-**This is the profile layer, and it is the only file that names the stack.** Everywhere else the
-system states the principle and keeps the stack as a named example — the experiment record asks
-for "the environment's locked state", not for `uv.lock`. Concentrating the stack in one file is
-what lets a project on a different one substitute a single file instead of editing eleven. §15
-covers the layer this belongs to.
+**This is the profile layer, and it is the only file where a project names its stack.** Everywhere
+else the system states the principle and keeps the stack as a named example — the experiment
+record asks for "the environment's locked state", not for `uv.lock`. Concentrating the stack in
+one file is what lets a project on a different one substitute a single file instead of editing
+eleven. §15 covers the layer this belongs to.
+
+**The shipped file names no stack.** Its environment section is an explicitly fenced example,
+marked the way `gitignore.template` marks its Python block, because a default that asserts one
+stack is read as a statement about the project that received it — and was. `v3.2.0` came from an
+adopting assistant doing exactly what the paragraph below forbids, on our instruction rather than
+its own initiative.
 
 **A project with no data environment omits the file entirely.** Shipping one full of instructions
 for a stack the project does not have is worse than shipping nothing: it instructs, and the

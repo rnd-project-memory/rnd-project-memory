@@ -5,13 +5,16 @@
 
 ## About this project
 
-<<FILL: one paragraph — what is being researched or designed, and for whom.>>
+<<FILL: one paragraph — what is being researched or designed, and for whom. Only from what you
+were told.>>
 
 R&D project. The method is being discovered, not implemented from a specification.
 
-<<FILL: how knowledge arrives — documentation, wiki pages, call transcripts, discussion —
-and what the analysis runs on. Whatever stack is named here must match
-`ai-sandbox/DATA_ENVIRONMENT.md`, which is the one file that describes it in detail.>>
+<<FILL: how knowledge arrives — documentation, wiki pages, call transcripts, discussion — and
+what the analysis runs on. Only from what you were told. **Name a stack only if this project has
+one**; if it does, it must match `ai-sandbox/DATA_ENVIRONMENT.md`, whose example block is an
+example and not this project's stack. If no stack has been named to you, write that instead — a
+project with no data environment yet is the normal state on day one.>>
 
 ## Session entry point
 

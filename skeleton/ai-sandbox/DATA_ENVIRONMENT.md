@@ -50,18 +50,25 @@ generated catalog is only as useful as the freshness of what depends on it is ho
 Data and tool traps live in `ai-sandbox/CAVEATS.yaml` now, not here — search it by subject
 before touching a table, column, or tool this project relies on.
 
-## Python environment
+## Environment
 
-Managed with `uv`.
+**Describe this project's stack here, or leave the section empty. What follows is an example of
+the shape, not a statement about your project** — the same treatment `gitignore.template` gives
+its Python block. This file is the profile layer: it is the one file that names a stack, and the
+stack it names must be the one the project actually uses. Many projects use none of this, and
+some have no data environment at all, in which case delete the file (see the handbook, §6).
 
-```bash
-uv sync                                   # create/refresh the environment from uv.lock
-uv run python src/experiments/<file>.py   # run inside it
-uv add <package>                          # add a dependency, updating uv.lock
-```
-
-`uv.lock` is committed. An experiment record cites its state — that is what makes a result
-reproducible when library versions have since moved.
+> *Example — replace or delete. A Python project managed with `uv`:*
+>
+> ```bash
+> uv sync                                   # create/refresh the environment from uv.lock
+> uv run python src/experiments/<file>.py   # run inside it
+> uv add <package>                          # add a dependency, updating uv.lock
+> ```
+>
+> *`uv.lock` is committed, and an experiment record cites its state — that is what makes a result
+> reproducible when library versions have since moved. Whatever tool a project uses, that last
+> point is the one worth keeping: pin something, and cite the pin.*
 
 ## Run recipes
 

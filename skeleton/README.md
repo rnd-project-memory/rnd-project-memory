@@ -60,9 +60,13 @@ so its count and yours agree.
 
 Answer each and delete the marker, brackets included. `AGENTS.md` and `ai-sandbox/INDEX.md` load
 into every session, so a marker left in either is not an empty section — it is text the assistant
-reads as instruction. `check.sh` counts what is left. An assistant may fill these only from what
-you actually told it: a plausible paragraph about a project nobody described is worse than the
-marker it replaced.
+reads as instruction. `check.sh` counts what is left.
+
+**Nothing here may be answered with a fact nobody supplied** — the rule is in
+`ai-sandbox/RULES.md`, which every session loads, and it is stated there rather than here because
+this file is never copied into a project and so binds nobody after the install. Leaving a marker
+in place, or answering it with what is *not* yet decided, is a legitimate outcome. A plausible
+paragraph about a project nobody described is not.
 
 The third class is why this is a table rather than a sentence. `ai-sandbox/INDEX.md` carries all
 three classes within twenty lines: `<PROJECT_NAME>` in its title goes, `CHECKPOINT-<thread>.md` in
