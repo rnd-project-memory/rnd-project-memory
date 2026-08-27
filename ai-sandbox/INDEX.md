@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-08-26
+- **Updated:** 2026-08-27
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -60,40 +60,37 @@ is undecided.
 
 ## Current focus
 
-**The template has been installed from outside this repository for the first time**, twice: once
-by a fresh assistant given only the public URL, a title and one paragraph, and once by a person
-unassisted with a stopwatch. Both against `v3.1.1`. Records:
-`EXP-2026-08-26-green-start-assisted` (*supports, with one field failing*) and
-`EXP-2026-08-26-green-start-manual` (*supports*, **12:11**).
+**Three green-start arms have run against `v3.1.1` from outside this repository — and the two
+assisted ones disagree.** A same-family model produced honest absences and three open questions
+(`EXP-2026-08-26-green-start-assisted`, *supports*). A different provider filled every
+underdetermined section confidently and raised none
+(`EXP-2026-08-27-green-start-independent`, *contradicts*). `CONFIGURATIONS.md` rates the second
+higher. The manual arm completed in **12:11** (`EXP-2026-08-26-green-start-manual`, *supports*).
 
-**Five findings, none acted on** — deliberately, so that what the experiments found and what was
-done about it stay separable. They are in `CHECKPOINT-install-path.md`, Gap 1.
+**Eight findings, none acted on** — deliberately. They are in `CHECKPOINT-install-path.md`, Gap 1,
+and the first two are why the independent arm failed rather than consequences of it.
 
 Four things worth carrying:
 
-- **Prose gave the assistant an escape and it used it; a structured field gave it none and it
-  took the forbidden value.** Where the paragraph underdetermined the project, it wrote explicit
-  absences and opened three questions — exactly the documented pattern, with no operator input and
-  no questions asked. Then it stamped every one `Owner: <a git address>`, thirteen lines under a
-  bold rule forbidding that. The field carries *always filled in* and *not an address* and nothing
-  says **ask**.
-- **A fix that removes a false positive can install a false negative in the same stroke.** The
-  blank check was anchored to `^<<FILL:` in the morning to clear nine false positives here; by
-  evening two half-answered markers in the two session-loaded files were passing as `ok`. The
-  second failure is the more expensive: the first is loud, the second looks like success.
-- **The assistant beat the person at the one parameter whose documentation is ambiguous.** The
-  guide's example makes the destination path and the project name read as the same string; the
-  person supplied the folder name and got `# churn-signals`, the assistant read the title and got
-  `# Churn Signals`. Nothing checks it.
-- **Same-family evidence is weak evidence.** `CONFIGURATIONS.md` says so, the documentation was
-  written by an assistant, and the assisted arm ran on one of the same family. Cite it as nearer
-  self-review than a test until a second provider runs it.
+- **The rule the design rests on reaches no project.** *"An assistant may fill these only from
+  what you actually told it"* lives in `skeleton/README.md` alone, which is `norcopy`. The markers
+  say what to write and never the prohibition. `v2.4.0`'s shape exactly: the instruction that
+  protects the system sits where the reader never goes.
+- **One apparent hallucination was ours.** The skeleton ships `DATA_ENVIRONMENT.md` asserting
+  `uv` as fact, and `AGENTS.md`'s marker says the stack named must match that file. The model
+  obeyed a document that was wrong — `ADR-002`'s criterion turned on its author, who already
+  applies it here by omitting that file.
+- **`check.sh` is clean on a repository of honest absences and on one of confident fiction.** The
+  boundary of the mechanical layer is now measured rather than assumed, and none of the eight
+  findings closes it. On day one there is no reviewer either: the project has no history and
+  nobody has read anything yet.
+- **One run agreeing with a rule is not evidence that the rule binds.** The pair does not read as
+  one pass and one fail; it reads as *not load-bearing across providers*.
 
-`Q-who-keeps-the-history` 🟡 has its first number and a sharper remaining question: the install is
-measured, the **recurring** cost of keeping the record by hand is not, and that is where the
-availability dependency actually lives. `Q-session-boundary` 🟡 open;
-`Q-unexercised-components` 🟡 untouched; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers
-from outside this repository.
+`Q-who-keeps-the-history` 🟡 — the manual half is measured, the assisted half is now **less**
+settled than it was yesterday, and the recurring cost of keeping the record by hand is still
+unmeasured. `Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 untouched;
+`Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside this repository.
 
 ## What a new session does
 

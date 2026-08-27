@@ -2,14 +2,14 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** both green-start arms have run against `v3.1.1` and are recorded. Five findings
-  are named and none is acted on. The install path is now evidenced from outside this repository
-  for the first time.
-  **Do not do until re-verified:** do not cite the assisted arm as independent evidence. It ran on
-  a model of the same family as the documentation's author, which `CONFIGURATIONS.md` rates *weak*
-  — nearer self-review than a test. And do not read `12:11` as the cost of the manual path: it is
-  the cost of *installing*, by someone who had seen the project before, with seven blanks still
-  unanswered at the endpoint.
+- **Resume from:** three green-start arms have run against `v3.1.1` — two assisted, one manual —
+  and all are recorded. Eight findings are named and none is acted on.
+  **Do not do until re-verified:** do not claim the template makes an assistant stop where it
+  lacks information. Two assisted arms disagree, and **the one that outranks the other is the one
+  that failed**. Do not read `12:11` as the cost of the manual path either — it is the cost of
+  *installing*, by someone who had seen the project before, with seven blanks unanswered at the
+  endpoint. And do not treat `3.49 AIC` as a saving against it: the cheap run is the one that
+  invented.
 
 > This file belongs to one thread, named for what is being worked on. Only whoever it names as
 > `Held by:` writes it. Rewritten, never appended; only what is unsettled.
@@ -34,41 +34,57 @@
 
 ## In progress
 
-### Gap 1 — five findings from the green start, none acted on (priority: high)
+### Gap 1 — eight findings from the green start, none acted on (priority: high)
 
-Deliberately left, so that what the experiments found and what was done about it stay separable.
-Ordered by what they cost, not by effort:
+Left deliberately, so that what the experiments found and what was done about it stay separable.
+The first two outrank the rest: they are why the independent arm failed, not consequences of it.
 
-1. **`Owner:` has two rules and no third exit** — *always filled in* and *not a git address* — and
-   nothing says *ask*. The assisted arm took the forbidden value. Needs the third exit written into
-   the register preamble and `RULES.md`, plus a check: `Owner:` containing `@`.
-2. **The `<<FILL:` marker can be half-removed.** Two of seven were answered leaving their closing
-   bracket, in the two files loaded into every session, and `check.sh` said `ok`. Both were
-   multi-line. A closing token on its own line makes a remnant visible and exactly checkable —
-   `>>` occurs nowhere else in the skeleton.
-3. **`install.sh`'s second argument is unclear**, and the guide's example
-   `./install.sh ../my-project my-project` makes the destination path and the project name read as
-   one string. The manual arm supplied the folder name and got `# churn-signals` where the
-   assisted arm got `# Churn Signals`. Nothing checks it.
-4. **Neither arm produced a project `README.md`**, nothing explains its absence, and only the
-   person noticed — after searching three documents.
-5. **Install guidance lives in three places**, one of which the install deletes. The same
-   duplication the installer extraction addressed, one level up.
+1. **The no-invention rule reaches no project.** *"An assistant may fill these only from what you
+   actually told it"* exists in exactly one file — `skeleton/README.md`, which `MANIFEST` marks
+   `norcopy`. The markers carry what to write and never the prohibition. It belongs where every
+   session loads it, which means `RULES.md`, and arguably in the marker text itself.
+2. **`DATA_ENVIRONMENT.md` ships a stack as fact.** *"Managed with `uv`"*, `uv sync`, *"`uv.lock`
+   is committed"* — not a placeholder, not an example. `AGENTS.md`'s marker then instructs that
+   the stack named must match that file, so an adopter without `uv` is told to assert one.
+   `ADR-002`'s own criterion, and this repository already applies it to itself by omitting the
+   file.
+3. **`OPEN_QUESTIONS.md`'s example entry carries no marker.** An untouched register is
+   indistinguishable from a filled one to every check — predicted correctly by the independent arm
+   before it walked past it.
+4. **`Owner:` has two rules and no third exit** — *always filled in* and *not a git address* — and
+   nothing says *ask*. The same-family arm took the forbidden value. Needs the third exit written
+   down, plus a check on `@`.
+5. **The `<<FILL:` marker can be half-removed.** Two of seven left their closing bracket, in the
+   two files loaded into every session, and `check.sh` said `ok`. Both were multi-line. A closing
+   token on its own line makes a remnant visible and exactly checkable.
+6. **`install.sh`'s second argument is unclear**, and the guide's example makes the destination
+   path and the project name read as one string. The manual arm supplied the folder name.
+7. **No arm produced a project `README.md`** — three for three — nothing explains its absence, and
+   only the person noticed.
+8. **Install guidance lives in three places**, one of which the install deletes.
 
-### Gap 2 — the assisted arm was same-family (priority: medium)
+### Gap 2 — what the mechanical layer cannot see (priority: high)
 
-`CONFIGURATIONS.md` rates a model of the same family as the documentation's author *weak*
-evidence, and the documentation was written by an assistant. A second assisted arm on a different
-provider costs nothing extra and moves the result a rung up the ladder. Until then the assisted
-result is nearer self-review than an independent test, and should be cited that way.
+`check.sh` is clean on a repository of honest absences and on a repository of confident fiction.
+That boundary is now measured rather than assumed, and no check proposed above closes it: finding 3
+catches an *untouched* register, and nothing catches a *confidently wrong* one.
 
-### Gap 3 — the pre-registered measurement, still waiting (priority: low)
+This is a limit to state in the handbook rather than a defect to fix. The design's answer has
+always been that a person reviews `docs/` before it lands; what the experiments show is that on
+day one there is no such review, because the project has no history and nobody has read anything
+yet.
 
-Does a change to the install's **mechanism alone** — no instruction changed, no behaviour added —
-touch one file after extraction where it touched two before? It needs such a change to arrive on
-its own rather than be invented. Finding 3 above may be it: renaming an argument changes the
-mechanism *and* the guide, so probably not. Finding 2 might be, if the marker's form changes
-without the instruction changing.
+### Gap 3 — three variables, two runs (priority: medium)
+
+Provider, interface and prompt phrasing are confounded. The prompt says *"create a project"*,
+which invites completion; *"adopt this template"* might not, and that is untested and cheap to
+test. Copilot CLI approves each command separately and Claude Code does not. Nothing here
+separates the three.
+
+### Gap 4 — the pre-registered measurement, still waiting (priority: low)
+
+Does a change to the install's mechanism alone touch one file after extraction where it touched
+two before? Findings 1 and 2 change instructions, so neither is the subject. Finding 5 might be.
 
 ## Promotion candidates
 

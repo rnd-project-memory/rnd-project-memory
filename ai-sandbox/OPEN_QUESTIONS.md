@@ -104,11 +104,17 @@ resolve to a different question. A slug, once assigned, is never changed.
   that has been timed by hand even once. The availability dependency this question is about lives
   there, not in the install.
 
-  The assisted arm (`EXP-2026-08-26-green-start-assisted`) adds the other side and one warning: an
-  assistant given documentation and no answers produced a correct install and three honest open
-  questions, needing a person for nothing — but where it needed a person, it did not ask. It filled
-  a structured field with a forbidden value rather than stopping. Judgement did not transfer to
-  the one slot that offered no escape.
+  The assisted side has now been run twice and **the two runs disagree**. On the same-family model
+  (`EXP-2026-08-26-green-start-assisted`) the assistant produced a correct install and three
+  honest open questions, needing a person for nothing — but where it needed a person it did not
+  ask, filling a structured field with a forbidden value rather than stopping. On a different
+  provider (`EXP-2026-08-27-green-start-independent`, the rung that outranks it) it filled every
+  underdetermined section confidently and raised no questions at all, having decided not to.
+
+  **So the assisted path is not yet a known quantity, and the honest position is weaker than
+  either run alone suggests.** What an assistant does with an instruction not to invent depends on
+  the assistant, and `check.sh` cannot tell the two outcomes apart. Cost, for what it is worth:
+  3.49 AIC assisted against 12:11 by hand — but a cheap wrong answer is not a saving.
 - **What would answer it:** the **recurring** half, timed — one ordinary session's closing
   performed by hand, against the same closing performed with an assistant. The install half is now
   measured; this half is not, and it is the half that repeats.
