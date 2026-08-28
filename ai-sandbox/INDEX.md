@@ -60,34 +60,43 @@ is undecided.
 
 ## Current focus
 
-**The probe passed and cause A held.** Two runs of the identical condition, thirteen minutes
-apart, agreed on both pre-registered outcomes, so the stopping rule did not fire and Run 2 is
-authorised. Where the `v3.2.0` run left `OPEN_QUESTIONS.md` untouched, entries now appear in both
-runs with `Owner:` blank — the named mechanism, in the predicted field, twice
-(`EXP-2026-08-28-probe-and-cause-a`).
+**The pre-registered design is closed.** Three runs, both questions answered. The instrument
+repeats itself on coarse outcomes; cause A holds; and removing the seven marker restatements
+changed neither outcome, so `ADR-013`'s third gate has no measured price on its first application
+(`EXP-2026-08-28-marker-flags`, *supports*).
 
-**`v3.4.0` ships Run 2's treatment**: the seven marker flags removed under `ADR-013`'s third gate.
-Everything is in place; the run has not happened.
+**The arc, one fix at a time:**
+
+| Version | Invention | Register |
+|---|---|---|
+| `v3.1.1` | broad | 0 entries |
+| `v3.2.0` | none | 0 — register avoided, because of the `Owner:` rule |
+| `v3.3.0` Runs 1 / 1′ | none | 2 / 1 |
+| `v3.4.0` Run 2 | none | 3 |
+
+Invention stopped when the rule moved into a file every session loads and the shipped stack stopped
+being asserted. Register use returned when a contradiction in the register's own preamble was
+removed. Removing the restatements changed neither.
 
 Four things worth carrying:
 
-- **The choice of coarse outcomes decided the experiment.** The identical condition gave two
-  register entries in one run and one with merged scope in the other. A count metric would have
-  failed the probe and cancelled Run 2 **by the metric, not by the instrument** — and that could
-  never have been decided honestly after seeing it.
-- **The confound that materialised was the one nobody was watching.** `C-copilot-model-build` was
-  written about an *invisible* model build; the CLI moved *visibly*, v1.0.80 → v1.0.81, between
-  the baseline and the runs. An unobservable confound gets a caveat; an observable one gets
-  forgotten. Cause A is supported-with-a-confound, not clean.
-- **A pre-registration is worth most when it constrains you against your own interest.** The fine
-  outcome disagreed and was simply out of scope.
-- **Run 2 is not about seven lines of marker text.** It is the first test of `ADR-013`'s third
-  gate: if removing a restatement costs behaviour, the gate has a price worth knowing before it is
-  applied again.
+- **A pre-registration proves itself by what it forbids.** Twice in three days it made an
+  attractive reading unavailable: the file-count metric, and a 1-2-3 trend across three noisy
+  cells. Both would have been written up confidently. The refusal is on the record in the
+  experiment, not left as an absence.
+- **The instrument is bounded in both directions.** Identical conditions gave different fine
+  outcomes; different conditions gave identical coarse ones. That pair is what makes the coarse
+  outcomes defensible rather than merely convenient.
+- **An unobservable confound gets a caveat; an observable one gets forgotten.**
+  `C-copilot-model-build` was written about an invisible model build, and the CLI moved visibly
+  underneath the cause-A comparison.
+- **`check.sh` was clean on the run that invented broadly and on all four that did not.** The
+  boundary of the mechanical layer is where `ADR-013` recorded it, and nothing since has moved it.
 
-`Q-who-keeps-the-history` 🟡 — install measured both ways, the recurring cost still not;
-`Q-session-boundary` 🟡 open; `Q-unexercised-components` 🟡 — `CAVEATS.yaml` has now run its full
-cycle, written and corrected; `Q-oss-intake` and `Q-contribution-flow` 🟢 need answers from outside.
+Six findings remain and none needs an experiment. `Q-who-keeps-the-history` 🟡 — install measured
+both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
+`Q-unexercised-components` 🟡 — `CAVEATS.yaml` has run its full cycle; `Q-oss-intake` and
+`Q-contribution-flow` 🟢 need answers from outside this repository.
 
 ## What a new session does
 

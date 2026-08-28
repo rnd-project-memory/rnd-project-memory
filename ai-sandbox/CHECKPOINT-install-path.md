@@ -2,9 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the probe passed, cause A is supported and replicated
-  (`EXP-2026-08-28-probe-and-cause-a`), and `v3.4.0` ships Run 2's treatment — the marker flags
-  removed under `ADR-013`'s third gate. Run 2 has not been performed.
+- **Resume from:** the pre-registered design is closed. Three runs, both questions answered: the
+  instrument repeats itself on coarse outcomes, cause A holds, and the third gate costs nothing
+  (`EXP-2026-08-28-marker-flags`). Six findings remain and none needs an experiment.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms disagree, the one that outranks the other is the one that
   failed, and the one clean run is written up as *worked once*. Do not remove the marker flags
@@ -36,77 +36,38 @@
 
 ## In progress
 
-### Gap 1 — three runs, pre-registered before any is run (priority: high)
+### Gap 1 — six green-start findings, none needing an experiment (priority: high)
 
-Written down now so that no more convenient outcome can be chosen after a result. Both runs use
-the frozen prompt and the same provider and interface as the recorded arms.
+The pre-registered design is **closed**: three runs, both questions answered, nothing further to
+run under it. What remains was found by the green starts and is ordinary work.
 
-**Amended 2026-08-27, before either run.** The original text said to record the model version.
-Copilot CLI v1.0.80 does not expose one — only a name (`C-copilot-model-build`), so "GPT-5.6 Luna"
-in two runs may be two models with nothing saying so. What is recorded instead: the name as
-displayed, the CLI version, and the timestamp. **Run the arms close together in time** — adjacency
-is the only control available over a build that cannot be observed. An amendment made before any
-data exists is legitimate; the same amendment after a result would not be, and this note is here
-so a later reader can tell which this was.
+1. **`OPEN_QUESTIONS.md`'s example entry carries no marker**, so an untouched register cannot be
+   told from a filled one. Run 2 left it standing beside three real entries and nothing said so.
+2. **`install.sh`'s second argument** and the guide's example, which make the destination path and
+   the project name read as one string. The manual arm supplied the folder name.
+3. **No arm has produced a project `README.md`** — three assisted runs and one manual, four of
+   four — and nothing explains its absence.
+4. **Install guidance lives in three places**, one of which the install deletes.
+5. **The `<<FILL:` marker can be half-removed**, and the anchored check does not see the remnant.
+6. **Provider, interface and prompt phrasing are confounded** across the arms, and no single run
+   separates them. *"Create a project"* invites completion; *"adopt this template"* might not, and
+   that is cheap and untested.
 
-| | State | Measures |
-|---|---|---|
-| **Run 1** | `v3.3.0` — cause A fixed, marker flags **present** | **A** — done 2026-08-28, supports |
-| **Run 1′** | identical to Run 1, nothing changed | **the instrument** — done, **probe passes** |
-| **Run 2** | `v3.4.0` — the marker flags **removed** | **B**, against Run 1 — authorised, state shipped, not yet run |
-
-In that order. The probe sits between them so that whatever it detects — the model's own variance,
-or a build that moved — is measured on the same days as the comparison it qualifies.
-
-**Two binary outcomes, and nothing finer.** At one run per cell anything more detailed is
-unreadable against the model's own variance:
-
-1. **Were entries raised in `OPEN_QUESTIONS.md`** — yes/no.
-2. **Was anything invented** — yes/no, judged by reading the seven answers against the frozen
-   paragraph.
-
-**The probe carries a stopping rule, and it is the point of having it.** *Agree* means both binary
-outcomes identical.
-
-- **Run 1 and Run 1′ agree** → the instrument is steady enough at n=1, and a difference at Run 2
-  may be read as the flags.
-- **Run 1 and Run 1′ disagree** → **stop. Do not perform Run 2.** The design cannot separate a
-  treatment from the instrument, and that is settled before any effort is spent interpreting a
-  result. The flags question then needs repeats per cell, not a one-run comparison, and that is
-  what gets recorded — a finding about the method, arrived at for the price of one run instead of
-  a false conclusion.
-
-Not performing Run 2 in that case is deliberate. A result one has pre-committed not to interpret
-is a temptation, not data.
-
-**Reading Run 2, if it happens.** Runs 1 and 2 agreeing is decent evidence the flags do not matter
-— if they mattered, a difference was expected and none appeared. Runs 1 and 2 differing is *not*
-proof that they do, even with a clean probe: one probe bounds the variance loosely, it does not
-eliminate it. **Unobservable model drift falls into that same bucket** rather than into an
-assumption, so this reading rule survives the instrument's limitation unchanged — it just has more
-in it.
-
-**Run 2 is not really about seven lines of marker text.** It is the first test of `ADR-013`'s third
-gate. If removing a restatement costs behaviour, the gate has a price, and that is worth knowing
-before it is applied again.
-
-**Why A had to ship first.** After A, the tree differs from `v3.2.0` by two things, so removing the
-flags now and comparing against the recorded run would measure A and B together — the mistake the
-`install.sh` extraction experiment already made.
+Each is statable without naming a model, so `ADR-013`'s first gate is satisfied for all six; gate 2
+sends most of them to a check or to prose rather than to `RULES.md`.
 
 ### Gap 2 — what the mechanical layer cannot see (priority: high)
 
-`check.sh` is clean on a repository of honest absences and on one of confident fiction. `ADR-013`
-turns this from an open task into a stated boundary: where neither a rule nor a check applies, the
-limit is recorded and left. Nothing in Gap 1 closes it.
+`check.sh` was clean on the `v3.1.1` run that invented broadly and on all four that did not. The
+boundary is recorded under `ADR-013` and none of the six findings closes it. On day one there is no
+reviewer either — the project has no history and nobody has read anything yet.
 
-### Gap 3 — six findings from the green starts, still untouched (priority: medium)
+### Gap 3 — the recurring cost, still unmeasured (priority: medium)
 
-`OPEN_QUESTIONS.md`'s example entry carries no marker, so an untouched register is
-indistinguishable from a filled one. `install.sh`'s second argument and its example. No arm has
-produced a project `README.md` — three for three. Install guidance in three places. The `<<FILL:`
-marker can be half-removed. And provider, interface and prompt phrasing remain confounded across
-the arms.
+`Q-who-keeps-the-history` has the install measured both ways — 12:11 by hand, 3.49–4.88 AIC
+assisted. The half that repeats every session, and where the availability dependency actually
+lives, has never been timed by hand: a session record written, a checkpoint rewritten, the
+registers swept.
 
 ## Promotion candidates
 
