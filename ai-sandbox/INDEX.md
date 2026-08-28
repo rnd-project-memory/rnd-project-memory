@@ -32,7 +32,7 @@ artefact, never as working notes — see `AGENTS.md`.
 | `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
 | `ASSUMPTIONS.md` | What the design bets on | edit |
 | `SOURCES.md` | Source register with IDs — empty; this project reasons rather than cites | append |
-| `CAVEATS.yaml` | Data/tool traps — empty; no data environment here | append, corrected in place |
+| `CAVEATS.yaml` | Tool traps from the experiment harness; no data environment here | append, corrected in place |
 | `PUBLICATIONS.md` | What was published externally — empty; nothing published externally | edit |
 | `CONFIGURATIONS.md` | Named session configurations | edit |
 | `RULES.md` | The behavioural rules — upstream's, replaced on upgrade | do not edit |
@@ -92,6 +92,12 @@ Four things worth carrying:
   underneath the cause-A comparison.
 - **`check.sh` was clean on the run that invented broadly and on all four that did not.** The
   boundary of the mechanical layer is where `ADR-013` recorded it, and nothing since has moved it.
+
+**The green-start evidence is summarised, not committed** (`ai-sandbox/results/green-start-arms__*.json`).
+The raw logs carry an employer domain and a work account name, `docs/constraints.md` binds this
+public repository against that including in history, and the secret hook matches credential values
+rather than identifiers — so it would have gone through. Met by someone looking, recorded as a near
+miss. `Q-oss-intake` is raised to 🟡: Run 2 ran on a work machine under a work identity.
 
 Six findings remain and none needs an experiment. `Q-who-keeps-the-history` 🟡 — install measured
 both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
