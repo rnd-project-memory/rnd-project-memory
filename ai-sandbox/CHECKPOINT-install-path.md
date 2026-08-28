@@ -3,8 +3,9 @@
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
 - **Resume from:** the green-start programme is finished. Six arms run, five releases cut
-  (`v3.1.0`–`v3.4.0`), the root on `v3.4.0`, and **two commits unpushed** — `467c6b3` and
-  `b2f209f`. Six findings remain and none needs an experiment.
+  (`v3.1.0`–`v3.4.0`), the root on `v3.4.0`, and `origin/main` is up to date — `467c6b3` and
+  `b2f209f` were pushed outside a session, so the prior checkpoint read stale for whoever opened
+  it next. Six findings remain and none needs an experiment.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms on different providers disagreed, the one that outranks the
   other is the one that failed, and every clean run since is written up as *worked once*. Do not
@@ -30,6 +31,7 @@
 | `Owner:` | blank is legitimate; a `@` in it is a check, not a rule | `v3.3.0`, `ADR-013` |
 | `bootstrap-test.sh` | 9 gates, passes; runs `install.sh` rather than reproducing it | run 2026-08-28 |
 | Green-start evidence | summarised in `results/`, raw deliberately outside | `results/README.md` |
+| `origin/main` | up to date with local `HEAD`, nothing to push | `git status` 2026-08-28 |
 
 ---
 
