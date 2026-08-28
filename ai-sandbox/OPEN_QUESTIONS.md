@@ -148,7 +148,7 @@ resolve to a different question. A slug, once assigned, is never changed.
 - **What would answer it:** a week's sessions recorded under each shape, counting how often a
   "final" save turns out not to be final. One day's three instances is a rate, not a design.
 
-## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟢
+## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟡
 
 - **Raised:** 2026-08-19 · **Owner:** esdevop (human)
 - **Source:** ADR-005; the remaining part of the retired `Q-enterprise-access`
@@ -159,6 +159,16 @@ resolve to a different question. A slug, once assigned, is never changed.
   later adoption routine.
 - **Progress:** The licence exists and is MIT, which is what such a process asks for first. Not a
   question to answer from inside this repository.
+
+  **2026-08-28 — the circumstances changed, and the question is no longer hypothetical.** The
+  third assisted green start (`exp_a-5`, Run 2) was performed on a work machine, under a work git
+  identity, against this public repository. Company resources have therefore already touched the
+  project, before the intake question had an answer, and the run's log and working tree carry an
+  employer domain and account name — which is why the green-start evidence is summarised in
+  `ai-sandbox/results/` rather than committed (`ADR-005`, `docs/constraints.md`).
+  Nothing employer-identifying has entered this repository. What has changed is that the question
+  now describes something that happened rather than something that might, and it is raised from 🟢
+  to 🟡 on that basis alone. Still not answerable from inside this repository.
 
 ## Q-contribution-flow · How do colleague improvements reach upstream? 🟢
 
