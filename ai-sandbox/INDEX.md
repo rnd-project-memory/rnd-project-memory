@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-08-27
+- **Updated:** 2026-08-28
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -98,6 +98,10 @@ The raw logs carry an employer domain and a work account name, `docs/constraints
 public repository against that including in history, and the secret hook matches credential values
 rather than identifiers — so it would have gone through. Met by someone looking, recorded as a near
 miss. `Q-oss-intake` is raised to 🟡: Run 2 ran on a work machine under a work identity.
+
+**The thread checkpoint was rewritten**, having been patched across nine sessions instead — it was
+telling a cold reader that the root runs `v3.0.1` and that no release had been cut. `check.sh` said
+`ok` throughout: the 150-line cap catches accumulation, not decay.
 
 Six findings remain and none needs an experiment. `Q-who-keeps-the-history` 🟡 — install measured
 both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
