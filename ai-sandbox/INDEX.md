@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-08-28
+- **Updated:** 2026-09-26
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -107,6 +107,15 @@ Six findings remain and none needs an experiment. `Q-who-keeps-the-history` 🟡
 both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
 `Q-unexercised-components` 🟡 — `CAVEATS.yaml` has run its full cycle; `Q-oss-intake` and
 `Q-contribution-flow` 🟢 need answers from outside this repository.
+
+## Latest completed session
+
+The 2026-09-26 sessions added a transactional, diff-reporting installer path and clarified the
+nonblocking Owner workflow. The issue-#1 implementation was revised: the global extracted-data and `data/` ignore rules are
+removed, so each project decides whether to ignore data files or directories. The pre-commit hook
+still blocks known data-file extensions as a separate safety control, and the changes are
+unreleased and require review. `CHECKPOINT-install-path.md` remains held by `esdevop@gmail.com` and
+was not edited.
 
 ## What a new session does
 
