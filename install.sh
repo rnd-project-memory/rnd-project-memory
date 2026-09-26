@@ -59,16 +59,167 @@ sha=$(cd "$src" && git log -1 --format=%h -- skeleton/ 2>/dev/null)
 [ -n "$sha" ] || die "cannot find the commit skeleton/ was last changed at in this clone"
 today=$(date +%F)
 
-say "Installing $version into $dest"
+say "Preparing $version for $dest"
 
-# ─── Step 1 — the copy set: the directory's contents, except its own README ───
-cp -r "$src/skeleton/." "$dest"/ || die "copy failed"
-rm -f "$dest/README.md"
-did "copied skeleton/ contents (README.md is the install guide, not part of the system)"
+# Build the transformed candidate outside the destination. Existing projects are not safe to
+# update by copying over them: cp -r silently replaces files and the old installer even removed
+# an adopter's README.md. The candidate lets us compare first and keep the destination untouched
+# when a human merge is needed.
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/rnd-project-memory-install.XXXXXX") || die "cannot create a temporary install tree"
+trap 'rm -rf "$tmp"' EXIT
+candidate="$tmp/tree"
+mkdir -p "$candidate" || die "cannot create the temporary install tree"
+cp -a "$src/skeleton/." "$candidate/" || die "copy failed"
+rm -f "$candidate/README.md"
 
-# ─── Step 2 — the rename, then this clone's settings ──────────────────────────
-[ -f "$dest/gitignore.template" ] && mv "$dest/gitignore.template" "$dest/.gitignore"
-did "gitignore.template renamed to .gitignore"
+# The candidate is now the install's complete copy set. Apply the mechanical transformations to it,
+# never to the adopter's files.
+[ -f "$candidate/gitignore.template" ] && mv "$candidate/gitignore.template" "$candidate/.gitignore"
+
+name_sed=$(printf '%s' "$name" | sed 's/[&|]/\\&/g')
+date_sed=$(printf '%s' "$today" | sed 's/[&|]/\\&/g')
+version_sed=$(printf '%s' "$version" | sed 's/[&|]/\\&/g')
+sha_sed=$(printf '%s' "$sha" | sed 's/[&|]/\\&/g')
+
+# _TEMPLATE.md files are copied per entry rather than filled in place, so they keep theirs.
+n=0
+while IFS= read -r f; do
+  case "$(basename "$f")" in _TEMPLATE.md) continue;; esac
+  sed -i "s|<PROJECT_NAME>|$name_sed|g; s|<DATE>|$date_sed|g" "$f"
+  n=$((n+1))
+done < <(grep -rlI --exclude-dir=.git -e '<PROJECT_NAME>' -e '<DATE>' "$candidate" 2>/dev/null)
+
+if [ -f "$candidate/.template-version" ]; then
+  sed -i "s|<VERSION>|$version_sed|; s|<SHA>|$sha_sed|; s|<DATE>|$date_sed|" "$candidate/.template-version"
+fi
+
+# Resolve the identity without changing the destination. A supplied value wins; otherwise an
+# existing repository identity is retained. An empty value remains an explicit human follow-up.
+existing_mail=$(git -C "$dest" config user.email 2>/dev/null || true)
+effective_mail=$mail
+[ -n "$effective_mail" ] || effective_mail=$existing_mail
+
+# ─── Step 4 — the first thread, only when one is named ───────────────────────
+# The slug is a judgement — it names what the work is about — so the install performs this step
+# only when told the answer, and leaves it undone otherwise. Held by: comes from the clone's
+# identity and from nowhere else; without one the rename is refused rather than done with a
+# placeholder holder, because a checkpoint naming nobody reads as unattended and an unattended
+# thread is one anyone may take over.
+cp="$candidate/ai-sandbox/CHECKPOINT-thread.md"
+if [ -n "$slug" ] && [ -f "$cp" ]; then
+  if [ -z "$effective_mail" ]; then
+    printf '  todo  thread "%s" not opened: no user.email in this clone, and Held by: is never\n' "$slug"
+    printf '        inferred. Set it, then rename ai-sandbox/CHECKPOINT-thread.md by hand.\n'
+  else
+    slug_sed=$(printf '%s' "$slug" | sed 's/[&|]/\\&/g')
+    mail_sed=$(printf '%s' "$effective_mail" | sed 's/[&|]/\\&/g')
+    sed -i "s|<thread>|$slug_sed|g; s|<your \`git config user.email\`>|$mail_sed|" "$cp"
+    mv "$cp" "$candidate/ai-sandbox/CHECKPOINT-$slug.md"
+  fi
+fi
+
+# ─── Step 5 — preflight existing paths and show safe diffs ───────────────────
+# git diff --no-index compares files even though the template and destination are separate Git
+# repositories. It returns 1 for a real difference, so only exit codes >1 are errors here.
+dest_repo=0
+git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1 && dest_repo=1
+collisions=0
+unchanged=0
+new_files=0
+
+tracked_state() {
+  if [ "$dest_repo" -eq 1 ] && git -C "$dest" ls-files --error-unmatch -- "$1" >/dev/null 2>&1; then
+    printf 'tracked'
+  else
+    printf 'untracked'
+  fi
+}
+
+report_collision() {
+  rel=$1
+  target=$2
+  incoming=$3
+  reason=$4
+  collisions=$((collisions + 1))
+  printf '\n  COLLISION [%s] %s (%s)\n' "$(tracked_state "$rel")" "$rel" "$reason"
+  if [ -f "$target" ] && [ -f "$incoming" ]; then
+    diff_rc=0
+    git --no-pager diff --no-index --unified=3 -- "$target" "$incoming" || diff_rc=$?
+    [ "$diff_rc" -le 1 ] || die "git diff failed while comparing $rel"
+  else
+    printf '        existing: %s\n        incoming:  %s\n' "$target" "$incoming"
+  fi
+}
+
+# A pre-existing gitignore.template would be left beside the newly installed .gitignore. Treat
+# that rename ambiguity as a collision instead of silently creating two competing ignore files.
+if [ -e "$dest/gitignore.template" ] || [ -L "$dest/gitignore.template" ]; then
+  if [ ! -e "$dest/.gitignore" ] && [ ! -L "$dest/.gitignore" ]; then
+    report_collision "gitignore.template" "$dest/gitignore.template" "$candidate/.gitignore" \
+      "the install rename would leave two ignore-file conventions"
+  fi
+fi
+
+has_symlink_parent() {
+  rel=$1
+  current=$dest
+  IFS='/' read -r -a parts <<< "$rel"
+  last=$((${#parts[@]} - 1))
+  for ((i=0; i<last; i++)); do
+    current="$current/${parts[i]}"
+    [ -L "$current" ] && return 0
+  done
+  return 1
+}
+
+while IFS= read -r -d '' incoming; do
+  rel=${incoming#"$candidate/"}
+  target="$dest/$rel"
+  if has_symlink_parent "$rel"; then
+    report_collision "$rel" "$target" "$incoming" "an existing parent is a symlink"
+  elif [ -e "$target" ] || [ -L "$target" ]; then
+    if [ -f "$target" ] && [ -f "$incoming" ]; then
+      diff_rc=0
+      git --no-pager diff --no-index --quiet -- "$target" "$incoming" >/dev/null 2>&1 || diff_rc=$?
+      if [ "$diff_rc" -eq 0 ]; then
+        unchanged=$((unchanged + 1))
+      elif [ "$diff_rc" -eq 1 ]; then
+        report_collision "$rel" "$target" "$incoming" "different file content"
+      else
+        die "git diff failed while checking $rel"
+      fi
+    else
+      report_collision "$rel" "$target" "$incoming" "different file type"
+    fi
+  else
+    new_files=$((new_files + 1))
+  fi
+done < <(find "$candidate" -type f -print0)
+
+if [ "$collisions" -gt 0 ]; then
+  printf '\ninstall.sh: %s collision(s); no project files or Git settings were changed.\n' "$collisions" >&2
+  printf 'Resolve or merge the displayed files, then rerun the installer.\n' >&2
+  exit 2
+fi
+
+# Install only paths proven absent. Matching files are deliberately not copied again.
+while IFS= read -r -d '' dir; do
+  rel=${dir#"$candidate/"}
+  [ "$rel" = "$dir" ] && continue
+  mkdir -p "$dest/$rel" || die "cannot create $dest/$rel"
+done < <(find "$candidate" -type d -print0)
+while IFS= read -r -d '' incoming; do
+  rel=${incoming#"$candidate/"}
+  target="$dest/$rel"
+  if [ ! -e "$target" ] && [ ! -L "$target" ]; then
+    cp -a "$incoming" "$target" || die "copy failed for $rel"
+  fi
+done < <(find "$candidate" -type f -print0)
+did "installed $new_files new files; preserved $unchanged identical existing files"
+
+if [ -f "$dest/.gitignore" ]; then
+  did "gitignore.template renamed to .gitignore"
+fi
 
 if [ ! -d "$dest/.git" ]; then
   git -C "$dest" init -q . || die "git init failed"
@@ -90,37 +241,13 @@ else
   mail=""
 fi
 
-# ─── Step 3a — the mechanical tokens ─────────────────────────────────────────
-# _TEMPLATE.md files are copied per entry rather than filled in place, so they keep theirs.
-n=0
-while IFS= read -r f; do
-  case "$(basename "$f")" in _TEMPLATE.md) continue;; esac
-  sed -i "s/<PROJECT_NAME>/$name/g; s/<DATE>/$today/g" "$f"
-  n=$((n+1))
-done < <(grep -rlI --exclude-dir=.git -e '<PROJECT_NAME>' -e '<DATE>' "$dest" 2>/dev/null)
+# ─── Step 3a — report the mechanical substitutions ───────────────────────────
 did "$n files had <PROJECT_NAME> and <DATE> substituted"
-
 if [ -f "$dest/.template-version" ]; then
-  sed -i "s/<VERSION>/$version/; s/<SHA>/$sha/; s/<DATE>/$today/" "$dest/.template-version"
   did ".template-version records $version, skeleton @ $sha, applied $today"
 fi
-
-# ─── Step 4 — the first thread, only when one is named ───────────────────────
-# The slug is a judgement — it names what the work is about — so the install performs this step
-# only when told the answer, and leaves it otherwise. Held by: comes from the clone's identity and
-# from nowhere else; without one the rename is refused rather than done with a placeholder holder,
-# because a checkpoint naming nobody reads as unattended and is a thread anyone may take over.
-cp="$dest/ai-sandbox/CHECKPOINT-thread.md"
-if [ -n "$slug" ] && [ -f "$cp" ]; then
-  held=$(git -C "$dest" config user.email 2>/dev/null)
-  if [ -z "$held" ]; then
-    printf '  todo  thread "%s" not opened: no user.email in this clone, and Held by: is never\n' "$slug"
-    printf '        inferred. Set it, then rename ai-sandbox/CHECKPOINT-thread.md by hand.\n'
-  else
-    sed -i "s/<thread>/$slug/g; s|<your \`git config user.email\`>|$held|" "$cp"
-    mv "$cp" "$dest/ai-sandbox/CHECKPOINT-$slug.md"
-    did "thread opened: ai-sandbox/CHECKPOINT-$slug.md, held by $held"
-  fi
+if [ -n "$slug" ] && [ -f "$dest/ai-sandbox/CHECKPOINT-$slug.md" ]; then
+  did "thread opened: ai-sandbox/CHECKPOINT-$slug.md, held by ${effective_mail:-unassigned}"
 fi
 
 say "Left for you — this script does none of it on purpose"

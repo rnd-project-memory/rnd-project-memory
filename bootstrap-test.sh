@@ -26,7 +26,9 @@ bad() { echo "  FAIL  $1"; fail=1; }
 ok()  { echo "  ok    $1"; }
 
 dest=$(mktemp -d) || exit 1
-trap 'rm -rf "$dest"' EXIT
+collision_dest=$(mktemp -d) || exit 1
+preserve_dest=$(mktemp -d) || exit 1
+trap 'rm -rf "$dest" "$collision_dest" "$preserve_dest"' EXIT
 
 # The install itself, performed by the file an adopter is pointed at. Anything wrong in here is
 # wrong for them too, which is the property this gate exists to have.
@@ -134,11 +136,80 @@ else
   echo "        example syntax along with the placeholders, and every session now loads the result"
 fi
 
+for owner_file in "$dest/ai-sandbox/OPEN_QUESTIONS.md" "$dest/ai-sandbox/ASSUMPTIONS.md"; do
+  if grep -q 'ask the user who should own' "$owner_file" \
+     && ! grep -q 'Owner:` is always filled' "$owner_file"; then
+    ok "$(basename "$owner_file") asks before filling an unknown Owner"
+  else
+    bad "$(basename "$owner_file") does not carry the ask-before-filling Owner workflow"
+  fi
+done
+
 left=$(grep -rlI --exclude-dir=.git '<PROJECT_NAME>' "$dest" 2>/dev/null \
        | grep -v '_TEMPLATE\.md$' | wc -l)
 [ "$left" -eq 0 ] \
   && ok "no <PROJECT_NAME> left outside the _TEMPLATE.md files" \
   || bad "$left installed files still say <PROJECT_NAME> after install.sh ran"
+
+say "User-controlled data ignore gate"
+mkdir -p "$dest/tests/fixtures" "$dest/data"
+printf 'id,value\nSAMPLE-001,1\n' > "$dest/tests/fixtures/example.csv"
+printf 'id,value\nSAMPLE-002,2\n' > "$dest/data/example.csv"
+if git -C "$dest" check-ignore -q -- tests/fixtures/example.csv; then
+  bad "CSV is still globally ignored; data-file ignore policy should be user-controlled"
+else
+  ok "CSV is visible for the user to track or ignore"
+fi
+if git -C "$dest" check-ignore -q -- data/example.csv; then
+  bad "data/ is still globally ignored; data-directory ignore policy should be user-controlled"
+else
+  ok "data/ is visible for the user to track or ignore"
+fi
+rm -f "$dest/tests/fixtures/example.csv" "$dest/data/example.csv"
+rmdir "$dest/tests/fixtures" "$dest/data" 2>/dev/null || true
+
+say "Existing-project collision gate"
+git -C "$collision_dest" init -q . || bad "could not initialise collision fixture"
+git -C "$collision_dest" config user.email test@example.invalid
+git -C "$collision_dest" config user.name bootstrap-test
+printf 'keep this README\n' > "$collision_dest/README.md"
+printf '# Existing project\n' > "$collision_dest/AGENTS.md"
+git -C "$collision_dest" add README.md AGENTS.md
+git -C "$collision_dest" commit -qm "seed existing project" \
+  || bad "could not commit collision fixture"
+if collision_out=$(./install.sh "$collision_dest" collision-project test@example.invalid 2>&1); then
+  collision_rc=0
+else
+  collision_rc=$?
+fi
+[ "$collision_rc" -eq 2 ] \
+  && ok "differing tracked files stop the install with collision status 2" \
+  || { bad "collision install returned $collision_rc, expected 2"; echo "$collision_out"; }
+printf '%s\n' "$collision_out" | grep -q 'COLLISION.*AGENTS.md' \
+  && ok "collision output names the existing file" \
+  || { bad "collision output did not name AGENTS.md"; echo "$collision_out"; }
+printf '%s\n' "$collision_out" | grep -q '^diff --git' \
+  && ok "collision output includes a git diff" \
+  || { bad "collision output did not include a git diff"; echo "$collision_out"; }
+[ "$(cat "$collision_dest/README.md")" = "keep this README" ] \
+  && ok "existing README survives a collision" \
+  || bad "existing README was changed or removed"
+[ ! -e "$collision_dest/check.sh" ] \
+  && ok "collision preflight leaves no partial install" \
+  || bad "collision preflight copied files before aborting"
+[ -z "$(git -C "$collision_dest" status --porcelain)" ] \
+  && ok "collision preflight leaves the tracked project clean" \
+  || bad "collision preflight changed the tracked project"
+
+say "Existing README preservation gate"
+printf 'keep this README\n' > "$preserve_dest/README.md"
+if ./install.sh "$preserve_dest" preserve-project test@example.invalid >/dev/null 2>&1; then
+  [ "$(cat "$preserve_dest/README.md")" = "keep this README" ] \
+    && ok "an existing README survives a successful install" \
+    || bad "a successful install changed or removed the existing README"
+else
+  bad "install with a non-conflicting existing README failed"
+fi
 
 say "Result"
 [ "$fail" -eq 0 ] && echo "  pass" || echo "  FAIL — an adopter following the instructions gets the above"
