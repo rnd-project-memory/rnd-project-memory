@@ -21,9 +21,13 @@
 > value, which names a temporary write claim and is bound to `git config user.email`
 > (`ADR-012`).
 >
-> **`Owner:` is always filled in, even working alone.** Blank must mean *nobody has
-> claimed this* — the signal the field exists to carry. If solo-era entries are left
-> blank, that meaning is destroyed the day a second person joins.
+> When creating a new entry and no human name has been supplied, **ask the user who should own
+> it before filling `Owner:`**. Never substitute `git config user.email` or another available
+> identity.
+>
+> If the user says no owner is assigned yet, or does not provide one, leave `Owner:` blank and
+> record the assumption anyway. Blank means nobody has claimed this; it must not mean an owner was
+> known and omitted. Fill it as soon as someone takes the entry.
 
 ---
 
