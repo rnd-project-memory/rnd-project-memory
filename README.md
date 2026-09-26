@@ -36,9 +36,16 @@ cd rnd-project-memory
 memory included, and you would start with a project whose history is somebody else's.
 
 `install.sh` does what has one correct answer and prints what it deliberately left: seven blanks
-only a person can answer, your first thread, and a check no script can perform. `skeleton/README.md`
-explains each and why. On a project that already has history, read the handbook's §11 first — it
-re-orders all of this.
+only a person can answer, your first thread, and a check no script can perform. Before writing, it
+compares the transformed candidate tree with an existing destination using `git diff --no-index`;
+differing files are reported as collisions and the install stops without overwriting them. Resolve
+those files and rerun it. `skeleton/README.md` explains each step and why. On a project that
+already has history, read the handbook's §11 first — it re-orders all of this.
+
+The template does not globally ignore generic data-file extensions or a `data/` directory. Add
+project-specific patterns above the `.gitignore` upstream marker if this project wants them ignored.
+The pre-commit hook is a separate safety control and still blocks known data-file extensions from
+commits by default.
 
 ## Status
 

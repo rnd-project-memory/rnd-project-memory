@@ -497,12 +497,15 @@ underneath you is not identified by its name alone. Where a field does not apply
 rather than leaving it blank: a later reader cannot otherwise tell "not applicable" from "nobody
 filled this in". See §8.
 
-**`OPEN_QUESTIONS.md` / `ASSUMPTIONS.md` — `Owner:` is always filled in, even alone.** Blank must
-mean *unclaimed*; if solo-era entries are left blank, that meaning is destroyed the day a second
-person joins. The same logic extends to any field that points at another record: `CAVEATS.yaml`'s
-`basis:`, `ASSUMPTIONS.md`'s `Basis:` — `—` is a legitimate value meaning no reference exists, and
-it must never be filled with the nearest similar ID instead. A wrong pointer looks exactly as
-valid as a right one, and is far more expensive to catch.
+**`OPEN_QUESTIONS.md` / `ASSUMPTIONS.md` — ask before filling `Owner:`.** `Owner:` is a human
+name, never a Git identity. When creating an entry without a supplied human owner, ask the user
+before filling it. If the user says no owner is assigned yet, or does not provide one, leave the
+field blank and record the entry anyway: blank means *unclaimed*, not *known but omitted*.
+This is a nonblocking ask-before-fill workflow, not the withdrawn blanket stop rule that caused
+assistants to skip register entries. The same logic extends to any field that points at another record: `CAVEATS.yaml`'s `basis:`,
+`ASSUMPTIONS.md`'s `Basis:` — `—` is a legitimate value meaning no reference exists, and it must
+never be filled with the nearest similar ID instead. A wrong pointer looks exactly as valid as a
+right one, and is far more expensive to catch.
 
 **`CHECKPOINT-<thread>.md` — named for the work, `Held by:` names the person.** Renaming the file
 to take over a thread is exactly the mistake this design avoids; only the header field changes,
@@ -676,6 +679,12 @@ This is the one rule in the system where a mistake is not repaired by editing a 
 committed, the content lives in git history, and removing it means rewriting history on every
 clone. Treat `reference-only` as the default and `committable` as the deliberate exception.
 
+The template does not decide whether generic data-file extensions or a `data/` directory are
+ignored: that policy belongs to the adopting project, whose patterns go above the `.gitignore`
+upstream marker. The blocking pre-commit data-file check is separate: visibility in Git does not
+grant permission to commit raw or extracted data, and intentional exceptions require an explicit
+project decision.
+
 ### Mutable sources
 
 Confluence pages and shared documents change without notice. The register records the **date
@@ -773,11 +782,14 @@ over the following weeks, in ordinary sessions. A section that reads as though t
 running this system by the end of the day sets up the opposite expectation, and the cost of that
 is a bootstrap declared finished while the intake file quietly becomes furniture.
 
-**1. Copy the structure.** `./install.sh <destination> <project-name> [user-email]` does it:
+**1. Copy the structure.** `./install.sh <destination> <project-name> [user-email]` prepares it:
 the copy set, the `gitignore.template` rename, the hooks, the token substitution and
-`.template-version`. **Read the script rather than looking for prose describing those steps —
-there is none, deliberately.** Anything that already exists is merged, not overwritten, and the
-inventory step below is what "merged" turns out to mean.
+`.template-version`. It first builds the transformed candidate tree and compares every existing
+destination path with `git diff --no-index`: identical files are preserved, while differing paths
+are printed as collisions and the installer stops before writing project files or Git settings.
+Resolve or merge those files manually, then rerun it. **Read the script rather than looking for
+prose describing its mechanical steps — there is none, deliberately.** The inventory and manual
+merge steps below are what safe adoption of an existing project means.
 
 Install the hooks before any *new* material arrives. On an existing project that guard cannot
 reach what is already committed, and no later edit can supply it retroactively; the install is
@@ -1279,12 +1291,12 @@ a rule genuinely must reach you, it arrives through `RULES.md`, which is mechani
 
 ### Taking a version, and knowing which you took
 
-Adoption copies the whole of `skeleton/` except its `README.md`, which `install.sh` does; an
-upgrade copies the paths `MANIFEST` marks `mechanism`, **plus `.template-hashes`, which is not in
-the manifest because a file cannot carry its own hash** — leave it behind and every file the
+Adoption prepares the whole of `skeleton/` except its `README.md`; `install.sh` installs only
+candidate paths that are absent from the destination and reports differing paths for human merge.
+An upgrade copies the paths `MANIFEST` marks `mechanism`, **plus `.template-hashes`, which is not
+in the manifest because a file cannot carry its own hash** — leave it behind and every file the
 upgrade just replaced fails its own comparison against the list it is leaving. `MANIFEST` is an
-ownership map, not a copy list, and that distinction is the difference between the two
-operations. No fork, no submodule, no subtree — **no git
+ownership map, not a copy list, and that distinction is the difference between the two operations. No fork, no submodule, no subtree — **no git
 relationship of any kind** between your project and the template.
 
 That is what makes your copy self-contained: it keeps working if the upstream repository is

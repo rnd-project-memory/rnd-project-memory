@@ -28,13 +28,22 @@ it is created and `git init`ed if not, and nothing is written into this reposito
 
 `install.sh` performs every part of the install that has one correct answer — the copy set, the
 `gitignore.template` rename, this clone's `core.hooksPath` and `user.email`, the token
-substitution across twenty files, and `.template-version` — then prints what it did, and after
-that what it deliberately did not.
+substitution across twenty files, and `.template-version`. Before writing, it builds a transformed
+candidate tree and compares every existing destination path with `git diff --no-index`. Identical
+files are preserved; differing paths are printed as collisions and the install stops with no
+project files or Git settings changed (exit status `2`). Resolve those files manually and rerun it.
+It then prints
+what it did, and after that what it deliberately did not.
 
 **Read it before running it.** It is short and does nothing clever, and it is also the
 instruction: those steps are described in one place, so there is no second description to fall
 out of date with it. If you would rather install by hand, read the script rather than looking for
 prose that repeats it.
+
+The template does not globally ignore generic data-file extensions or a `data/` directory. Add
+project-specific patterns above the `.gitignore` upstream marker if this project wants them ignored.
+The pre-commit hook is a separate safety control and still blocks known data-file extensions from
+commits by default.
 
 It never guesses. An unset `user.email` is reported, not invented — a wrong address there names
 the wrong person in every `Held by:` written afterwards, and nothing later tells that apart from a
@@ -95,9 +104,12 @@ rule in the file is inert. `RULES.md` matters most — it holds every behavioura
 silence looks exactly like correctness. **No script can do this**: a session cannot measure its
 own imports from the inside, which is why it is here rather than in `install.sh`.
 
-**5. Merging, where a file already exists.** Nothing here is meant to overwrite one. `AGENTS.md`
-is the case that matters: the project's own content stays and the two `@` import lines are added
-to it. The rules themselves are **not** copied into `AGENTS.md` — they live in
+**5. Merging, where a file already exists.** Nothing here is meant to overwrite one. The
+installer preflights every transformed candidate path with `git diff --no-index`: identical files
+are left alone, while a differing file is reported as a collision and the install stops before
+writing anything. Resolve or merge the displayed files manually, then rerun the installer.
+`AGENTS.md` is the case that matters: preserve the project's own content and add the two `@`
+import lines to it. The rules themselves are **not** copied into `AGENTS.md` — they live in
 `ai-sandbox/RULES.md`, which the import pulls in and an upgrade replaces wholesale.
 
 **6. On a project already underway, read `RND_PROJECT_MEMORY.md` §11 before any of this.** It
