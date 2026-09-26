@@ -111,11 +111,10 @@ both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
 ## Latest completed session
 
 The 2026-09-26 sessions added a transactional, diff-reporting installer path and clarified the
-nonblocking Owner workflow. The issue-#1 implementation was revised: the global extracted-data and `data/` ignore rules are
-removed, so each project decides whether to ignore data files or directories. The pre-commit hook
-still blocks known data-file extensions as a separate safety control, and the changes are
-unreleased and require review. `CHECKPOINT-install-path.md` remains held by `esdevop@gmail.com` and
-was not edited.
+nonblocking Owner workflow. Issue #1 was resolved by removing the global extracted-data and `data/`
+ignore rules, so each project decides whether to ignore data files or directories; the pre-commit
+hook remains a separate data-file safety control. The root self-upgrade to v3.5.0 is complete;
+`CHECKPOINT-install-path.md` remains held by `esdevop@gmail.com` and was not edited.
 
 ## What a new session does
 
