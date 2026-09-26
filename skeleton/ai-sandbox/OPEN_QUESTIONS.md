@@ -31,20 +31,19 @@ permanently. The handbook's §11 says why, and an adoption note in this file sho
 > value, which names a temporary write claim and is bound to `git config user.email`
 > (`ADR-012`).
 >
-> **Blank means nobody has claimed this**, and that is the signal the field exists to carry. So
-> **raise the entry anyway when you have no name to put here** — an unowned question in the
-> register is worth far more than a question that was never written down because one field could
-> not be filled.
+> When creating a new entry and no human name has been supplied, **ask the user who should own
+> it before filling this field**. Never substitute `git config user.email` or another available
+> identity.
 >
-> What blank must never mean is *the owner is known and nobody typed it*. Fill it as soon as
-> someone takes the entry; if solo-era entries that do have an owner are left blank out of
-> habit, the signal is destroyed the day a second person joins.
+> If the user says no owner is assigned yet, or does not provide one, leave `Owner:` blank and
+> raise the entry anyway. Blank means nobody has claimed this; it must not mean an owner was known
+> and omitted. Fill it as soon as someone takes the entry.
 
 ---
 
 ## Q-<slug> · <short title> 🔴
 
-- **Raised:** <DATE> · **Owner:** <human name>
+- **Raised:** <DATE> · **Owner:** <human name, or blank if unclaimed>
 - **Source:** <where the gap surfaced — a document, a source ID, a session>
 - **Question:** <what is unknown>
 - **Why it matters:** <what decision it blocks>
