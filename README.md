@@ -49,7 +49,7 @@ commits by default.
 
 ## Status
 
-`v3.4.0`. Fifteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.5.0`. Sixteen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
