@@ -101,7 +101,10 @@ project was read after about eight weeks under the template. Three things it sho
 detectable and nothing detected them. *Current focus* in `INDEX.md` grew to about 300 lines in a
 file loaded every session, because the bound lived only in the blank that answering deletes. A
 log written with bare tags made the tag check print nothing. The shipped checkpoint template
-survived as a "thread" for weeks. Each is now a `check.sh` report that clears when acted on. What
+survived as a "thread" for weeks. Each is now a `check.sh` report that clears when acted on. One
+failure was ours and needed no check: the session-start sweep froze any other open session as
+interrupted. That contradicts §3, where parallel agents are the normal case, and live sessions
+were frozen. The sweep now asks. What
 the same reading found and did not fix — nothing promoted to `docs/` after install day, staleness
 notices deferred every time, single-valued fields — is a design question, not a check.
 

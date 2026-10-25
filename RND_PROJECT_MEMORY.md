@@ -525,7 +525,7 @@ Follow ai-sandbox/playbooks/checkpoint.md
 
 | Playbook | Purpose | The part that is easy to get wrong |
 |----------|---------|-----------------------------------|
-| `session-start.md` | Pull, load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. Its staleness check **reports and counts**, it does not demand a verdict — the person opening a session is often not the thread's holder. |
+| `session-start.md` | Pull, load state, report, propose a focus | It **stops and waits**. An assistant that starts researching unprompted has skipped the only step where you steer. Its staleness check **reports and counts**, it does not demand a verdict — the person opening a session is often not the thread's holder. Another `open` session is **reported and asked about, never frozen on a guess**: parallel agents are the normal case (§3). |
 | `checkpoint.md` | Close a session: freeze the record, promote, decide each touched thread's checkpoint | A thread only gets a checkpoint if something is left with nowhere else to live; if it does, the cap means **promote something**, never shorten the prose; closing splits the remainder to `docs/` and one `OPEN_QUESTIONS.md` entry, never a choice between them. |
 | `promote.md` | Move a matured conclusion into `docs/` | Step 2 — find *every* file the conclusion touches. Updating one and missing another leaves `docs/` self-contradictory, which is worse than not recording it. |
 | `ingest-source.md` | Take in a PDF, wiki page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |

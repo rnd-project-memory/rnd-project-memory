@@ -34,19 +34,31 @@ inferred from commit history or from another file.
 specific document when the discussion actually needs it. The point of the index is to
 avoid loading the whole knowledge base into every session.
 
-## Check for an interrupted session
+## Check for other open sessions
 
 ```bash
-grep -l 'Status:.*open' ai-sandbox/sessions/*.md
+grep -lE '^[-*] \*\*Status:\*\*.*open' ai-sandbox/sessions/*.md | grep -v '_TEMPLATE\.md$'
 ```
 
-`open` belongs to the current session only. Any other match is a session that was cut
-short — context ran out, the user left, `checkpoint.md` never ran.
+`open` marks a session in progress, and more than one can be in progress at once. Several agents
+on unrelated threads is the normal solo case (handbook §3). Any match other than this session's
+own file is one of two things, and nothing in the file says which:
 
-Freeze it: set `**Status:** abandoned`, add a `sessions/LOG.md` row with the outcome
-"interrupted", and **change nothing else**. Do not backfill from memory — the value of the
-record is that it shows what was actually captured before the interruption. This also makes
-interruptions visible instead of leaving them traceless.
+- **running in parallel** — another agent or terminal, working right now;
+- **interrupted** — context ran out, the user left, `checkpoint.md` never ran.
+
+**Do not decide, and do not touch the file.** List each match in the report below, by filename
+and objective line, and ask which it is. Freezing a live session takes away its contemporaneous
+record, and undoing that means editing a frozen one: two broken guarantees for one guess.
+
+- **Parallel:** leave it alone. Whoever is running it closes it. If it works the same thread as
+  this session, only one of the two may write that thread's checkpoint, so agree which before
+  either does.
+- **Interrupted:** freeze it. Set `**Status:** abandoned`, add a `sessions/LOG.md` row with the
+  outcome "interrupted", and **change nothing else**. Do not backfill from memory: the value of
+  the record is that it shows what was actually captured before the interruption.
+- **No answer:** leave it `open`. An open file costs one line in `check.sh`, while a wrong freeze
+  cannot be undone without breaking immutability.
 
 ## Open this session's file
 
@@ -63,6 +75,7 @@ detail.
 - where the last session stopped
 - what is currently in progress
 - the 2–3 highest-priority open questions
+- any other `open` session, with the question whether it is live or interrupted
 - a proposed focus for this session
 
 Then **stop and wait** for confirmation or redirection. Do not start work unprompted.
