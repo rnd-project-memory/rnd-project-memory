@@ -80,6 +80,10 @@ case "$out" in
   *FAILED*) bad "check.sh reports a hash failure on a clean, correct adoption";;
         *) ok "no hash failure on a clean adoption";;
 esac
+case "$out" in
+  *"still the shipped template"*) bad "check.sh reports template residue after an install that named its thread";;
+                               *) ok "no template residue reported when the first thread was named";;
+esac
 
 [ -f "$dest/.template-version" ] \
   && ok ".template-version reached the consumer" \
@@ -207,6 +211,14 @@ if ./install.sh "$preserve_dest" preserve-project test@example.invalid >/dev/nul
   [ "$(cat "$preserve_dest/README.md")" = "keep this README" ] \
     && ok "an existing README survives a successful install" \
     || bad "a successful install changed or removed the existing README"
+  # Given no thread slug, the install leaves the shipped checkpoint template in place and says so
+  # once. check.sh is what keeps saying so: without it the template counted as a thread, reported
+  # ok, for as long as nobody happened to notice.
+  case "$(cd "$preserve_dest" && ./check.sh 2>&1)" in
+    *"CHECKPOINT-thread.md: still the shipped template"*)
+      ok "an unnamed first thread is reported by check.sh, not counted as a thread";;
+    *) bad "check.sh is silent about CHECKPOINT-thread.md left by an install with no thread slug";;
+  esac
 else
   bad "install with a non-conflicting existing README failed"
 fi
