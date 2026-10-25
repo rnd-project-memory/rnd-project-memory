@@ -84,6 +84,15 @@ case "$out" in
   *"still the shipped template"*) bad "check.sh reports template residue after an install that named its thread";;
                                *) ok "no template residue reported when the first thread was named";;
 esac
+# The Current focus bound must hold on day one, and its guidance must outlive the answered blank:
+# that guidance used to live only in the marker, which is exactly what the step above deletes.
+case "$out" in
+  *"lines — rewrite it"*) bad "check.sh reports an over-long Current focus on a fresh install";;
+                       *) ok "Current focus within its bound on a fresh install";;
+esac
+grep -q 'never appended' "$dest/ai-sandbox/INDEX.md" \
+  && ok "Current focus guidance survives answering the blank" \
+  || bad "INDEX.md lost its Current focus guidance once the blank was answered"
 
 [ -f "$dest/.template-version" ] \
   && ok ".template-version reached the consumer" \
