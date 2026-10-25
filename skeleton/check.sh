@@ -225,6 +225,25 @@ for f in "$SB"/CHECKPOINT-*.md; do
                    || echo "  ok    $f: $l"
 done
 
+n "INDEX.md Current focus (limit 15)"
+# INDEX.md loads into every session, and its Current focus is rewritten, never appended. The
+# bound used to live only in the <<FILL: marker, which answering the blank deletes, so nothing
+# carried it past day one. One adopter's section reached about 300 lines of dated paragraphs, the
+# older ones contradicting the newer, while every section here reported clean. Counted: non-blank
+# lines from the heading to the next rule or heading, blockquote guidance excluded.
+if [ -f "$SB/INDEX.md" ]; then
+  fl=$(awk '/^## Current focus/{on=1; next} on && (/^## / || /^---$/){exit}
+            on && NF && !/^[[:space:]]*>/{c++} END{print c+0}' "$SB/INDEX.md")
+  if [ "$fl" -gt 15 ]; then
+    echo "  ?     $fl lines — rewrite it to where the work stands now; what happened belongs in"
+    echo "        sessions/, what is unresolved in a checkpoint"
+  else
+    echo "  ok    $fl"
+  fi
+else
+  echo "  none  no ai-sandbox/INDEX.md"
+fi
+
 n "Dangling citations"
 # Blockquote preambles, <placeholder> examples and the playbooks all carry sample IDs.
 # Those are instruction, not content: scanning them makes the template report itself.

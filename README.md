@@ -49,7 +49,7 @@ commits by default.
 
 ## Status
 
-`v3.5.0`. Sixteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.6.0`. Seventeen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -93,14 +93,22 @@ detectability, and a rule is the last resort, for failures nothing can see.**
 
 **`v3.4.0` applies `ADR-013`'s third gate to the release before it**, removing a short form of one
 rule that `v3.2.0` had added at each of the seven install markers. One rule stated in one place,
-pointed at elsewhere, never restated. Whether the restatement was doing any work is the next
-measurement — a variance probe has already established that this instrument repeats itself on
-coarse outcomes, so a single comparison is readable.
+pointed at elsewhere, never restated. Removing the restatement changed neither pre-registered
+outcome, so on its first application the third gate had no measured price.
 
-What is still narrow: one adopting project besides these three starts, multi-user behaviour
-reasoned from the design rather than observed, and upgrades still performed by whoever writes the
-migrations. This repository runs the system on itself and upgrades itself first, deliberately, so
-that the first thing to break belongs to whoever wrote it.
+**`v3.6.0` is the first release driven by long use rather than by a green start.** One adopting
+project was read after about eight weeks under the template. Three things it showed were
+detectable and nothing detected them. *Current focus* in `INDEX.md` grew to about 300 lines in a
+file loaded every session, because the bound lived only in the blank that answering deletes. A
+log written with bare tags made the tag check print nothing. The shipped checkpoint template
+survived as a "thread" for weeks. Each is now a `check.sh` report that clears when acted on. What
+the same reading found and did not fix — nothing promoted to `docs/` after install day, staleness
+notices deferred every time, single-valued fields — is a design question, not a check.
+
+What is still narrow: one adopting project besides these three starts and one more read after
+weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
+still performed by whoever writes the migrations. This repository runs the system on itself and
+upgrades itself first, deliberately, so that the first thing to break belongs to whoever wrote it.
 
 ## Licence
 

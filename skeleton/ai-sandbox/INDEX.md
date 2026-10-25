@@ -48,8 +48,12 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 
 ## Current focus
 
-<<FILL: 2–4 lines — the live question, and what is blocking it. On day one that is what the
-project is setting out to find out.>>
+> **2–4 lines, rewritten at every checkpoint, never appended.** Where the work stands now and what
+> is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
+> This file loads into every session; `check.sh` reports this section past 15 lines.
+
+<<FILL: the live question, and what is blocking it. On day one that is what the project is
+setting out to find out.>>
 
 ---
 

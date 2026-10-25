@@ -110,9 +110,10 @@ checkpoint as a gap; add new assumptions surfaced this session.
   names **what was resolved**, not just what was worked on: this row is the only cue a later
   reader gets that a deleted question ever had an answer.
 - `experiments/LOG.md` — a row for each experiment run this session.
-- `INDEX.md` — update the date, the `## Threads` table (add, update, or remove the rows this
-  session touched), and "Current focus". Leave the rest alone unless the structure genuinely
-  changed: this file loads into every session and must stay small and stable.
+- `INDEX.md` — update the date and the `## Threads` table (add, update, or remove the rows this
+  session touched). **Rewrite** "Current focus" whole, to where the work stands now: never add a
+  paragraph for this session. Leave the rest alone unless the structure genuinely changed: this
+  file loads into every session and must stay small and stable.
 
 ## 6. Propose a commit
 
