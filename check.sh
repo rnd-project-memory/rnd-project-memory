@@ -366,7 +366,7 @@ n "Sessions left open"
 # The anchor works because a field is a list item and a mention of one is not.
 open=$(grep -lnE '^[-*] \*\*Status:\*\*.*open' "$SB"/sessions/*.md 2>/dev/null | grep -v '_TEMPLATE\.md$')
 if [ -n "$open" ]; then
-  echo "$open" | sed 's/^/  still open (freeze as abandoned if interrupted): /'
+  echo "$open" | sed 's/^/  still open (live in parallel, or interrupted? ask before freezing): /'
 else echo "  none"; fi
 
 n "docs/ changed without CLAIMS.md"
