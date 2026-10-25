@@ -26,11 +26,15 @@
 #             unverified-by-design (there is nothing to check by construction).
 #   corrected / superseded_by  (optional) How this was addressed, without deleting the record.
 
-- id: C-<slug>
-  subject: <table, column, or script path>
-  kind: table
-  severity: critical
-  what: >
-    <what happens, and why it looks fine until it doesn't>
-  found: <DATE>
-  basis: <EXP-… | sessions/… | S-… | —>
+#
+# Shape of an entry. Commented out on purpose: an uncommented example is read as data, so it
+# counts in every field distribution and survives as an entry long after real ones arrive.
+#
+# - id: C-<slug>
+#   subject: <table, column, or script path>
+#   kind: table
+#   severity: critical
+#   what: >
+#     <what happens, and why it looks fine until it doesn't>
+#   found: <DATE>
+#   basis: <EXP-… | sessions/… | S-… | —>

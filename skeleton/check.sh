@@ -213,6 +213,14 @@ for f in "$SB"/CHECKPOINT-*.md; do
     fi
     continue
   fi
+  # The shipped template carries a placeholder Held by:. Left unnamed, it is not a thread, but it
+  # counts as one everywhere else — reported ok here, swept as stalled at every session start —
+  # and nothing said so. One adopter's copy carried it for 54 days.
+  if grep -m1 -qE '^[-*] \*\*Held by:\*\*[[:space:]]*<' "$f"; then
+    echo "  ?     $f: still the shipped template, not a thread — rename it for the work"
+    echo "        and set Held by:, or delete it"
+    continue
+  fi
   [ "$l" -gt 150 ] && echo "  OVER  $f: $l lines — promote something, do not compress" \
                    || echo "  ok    $f: $l"
 done
@@ -349,8 +357,16 @@ if git diff --cached --name-only 2>/dev/null | grep -q '^docs/'; then
 else echo "  no staged docs/ changes"; fi
 
 n "Tag frequencies (singletons are usually a second spelling)"
-grep -ho '`#[a-z0-9-]*`' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
-  | sort | uniq -c | sort -rn | sed 's/^/  /' || echo "  no tags yet"
+# Table rows only, and a tag with or without backticks. Matching only the backticked form printed
+# nothing for a log written with bare tags — and an empty section reads as clean, not as unread
+# (one adopter's session log: 151 distinct tags, 93 used once, none reported).
+tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
+  | grep -oE '(^|[[:space:]`|])#[a-z][a-z0-9-]*' | sed 's/^[^#]*//')
+if [ -n "$tags" ]; then
+  printf '%s\n' "$tags" | sort | uniq -c | sort -rn | sed 's/^/  /'
+else
+  echo "  no tags yet"
+fi
 
 n "Heuristic: numbers in docs/ with no nearby date (expect false positives)"
 grep -rnE '[0-9]+(\.[0-9]+)?\s*(%|ms|GB|k)\b' docs/ 2>/dev/null \
