@@ -110,6 +110,21 @@ the archive worth keeping.
 
 Corrections go into the next record, referring back.
 
+### Another open session is asked about, never frozen on a guess
+
+The first version of this rule said an `open` file from any earlier session was interrupted, and
+ordered it frozen. That holds only while one session runs at a time, and the thread axis exists
+because that is not the solo case: one person runs several agents on unrelated threads. Under the
+old rule, a session that started while another was live froze the live one. Its record stopped
+mid-work, and the only way to resume it was to edit a frozen file, so following one rule forced
+breaking another. One adopter hit this repeatedly.
+
+Nothing in the file separates *live elsewhere* from *cut short*: same status, same shape, and a
+recent edit proves nothing across clones. So no check can decide it. The person can, at the one
+moment the question arises, and the cost of asking is one line in the session-start report. The
+default with no answer is to leave the file open, because that mistake is cheap and reversible and
+the other is neither.
+
 ### Answered questions and confirmed assumptions are deleted, not marked resolved
 
 A register that is 80% resolved entries is one nobody reads, and an unread register is worse than
@@ -323,7 +338,7 @@ automates the mechanical half.
 | A claim nobody can trace | Source was never registered | Register it retroactively, or drop the claim |
 | An experiment that cannot be re-run | Reproducibility fields not captured | Treat its result as unverified |
 | An experiment cited from `docs/` whose evidence file is gitignored | The record didn't say what stands in as evidence | Add a `results/` pointer, or don't promote it |
-| A session file left `Status: open` | The session was interrupted | Freeze as `abandoned`; do not backfill |
+| Another session file left `Status: open` | Running in parallel, or interrupted; the file cannot say which | Ask. Leave it if live; freeze as `abandoned` only on the person's word; never backfill |
 | `docs/CLAIMS.md` disagrees with `docs/` | The index was updated separately, or not at all | Re-sync; it belongs in the same change as the promotion |
 | A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |
 | An intake file past its dismantling date | Bootstrapping never finished | Highest-priority item, not furniture |

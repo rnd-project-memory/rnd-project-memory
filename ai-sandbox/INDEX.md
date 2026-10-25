@@ -66,8 +66,8 @@ template, and `adopter-review` covers what real adopters' memories show.
 **Two threads are open.** `install-path` holds six install findings, none of which needs an
 experiment, and Gap 4: a work identity in published commit history, which is undecided.
 `adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
-detectable part. Next is Gap 7 (issue #3): `session-start.md` freezes live parallel sessions. The
-rest is design: working decisions, staleness, single-valued fields, planned threads (issue #2).
+detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).
+The rest is design: working decisions, staleness, single-valued fields, planned threads (issue #2).
 
 The green-start programme is closed. Its arc and lessons are in
 `sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from
