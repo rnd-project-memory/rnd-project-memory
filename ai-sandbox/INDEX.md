@@ -1,6 +1,6 @@
 # rnd-project-memory — Session Index
 
-- **Updated:** 2026-09-26
+- **Updated:** 2026-10-25
 
 Entry point for every session. Loaded automatically through `AGENTS.md`.
 
@@ -113,8 +113,11 @@ both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
 The 2026-09-26 sessions added a transactional, diff-reporting installer path and clarified the
 nonblocking Owner workflow. Issue #1 was resolved by removing the global extracted-data and `data/`
 ignore rules, so each project decides whether to ignore data files or directories; the pre-commit
-hook remains a separate data-file safety control. The root self-upgrade to v3.5.0 is complete;
-`CHECKPOINT-install-path.md` remains held by `esdevop@gmail.com` and was not edited.
+hook remains a separate data-file safety control. The root self-upgrade to v3.5.0 is complete.
+
+On 2026-10-25 `CHECKPOINT-install-path.md` was rewritten against v3.5.0 by its holder. None of the
+six findings moved. A new **Gap 4** is open and undecided: the six v3.5.0 commits name a work
+identity as author in published history, which `docs/constraints.md` forbids.
 
 ## What a new session does
 
