@@ -1,6 +1,6 @@
 # rnd-project-memory — Open Questions
 
-- **Updated:** 2026-08-26
+- **Updated:** 2026-10-25
 
 > **Open questions only.** A question leaves this file in one of two ways, and both are
 > deletions — status `Resolved` is never used, because a register of resolved entries is one
@@ -60,6 +60,14 @@ resolve to a different question. A slug, once assigned, is never changed.
   the components that failed were not the ones named here. They were in the *installation* — a path
   this repository never takes — and that region now has an instrument (`bootstrap-test.sh`,
   `ADR-008`). The four components above remain unexercised; the trial did not reach them.
+
+  **2026-10-25 — three of the four have now run in a real project**
+  (`[S-adopter-snapshot-2026-10-25]`, about 8 weeks). `CAVEATS.yaml` held 28 entries, 15 of them
+  tool traps. `SOURCES.md` held 32 sources, 31 `reference-only`. `DATA_ENVIRONMENT.md` was in use,
+  and so was `experiments/` (12 records). Two field-level defects surfaced: `severity:` asks the
+  wrong question, and a shipped example entry is never removed (`CHECKPOINT-adopter-review.md`).
+  The hook could not be observed, because the snapshot was prepared without it. What remains open
+  is the hook firing on a real secret.
 
 ## Q-who-keeps-the-history · Who executes the record when the assistant is unavailable? 🟡
 
@@ -123,6 +131,13 @@ resolve to a different question. A slug, once assigned, is never changed.
   performed by hand, against the same closing performed with an assistant. The install half is now
   measured; this half is not, and it is the half that repeats.
 
+  **2026-10-25 — the availability event has been observed, not timed.** A real adopter
+  (`[S-adopter-snapshot-2026-10-25]`) hit an AI-credit ceiling mid-task and wrote a local playbook
+  for handing implementation to a cheaper model. Its gates are a command plus an expected value, so
+  the incoming model can trust prior work without re-deriving it. That confirms the dependency is
+  real and shows one adopter's answer to it. It is a model switch, not a human reduced mode, so the
+  question as posed stays open.
+
 ## Q-session-boundary · Is closing a session the same gesture as saving one? 🟡
 
 - **Raised:** 2026-08-26 · **Owner:** esdevop (human)
@@ -146,6 +161,12 @@ resolve to a different question. A slug, once assigned, is never changed.
     half of a save and are written as though the session is over.
 - **What would answer it:** a week's sessions recorded under each shape, counting how often a
   "final" save turns out not to be final. One day's three instances is a rate, not a design.
+
+  **2026-10-25 — a second project shows the same pressure at a higher rate.** In
+  `[S-adopter-snapshot-2026-10-25]`, one day produced eight session records and another eleven
+  `LOG.md` rows, out of 66 sessions in about eight weeks. This is the *granular archive* direction
+  above, measured outside this repository. Whether the cause is this gesture or the adopter's habit
+  of one session per task is not separable from the files.
 
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟡
 
