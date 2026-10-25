@@ -50,6 +50,7 @@ template's own rule says content that instructs falsely is worse than content th
 | Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
 | `install-path` | esdevop@gmail.com | active | 2026-08-26 |
+| `adopter-review` | esdevop@gmail.com | active | 2026-10-25 |
 
 The first thread open since `v2.0.0` shipped on 2026-08-23. Six releases were cut without one,
 because everything each session produced either shipped or had a home. This one does not: an
@@ -118,6 +119,10 @@ hook remains a separate data-file safety control. The root self-upgrade to v3.5.
 On 2026-10-25 `CHECKPOINT-install-path.md` was rewritten against v3.5.0 by its holder. None of the
 six findings moved. A new **Gap 4** is open and undecided: the six v3.5.0 commits name a work
 identity as author in published history, which `docs/constraints.md` forbids.
+
+Also on 2026-10-25, a real adopter's memory was reviewed after about eight weeks of use
+(`S-adopter-snapshot-2026-10-25`). Eight findings are open in `CHECKPOINT-adopter-review.md`,
+untriaged, and no template change has been made.
 
 ## What a new session does
 
