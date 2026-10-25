@@ -2,8 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`, and the root runs it. Gap 5's check is the
-  next buildable item. Gaps 3, 4 and 6 wait on design decisions, not on work. Triage is in
+- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`, and the root runs it. Gap 5's check is
+  built in `skeleton/` and unreleased. Every remaining item is a design decision for the author:
+  Gaps 3, 4 and 6, and Gap 5's schema half. Triage is in
   `sessions/2026-10-25-adopter-review-triage.md`.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
@@ -45,9 +46,10 @@ at the response, not at the number. The decision is the author's.
 
 ### Gap 5 — single-valued fields (priority: medium)
 
-Instrument: extend §12's distribution check to `Configuration:` in session records. That is
-detectable and clearable. Whether the schema gains a *session mode* axis, and whether `severity:`
-is redefined, are design decisions and come after the check.
+The check is built and unreleased: §12's distribution now counts session `Configuration:`
+values, with no mark on values outside the dictionary, since those sit in immutable records
+(`sessions/2026-10-25-configuration-distribution.md`). Left for design: whether the schema gains a
+*session mode* axis, and whether `severity:` is redefined.
 
 ### Gap 6 — planned threads and model handoff (priority: medium, design; issue #2)
 

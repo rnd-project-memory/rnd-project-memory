@@ -431,5 +431,21 @@ if [ -f "$SB/CAVEATS.yaml" ]; then
     | sort | uniq -c | sort -rn | sed 's/^/    /'
 fi
 
+# Session Configuration, a dictionary field whose names CONFIGURATIONS.md declares. One adopter
+# recorded Solo on every session while the free-text Participants field collected about twenty
+# role strings: the axis that varied was never one this field asked about. Counts only, with no
+# mark on values outside the dictionary. Those sit in closed records, which are immutable, so a
+# mark could never clear (ADR-013 §4). A value that is not a declared name shows plainly enough in
+# the list.
+cfgs=$(for f in "$SB"/sessions/*.md; do
+         case "$(basename "$f")" in LOG.md|_TEMPLATE.md) continue;; esac
+         grep -m1 -E '^[-*] \*\*Configuration:\*\*' "$f" 2>/dev/null \
+           | sed 's/^[-*] \*\*Configuration:\*\*[[:space:]]*//; s/[[:space:]]*$//'
+       done)
+if [ -n "$cfgs" ]; then
+  echo "  sessions Configuration:"
+  printf '%s\n' "$cfgs" | sort | uniq -c | sort -rn | sed 's/^/    /'
+fi
+
 printf '\n\033[2madvisory only — nothing here blocks a commit\033[0m\n'
 exit 0
