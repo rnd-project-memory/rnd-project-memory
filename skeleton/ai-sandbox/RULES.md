@@ -37,8 +37,9 @@
   something needs promoting to `docs/` — not that the prose needs shortening.
 - Write every entry for a reader who missed the session. In three months that reader is you.
 - The session file is created at the **start** of a session (`Status: open`) and appended to as it
-  runs; `checkpoint.md` closes it. Immutable once closed. An `open` file from any earlier session
-  was interrupted — freeze it as `abandoned`, do not backfill.
+  runs; `checkpoint.md` closes it. Immutable once closed. **Another `open` session file is not
+  yours to change.** It is either running in parallel or was interrupted, and only the person can
+  say which. Ask, and freeze it as `abandoned` only on their word. Never backfill.
 - Experiment records are immutable once written. Corrections go into the next one.
 - **A conclusion resting on an experiment marked `not verified` does not move to `docs/`.**
 - **If an experiment record cites a file, that file is in the repository** — or the record says

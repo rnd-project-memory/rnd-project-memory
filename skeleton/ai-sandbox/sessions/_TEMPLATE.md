@@ -9,8 +9,8 @@
 > a decision reached is a decision written down, not something to reconstruct at the end.
 > `checkpoint.md` sets it to `closed`, after which the file is immutable.
 >
-> Any `open` file that is **not** the current session is an interrupted one. Freeze it as
-> `abandoned` exactly as it stands; never backfill from memory.
+> Another `open` file is either running in parallel or was interrupted, and only the person can
+> say which. Never change it on a guess; `session-start.md` says what to do.
 >
 > **Participants matters only when the configuration has a check step** — independence is a
 > property of the pair doing the checking, not something the configuration's name alone
