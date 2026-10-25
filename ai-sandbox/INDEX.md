@@ -121,8 +121,9 @@ six findings moved. A new **Gap 4** is open and undecided: the six v3.5.0 commit
 identity as author in published history, which `docs/constraints.md` forbids.
 
 Also on 2026-10-25, a real adopter's memory was reviewed after about eight weeks of use
-(`S-adopter-snapshot-2026-10-25`). Eight findings are open in `CHECKPOINT-adopter-review.md`,
-untriaged, and no template change has been made.
+(`S-adopter-snapshot-2026-10-25`). Its findings are triaged in `CHECKPOINT-adopter-review.md`.
+Two `check.sh` defects are fixed in `skeleton/` and not released. A threshold and the bump level
+are the author's to decide.
 
 ## What a new session does
 
