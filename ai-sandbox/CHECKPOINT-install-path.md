@@ -2,11 +2,12 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the green-start programme is finished, and `v3.5.0` has shipped since — cut on
-  2026-09-26 in sessions that deliberately left this file alone, because it is held here. The root
-  runs `v3.5.0`. That release touched none of the six findings below; they stand as written on
-  2026-08-28, and none needs an experiment. It did open one gap of its own: the six commits it
-  arrived in carry a work identity as author (Gap 4). Push state is not recorded here — it has gone
+- **Resume from:** the green-start programme is finished. Two releases have shipped since. `v3.5.0`
+  was cut on 2026-09-26, in sessions that deliberately left this file alone because it is held here.
+  `v3.6.0` was cut on 2026-10-25 from the `adopter-review` thread, and the root runs it. Neither
+  release touched the six findings below. They stand as written on 2026-08-28, and none needs an
+  experiment. `v3.5.0` opened one gap of its own: the six commits it arrived in carry a work
+  identity as author (Gap 4). Push state is not recorded here — it has gone
   stale three times — so read it from `git status`.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms on different providers disagreed, the one that outranks the
@@ -26,7 +27,7 @@
 
 | Item | Value | Source |
 |------|-------|--------|
-| Template | `v3.5.0`, root vendored at the same | `.template-version` |
+| Template | `v3.6.0`, root vendored at the same | `.template-version` |
 | The install | `install.sh`; builds a candidate tree, stops with exit `2` on any differing path | `v3.5.0` |
 | Install-time blanks | 7 markers, 3 files, `<<FILL:` at line start | `grep -rn '^<<FILL' skeleton/` |
 | Rule against invention | `RULES.md`, loaded every session; no restatement anywhere | `v3.2.0`, `v3.4.0` |
@@ -45,8 +46,9 @@
 The pre-registered design is closed: three runs, both questions answered, nothing further under
 it. What remains is ordinary work. Each is statable without naming a model, so `ADR-013`'s first
 gate is satisfied for all six; the second sends most to a check or to prose rather than `RULES.md`.
-Re-read against `v3.5.0` on 2026-10-25: the release made the install collision-safe and stopped it
-removing an adopter's README, but none of the six moved.
+Re-read on 2026-10-25. `v3.5.0` made the install collision-safe and stopped it removing an
+adopter's README. `v3.6.0` made `check.sh` report an unrenamed checkpoint template. None of the six
+moved.
 
 1. **`OPEN_QUESTIONS.md`'s example entry carries no marker**, so an untouched register cannot be
    told from a filled one. Run 2 left it standing beside three real entries and nothing said so.

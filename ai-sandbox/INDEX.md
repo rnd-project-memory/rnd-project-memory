@@ -52,78 +52,39 @@ template's own rule says content that instructs falsely is worse than content th
 | `install-path` | esdevop@gmail.com | active | 2026-08-26 |
 | `adopter-review` | esdevop@gmail.com | active | 2026-10-25 |
 
-The first thread open since `v2.0.0` shipped on 2026-08-23. Six releases were cut without one,
-because everything each session produced either shipped or had a home. This one does not: an
-unreleased change sits in the tree, three install defects are named but untouched, and the bump
-is undecided.
+Both threads hold work that has nowhere else to live yet. `install-path` covers installing the
+template, and `adopter-review` covers what real adopters' memories show.
 
 ---
 
 ## Current focus
 
-**The pre-registered design is closed.** Three runs, both questions answered. The instrument
-repeats itself on coarse outcomes; cause A holds; and removing the seven marker restatements
-changed neither outcome, so `ADR-013`'s third gate has no measured price on its first application
-(`EXP-2026-08-28-marker-flags`, *supports*).
+> **2–4 lines, rewritten at every checkpoint, never appended.** Where the work stands now and what
+> is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
+> This file loads into every session; `check.sh` reports this section past 15 lines.
 
-**The arc, one fix at a time:**
+**Two threads are open.** `install-path` holds six install findings, none of which needs an
+experiment, and Gap 4: a work identity in published commit history, which is undecided.
+`adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
+detectable part. The rest is design: a home for working decisions, an exit from staleness,
+single-valued fields, and planned threads.
 
-| Version | Invention | Register |
-|---|---|---|
-| `v3.1.1` | broad | 0 entries |
-| `v3.2.0` | none | 0 — register avoided, because of the `Owner:` rule |
-| `v3.3.0` Runs 1 / 1′ | none | 2 / 1 |
-| `v3.4.0` Run 2 | none | 3 |
+The green-start programme is closed. Its arc and lessons are in
+`sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from
+confident fiction, a boundary `ADR-013` recorded.
 
-Invention stopped when the rule moved into a file every session loads and the shipped stack stopped
-being asserted. Register use returned when a contradiction in the register's own preamble was
-removed. Removing the restatements changed neither.
+Open questions: `Q-who-keeps-the-history` and `Q-session-boundary` 🟡 now have adopter evidence.
+`Q-unexercised-components` 🟡 is down to the hook. `Q-oss-intake` 🟡 and `Q-contribution-flow` 🟢
+need answers from outside this repository.
 
-Four things worth carrying:
-
-- **A pre-registration proves itself by what it forbids.** Twice in three days it made an
-  attractive reading unavailable: the file-count metric, and a 1-2-3 trend across three noisy
-  cells. Both would have been written up confidently. The refusal is on the record in the
-  experiment, not left as an absence.
-- **The instrument is bounded in both directions.** Identical conditions gave different fine
-  outcomes; different conditions gave identical coarse ones. That pair is what makes the coarse
-  outcomes defensible rather than merely convenient.
-- **An unobservable confound gets a caveat; an observable one gets forgotten.**
-  `C-copilot-model-build` was written about an invisible model build, and the CLI moved visibly
-  underneath the cause-A comparison.
-- **`check.sh` was clean on the run that invented broadly and on all four that did not.** The
-  boundary of the mechanical layer is where `ADR-013` recorded it, and nothing since has moved it.
-
-**The green-start evidence is summarised, not committed** (`ai-sandbox/results/green-start-arms__*.json`).
-The raw logs carry an employer domain and a work account name, `docs/constraints.md` binds this
-public repository against that including in history, and the secret hook matches credential values
-rather than identifiers — so it would have gone through. Met by someone looking, recorded as a near
-miss. `Q-oss-intake` is raised to 🟡: Run 2 ran on a work machine under a work identity.
-
-**The thread checkpoint was rewritten**, having been patched across nine sessions instead — it was
-telling a cold reader that the root runs `v3.0.1` and that no release had been cut. `check.sh` said
-`ok` throughout: the 150-line cap catches accumulation, not decay.
-
-Six findings remain and none needs an experiment. `Q-who-keeps-the-history` 🟡 — install measured
-both ways, the **recurring** cost still not; `Q-session-boundary` 🟡 open;
-`Q-unexercised-components` 🟡 — `CAVEATS.yaml` has run its full cycle; `Q-oss-intake` and
-`Q-contribution-flow` 🟢 need answers from outside this repository.
+---
 
 ## Latest completed session
 
-The 2026-09-26 sessions added a transactional, diff-reporting installer path and clarified the
-nonblocking Owner workflow. Issue #1 was resolved by removing the global extracted-data and `data/`
-ignore rules, so each project decides whether to ignore data files or directories; the pre-commit
-hook remains a separate data-file safety control. The root self-upgrade to v3.5.0 is complete.
-
-On 2026-10-25 `CHECKPOINT-install-path.md` was rewritten against v3.5.0 by its holder. None of the
-six findings moved. A new **Gap 4** is open and undecided: the six v3.5.0 commits name a work
-identity as author in published history, which `docs/constraints.md` forbids.
-
-Also on 2026-10-25, a real adopter's memory was reviewed after about eight weeks of use
-(`S-adopter-snapshot-2026-10-25`). Its findings are triaged in `CHECKPOINT-adopter-review.md`.
-Two `check.sh` defects are fixed in `skeleton/` and not released. A threshold and the bump level
-are the author's to decide.
+2026-10-25: `v3.6.0` was cut and the root raised to it. `check.sh` now reports an over-long
+*Current focus*, an unrenamed checkpoint template and bare log tags, all from
+`[S-adopter-snapshot-2026-10-25]`. The same day `CHECKPOINT-install-path.md` was rewritten against
+`v3.5.0`, and its Gap 4 opened.
 
 ## What a new session does
 

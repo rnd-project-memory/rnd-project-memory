@@ -213,9 +213,36 @@ for f in "$SB"/CHECKPOINT-*.md; do
     fi
     continue
   fi
+  # The shipped template carries a placeholder Held by:. Left unnamed, it is not a thread, but it
+  # counts as one everywhere else — reported ok here, swept as stalled at every session start —
+  # and nothing said so. One adopter's copy carried it for 54 days.
+  if grep -m1 -qE '^[-*] \*\*Held by:\*\*[[:space:]]*<' "$f"; then
+    echo "  ?     $f: still the shipped template, not a thread — rename it for the work"
+    echo "        and set Held by:, or delete it"
+    continue
+  fi
   [ "$l" -gt 150 ] && echo "  OVER  $f: $l lines — promote something, do not compress" \
                    || echo "  ok    $f: $l"
 done
+
+n "INDEX.md Current focus (limit 15)"
+# INDEX.md loads into every session, and its Current focus is rewritten, never appended. The
+# bound used to live only in the <<FILL: marker, which answering the blank deletes, so nothing
+# carried it past day one. One adopter's section reached about 300 lines of dated paragraphs, the
+# older ones contradicting the newer, while every section here reported clean. Counted: non-blank
+# lines from the heading to the next rule or heading, blockquote guidance excluded.
+if [ -f "$SB/INDEX.md" ]; then
+  fl=$(awk '/^## Current focus/{on=1; next} on && (/^## / || /^---$/){exit}
+            on && NF && !/^[[:space:]]*>/{c++} END{print c+0}' "$SB/INDEX.md")
+  if [ "$fl" -gt 15 ]; then
+    echo "  ?     $fl lines — rewrite it to where the work stands now; what happened belongs in"
+    echo "        sessions/, what is unresolved in a checkpoint"
+  else
+    echo "  ok    $fl"
+  fi
+else
+  echo "  none  no ai-sandbox/INDEX.md"
+fi
 
 n "Dangling citations"
 # Blockquote preambles, <placeholder> examples and the playbooks all carry sample IDs.
@@ -349,8 +376,16 @@ if git diff --cached --name-only 2>/dev/null | grep -q '^docs/'; then
 else echo "  no staged docs/ changes"; fi
 
 n "Tag frequencies (singletons are usually a second spelling)"
-grep -ho '`#[a-z0-9-]*`' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
-  | sort | uniq -c | sort -rn | sed 's/^/  /' || echo "  no tags yet"
+# Table rows only, and a tag with or without backticks. Matching only the backticked form printed
+# nothing for a log written with bare tags — and an empty section reads as clean, not as unread
+# (one adopter's session log: 151 distinct tags, 93 used once, none reported).
+tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
+  | grep -oE '(^|[[:space:]`|])#[a-z][a-z0-9-]*' | sed 's/^[^#]*//')
+if [ -n "$tags" ]; then
+  printf '%s\n' "$tags" | sort | uniq -c | sort -rn | sed 's/^/  /'
+else
+  echo "  no tags yet"
+fi
 
 n "Heuristic: numbers in docs/ with no nearby date (expect false positives)"
 grep -rnE '[0-9]+(\.[0-9]+)?\s*(%|ms|GB|k)\b' docs/ 2>/dev/null \

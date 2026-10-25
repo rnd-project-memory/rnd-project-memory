@@ -2,10 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gap 1's two defects are fixed in `skeleton/` and not yet released. All six gaps
-  have been triaged under `ADR-013` (`sessions/2026-10-25-adopter-review-triage.md`). Two are ready
-  to build once the author decides: Gap 2, which needs a threshold, and Gap 5's check. The other
-  three wait on design decisions, not on work.
+- **Resume from:** Gaps 1 and 2 shipped in `v3.6.0`, and the root runs it. Gap 5's check is the
+  next buildable item. Gaps 3, 4 and 6 wait on design decisions, not on work. Triage is in
+  `sessions/2026-10-25-adopter-review-triage.md`.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
   prototype-phase project. Do not quote, paraphrase or name anything identifying the adopter: its
@@ -25,32 +24,11 @@
 | Evidence | one adopter on `v3.5.0`, about 8 weeks, 66 sessions | `[S-adopter-snapshot-2026-10-25]` |
 | Findings | what worked, what failed, mechanisms | `sessions/2026-10-25-adopter-example-review.md` |
 | Triage | instrument chosen for each gap | `sessions/2026-10-25-adopter-review-triage.md` |
-| Template changed | `skeleton/check.sh`, `skeleton/ai-sandbox/CAVEATS.yaml`, `bootstrap-test.sh`; unreleased | Gap 1 |
-| Root | still runs `v3.5.0`'s `check.sh`; it takes the fix at the next upgrade, as vendoring requires | `AGENTS.md` |
+| Shipped | Gaps 1 and 2, as `v3.6.0`; root raised | `sessions/2026-10-25-v3-6-0-index-focus.md` |
 
 ---
 
 ## In progress
-
-### Gap 1 — fixed, not released (priority: high)
-
-- The tag-frequency check now matches bare and backticked tags in table rows, and says `no tags
-  yet` when there are none.
-- `check.sh` reports an unrenamed `CHECKPOINT-thread.md` as template residue instead of `ok`.
-- The `CAVEATS.yaml` example is a comment.
-
-`bootstrap-test.sh` passes, with two new gates covering both install paths. Open: the bump level,
-and whether this ships alone or with Gap 2. The tag and residue checks report things the old
-`check.sh` did not, so check the bump level against §15 before tagging.
-
-### Gap 2 — `INDEX.md` *Current focus* has no write mode that holds (priority: high)
-
-Instrument: an advisory line count in `check.sh`, plus `checkpoint.md` step 5 saying *rewrite*
-where it now says *update*. The second fixes an ambiguity in the document and adds no rule.
-Blocking: **the threshold**. The shipped guidance says 2–4 lines and the adopter reached about 300.
-Nothing measured between those says where a warning starts being useful rather than noise. The
-guidance itself should also move from the `<<FILL:` marker, which is deleted on fill, to text that
-survives it.
 
 ### Gap 3 — no home for working decisions (priority: high, design)
 
@@ -82,4 +60,3 @@ upstream material. Plan status drifted across three files in the adopter. Not st
 
 - **Changing or advising the adopter's project.** This thread improves the template only.
 - **Committing any part of the snapshot**, or a summary detailed enough to identify it.
-- **Raising the root to the fixed `check.sh` by hand.** The root is vendored from a released tag.
