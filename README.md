@@ -49,7 +49,7 @@ commits by default.
 
 ## Status
 
-`v3.6.0`. Seventeen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.7.0`. Eighteen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -107,6 +107,16 @@ interrupted. That contradicts §3, where parallel agents are the normal case, an
 were frozen. The sweep now asks. What
 the same reading found and did not fix — nothing promoted to `docs/` after install day, staleness
 notices deferred every time, single-valued fields — is a design question, not a check.
+
+**`v3.7.0` adds implementation packages** (`ADR-014`), for changes designed in one place and
+executed in another: by a cheaper model, by parallel executors, or later. A capable model and a
+person fix the design and a gated plan. Executors leave one immutable report per attempt.
+`check.sh` derives each step's state from those reports, never from typed status, and a reviewer
+re-runs the gates in a clean checkout of the reported commit. It was dogfooded once here, on the
+fix that makes `install.sh` label an unreleased skeleton honestly (`v3.6.0+<sha>`): four steps on
+a cheaper model, two in parallel, all accepted. Along the way, one executor's report proved right
+in every gate and false in a note, and only the reviewer's re-run caught it. Exercised so far on
+one small change, with no revision or branch.
 
 What is still narrow: one adopting project besides these three starts and one more read after
 weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
