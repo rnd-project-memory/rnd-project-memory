@@ -570,7 +570,7 @@ Follow ai-sandbox/playbooks/checkpoint.md
 | `ingest-source.md` | Take in a PDF, wiki page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
 | `run-experiment.md` | Run and record an analysis | The question is written **before** the run. An experiment with no stated question cannot fail, and so teaches nothing. |
 | `plan-implementation.md` | Design a change, then release a gated plan others execute | **Every gate carries an expected value**, or a weaker executor supplies one. After release the plan never changes: a revision is a new file. |
-| `execute-step.md` | Execute, or review, one step of a released plan | **Re-run the gates you build on** before building. A report says what happened then, and a re-run says what is true now. Never edit the plan. |
+| `execute-step.md` | Execute, or review, one step of a released plan | **Re-run the gates you build on** before building. A report says what happened then, and a re-run says what is true now. Never edit the plan. A reviewer re-runs **in a clean checkout of exactly the report's commit**, never in the executor's tree, where uncommitted work would pass again. |
 | `upgrade-template.md` | Raise the project to a later template release | It diffs `RULES.md` and reports every changed rule. A rule delivered by file replacement arrives silently; this step is the only thing that makes it visible (§15). |
 
 ### Why playbooks rather than custom agents
