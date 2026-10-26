@@ -66,6 +66,12 @@ Create `ai-sandbox/sessions/YYYY-MM-DD-<slug>.md` from `_TEMPLATE.md` with
 `**Status:** open`, and fill in the objective once the focus is agreed. Append to it as the
 session runs.
 
+**The slug names the objective**: what the session sets out to settle or produce, such as
+`retry-budget-for-ingest`, not the activity (`brainstorming`, `review`, `follow-up`), a person,
+or a ticket number. A list of activities cannot be searched by topic. The focus is often agreed
+only after the report below, so name the file then. Until the file is first committed, renaming it
+costs nothing. After that it never changes.
+
 Writing the record at the end instead — after context has compacted — reproduces the lossy
 re-summarising this system exists to prevent, inside the one file declared to hold full
 detail.

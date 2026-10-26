@@ -13,7 +13,11 @@ them, and anyone checking afterwards, whether they are done. Follow the steps **
 Search `implementations/LOG.md` first (`rg -i "<topic>"`). The change may already have a package,
 or an `abandoned` row saying why it was given up.
 
-- ID `IMP-<YYYY-MM-DD>-<slug>`, the slug named for the change. It is also the directory name:
+- ID `IMP-<YYYY-MM-DD>-<slug>`. **The slug names the objective, not the solution**: what will be
+  true once the package is accepted, such as `honest-version-for-unreleased-installs`, not
+  `add-sha-suffix` or `fix-install`. A slug never changes, and a revision may replace the approach
+  while the objective stands, so a slug naming the approach turns false at the first revision.
+  A ticket number goes in the design's text, not the slug. The ID is also the directory name:
   `ai-sandbox/implementations/IMP-<YYYY-MM-DD>-<slug>/`. A numeric suffix only breaks a genuine
   collision, the same rule as session files.
 - Copy `implementations/_TEMPLATE/DESIGN.md` and `PLAN.md` into it.
