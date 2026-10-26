@@ -2,12 +2,13 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-08-26
 - **Status:** active
-- **Resume from:** the green-start programme is finished. Two releases have shipped since. `v3.5.0`
-  was cut on 2026-09-26, in sessions that deliberately left this file alone because it is held here.
-  `v3.6.0` was cut on 2026-10-25 from the `adopter-review` thread, and the root runs it. Neither
-  release touched findings 1–6 below. They stand as written on 2026-08-28, and none needs an
-  experiment. Finding 7, added on 2026-10-26, was closed the same day. `v3.5.0` opened one gap of its own: the six commits it arrived in carry a work
-  identity as author (Gap 4). Push state is not recorded here — it has gone
+- **Resume from:** the green-start programme is finished. Three releases have shipped since:
+  `v3.5.0` on 2026-09-26, in sessions that deliberately left this file alone because it is held
+  here, then `v3.6.0` on 2026-10-25 and `v3.7.0` on 2026-10-26, both from the `adopter-review`
+  thread. The root runs `v3.7.0`. None of them touched findings 1–6 below, which stand as written
+  on 2026-08-28, and none needs an experiment. Finding 7, added on 2026-10-26, was closed the same
+  day. `v3.5.0` opened one gap of its own: the six commits it arrived in carry a work identity as
+  author (Gap 4). Push state is not recorded here — it has gone
   stale three times — so read it from `git status`.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
   lacks information. Two assisted arms on different providers disagreed, the one that outranks the
@@ -27,7 +28,7 @@
 
 | Item | Value | Source |
 |------|-------|--------|
-| Template | `v3.6.0`, root vendored at the same | `.template-version` |
+| Template | `v3.7.0`, root vendored at the same | `.template-version` |
 | The install | `install.sh`; builds a candidate tree, stops with exit `2` on any differing path | `v3.5.0` |
 | Install-time blanks | 7 markers, 3 files, `<<FILL:` at line start | `grep -rn '^<<FILL' skeleton/` |
 | Rule against invention | `RULES.md`, loaded every session; no restatement anywhere | `v3.2.0`, `v3.4.0` |
@@ -64,7 +65,7 @@ moved.
 6. **Provider, interface and prompt phrasing are confounded** across the arms. *"Create a project"*
    invites completion; *"adopt this template"* might not, and that is cheap and untested.
 Finding 7, *`install.sh` labels unreleased content with the last tag*, was closed on 2026-10-26 by
-`IMP-2026-10-26-install-unreleased-label` (accepted, on `next`, unreleased). Installs now record
+`IMP-2026-10-26-install-unreleased-label`, shipped in `v3.7.0`. Installs now record
 `T`, `T+<sha>` or `T+<sha>-dirty`.
 
 ### Gap 2 — what the mechanical layer cannot see (priority: high)

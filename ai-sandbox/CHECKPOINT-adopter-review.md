@@ -2,9 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`. Gaps 5 and 6 are built on `next` and
-  unreleased, waiting for `v3.7.0`. Gaps 3 and 4, and Gap 5's schema half, wait on design decisions
-  by the author.
+- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`, and Gaps 5 (check half) and 6 in
+  `v3.7.0`. The root runs `v3.7.0`. Every remaining item is a design decision for the author:
+  Gaps 3 and 4, and Gap 5's schema half.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
   prototype-phase project. Do not quote, paraphrase or name anything identifying the adopter: its
@@ -24,7 +24,7 @@
 | Evidence | one adopter on `v3.5.0`, about 8 weeks, 66 sessions | `[S-adopter-snapshot-2026-10-25]` |
 | Findings | what worked, what failed, mechanisms | `sessions/2026-10-25-adopter-example-review.md` |
 | Triage | instrument chosen for each gap | `sessions/2026-10-25-adopter-review-triage.md` |
-| Shipped | Gaps 1, 2 and 7, as `v3.6.0`; root raised | `sessions/2026-10-25-v3-6-0-index-focus.md`, `sessions/2026-10-25-parallel-sessions-fix.md` |
+| Shipped | Gaps 1, 2, 7 as `v3.6.0`; 5 (check) and 6 as `v3.7.0`, with `ADR-014`; root raised | `sessions/2026-10-25-v3-6-0-index-focus.md`, `sessions/2026-10-25-parallel-sessions-fix.md` |
 
 ---
 
@@ -37,28 +37,17 @@ This is not detectable and is no rule's business. The question is whether a slot
 provisional decision, a light ADR, engineering facts allowed in `docs/`), or whether this is the
 correct state of a project with no settled method yet. One snapshot cannot separate the two.
 
+### Gap 5 — the schema half of single-valued fields (priority: medium, design)
+
+The `Configuration:` distribution check shipped in `v3.7.0`. Still open: whether the session schema
+gains a *session mode* axis, and whether `CAVEATS.yaml` `severity:` is redefined.
+
 ### Gap 4 — staleness without an exit (priority: medium, design)
 
 `STALENESS_LOG.md` exists to validate its own 3-week threshold. The adopter gives the first outside
 evidence: the notice fired every session and was deferred every time, by the assistant. That points
 at the response, not at the number. The decision is the author's.
 
-### Gap 5 — single-valued fields (priority: medium)
-
-The check is built and unreleased: §12's distribution now counts session `Configuration:`
-values, with no mark on values outside the dictionary, since those sit in immutable records
-(`sessions/2026-10-25-configuration-distribution.md`). Left for design: whether the schema gains a
-*session mode* axis, and whether `severity:` is redefined.
-
-### Gap 6 — implementation packages (built and dogfooded on `next`, unreleased; issue #2)
-
-Built 2026-10-26 to the author's decisions, then dogfooded on
-`IMP-2026-10-26-install-unreleased-label`: four steps on a cheaper model, two of them in parallel,
-all accepted. Thirteen findings were folded back into the templates and playbooks
-(`sessions/2026-10-26-dogfood-install-label.md`). The decision is written as
-`docs/decisions/ADR-014-implementation-packages.md`, `proposed`, **awaiting the author's
-sign-off** and not yet committed. What remains is the sign-off, the `v3.7.0` release, raising the
-root, and closing issue #2. Not yet exercised on a change with a revision or a branch.
 ---
 
 ## Out of scope for this thread

@@ -66,6 +66,12 @@ Create `ai-sandbox/sessions/YYYY-MM-DD-<slug>.md` from `_TEMPLATE.md` with
 `**Status:** open`, and fill in the objective once the focus is agreed. Append to it as the
 session runs.
 
+**The slug names the objective**: what the session sets out to settle or produce, such as
+`retry-budget-for-ingest`, not the activity (`brainstorming`, `review`, `follow-up`), a person,
+or a ticket number. A list of activities cannot be searched by topic. The focus is often agreed
+only after the report below, so name the file then. Until the file is first committed, renaming it
+costs nothing. After that it never changes.
+
 Writing the record at the end instead — after context has compacted — reproduces the lossy
 re-summarising this system exists to prevent, inside the one file declared to hold full
 detail.
@@ -86,13 +92,13 @@ Before calling anything unknown, new, or unresolved, check whether it has alread
 answered. The archive is only worth writing if something triggers reading it:
 
 ```bash
-rg -i "<topic>" ai-sandbox/sessions/LOG.md ai-sandbox/experiments/LOG.md
+rg -i "<topic>" ai-sandbox/*/LOG.md
 rg -i "<topic>" docs/ ai-sandbox/OPEN_QUESTIONS.md
 ```
 
-Search the two `LOG.md` files first — that is what they are for, and it is how "find the row
-by topic or date" is meant to be done without reading them whole. A hit gives a filename;
-open that file, not the log.
+Search the `LOG.md` files first — sessions, experiments, implementations. That is what they are
+for, and it is how "find the row by topic or date" is meant to be done without reading them
+whole. A hit gives a filename or a package ID. Open that, not the log.
 
 If the topic has been named differently before, the tag column in each log is the fallback:
 `rg '#<tag>' ai-sandbox/*/LOG.md`.

@@ -257,6 +257,10 @@ for id in $(grep -rhE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/n
             | skip_examples | grep -oE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' | sort -u); do
   ls "$SB"/experiments/"$id".md >/dev/null 2>&1 || echo "  $id cited but no record file"
 done
+for id in $(grep -rhE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/null \
+            | skip_examples | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' | sort -u); do
+  [ -d "$SB/implementations/$id" ] || echo "  $id cited but no package directory"
+done
 
 n "Registers: resolved entries should be deleted, not marked"
 # Same exclusion: each register's own preamble explains that `Resolved` must never be used — and
@@ -379,7 +383,7 @@ n "Tag frequencies (singletons are usually a second spelling)"
 # Table rows only, and a tag with or without backticks. Matching only the backticked form printed
 # nothing for a log written with bare tags — and an empty section reads as clean, not as unread
 # (one adopter's session log: 151 distinct tags, 93 used once, none reported).
-tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
+tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md "$SB"/implementations/LOG.md 2>/dev/null \
   | grep -oE '(^|[[:space:]`|])#[a-z][a-z0-9-]*' | sed 's/^[^#]*//')
 if [ -n "$tags" ]; then
   printf '%s\n' "$tags" | sort | uniq -c | sort -rn | sed 's/^/  /'
@@ -420,6 +424,148 @@ else
   echo "  none"
 fi
 
+n "Implementation packages"
+# A package is implementations/IMP-<date>-<slug>/: an approved DESIGN.md, a released PLAN.md that
+# never changes, one immutable report per attempt in runs/, reviews in reviews/. Status is derived
+# here from those files and is typed nowhere. One adopter typed status into its plans. One item
+# then read both done and not done, and gates reported passed had no artefacts behind them.
+#
+# Reports and fixed files are judged only while uncommitted, the moment a mistake is free to fix.
+# A committed record is immutable, so a warning on it could never clear (ADR-013 §4). The derived
+# state still shows a committed contradiction, as `inconsistent`.
+IM="$SB/implementations"
+pkgs=$(find "$IM" -mindepth 1 -maxdepth 1 -type d -name 'IMP-*' 2>/dev/null | sort)
+if [ -z "$pkgs" ]; then
+  echo "  none"
+else
+  for d in $pkgs; do
+    id=$(basename "$d")
+    grep -qE "^\|[[:space:]]*$id[[:space:]]*\|[^|]*\|[[:space:]]*opened" "$IM/LOG.md" 2>/dev/null \
+      || echo "  ?     $id: no 'opened' row in $IM/LOG.md"
+  done
+  for id in $(grep -oE '^\|[[:space:]]*IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' "$IM/LOG.md" 2>/dev/null \
+              | tr -d '| ' | sort -u); do
+    [ -d "$IM/$id" ] || echo "  ?     $id: in LOG.md, but no package directory"
+  done
+
+  for d in $pkgs; do
+    id=$(basename "$d")
+    plan=$(ls "$d"/PLAN.r*.md 2>/dev/null | sort -V | tail -1)
+    [ -n "$plan" ] || plan="$d/PLAN.md"
+    [ -f "$plan" ] || { echo "  ?     $id: no PLAN.md"; continue; }
+
+    # A fixed file edited before the edit is committed. A change is a new revision file.
+    for f in "$d"/DESIGN*.md "$d"/PLAN*.md; do
+      [ -f "$f" ] || continue
+      git cat-file -e "HEAD:$f" 2>/dev/null || continue
+      git diff --quiet HEAD -- "$f" 2>/dev/null && continue
+      st=$(git show "HEAD:$f" | grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*(released|approved)' | awk '{print $NF}')
+      [ -n "$st" ] && echo "  ?     $id: $(basename "$f") is $st and fixed — revert the edit; a change is a new revision file"
+    done
+
+    # Backward links in records not yet committed: does each one name something that exists?
+    # Session paths resolve from ai-sandbox/, package paths from the package directory.
+    for r in $(git status --porcelain --untracked-files=all -- "$d" 2>/dev/null | awk '{print $NF}'); do
+      [ -f "$r" ] || continue
+      for fld in 'Session' 'Sessions' 'Plan' 'Design' 'Run reviewed' 'Reviews' 'Supersedes'; do
+        for ref in $(grep -m1 -E "^[-*] \*\*$fld:\*\*" "$r" | sed "s/^[-*] \*\*$fld:\*\*//" | tr -d '`,'); do
+          case "$ref" in —|-|'<'*|'|') continue;; esac
+          [ -e "$ref" ] || [ -e "$SB/$ref" ] || [ -e "$d/$ref" ] \
+            || echo "  ?     $r: $fld: $ref does not exist"
+        done
+      done
+      ub=$(grep -m1 -oE '^[-*] \*\*Unblocks:\*\*.*' "$r" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+/S-[0-9]+')
+      if [ -n "$ub" ]; then
+        ubp=${ub%/*}; ubs=${ub#*/}
+        if [ ! -d "$IM/$ubp" ]; then echo "  ?     $r: Unblocks: $ubp does not exist"
+        elif ! grep -qE "^### $ubs " "$IM/$ubp"/PLAN*.md 2>/dev/null; then echo "  ?     $r: Unblocks: $ubp has no step $ubs"; fi
+      fi
+    done
+
+    # Attempt reports not yet committed: does the report agree with itself?
+    for r in $(git status --porcelain --untracked-files=all -- "$d/runs" 2>/dev/null | awk '{print $NF}'); do
+      [ -f "$r" ] || continue
+      rs=$(grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*[a-z]+' "$r" | awk '{print $NF}')
+      ng=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*' "$r")
+      np=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*[[:space:]]*pass\b' "$r")
+      [ "$rs" = passed ] && [ "$np" -ne "$ng" ] \
+        && echo "  ?     $r: passed, but $((ng - np)) of $ng gate(s) are not pass"
+      [ "$rs" = passed ] && [ "$ng" -eq 0 ] && echo "  ?     $r: passed, with no gate lines"
+      sha=$(grep -m1 -oE '^[-*] \*\*Commit:\*\*[[:space:]]*[0-9a-f]{7,40}' "$r" | awk '{print $NF}')
+      if [ "$rs" != running ]; then
+        if [ -z "$sha" ]; then echo "  ?     $r: closed without a Commit:"
+        elif ! git cat-file -e "$sha^{commit}" 2>/dev/null; then echo "  ?     $r: Commit: $sha does not exist"; fi
+      fi
+      for e in $(grep -m1 -E '^[-*] \*\*Evidence:\*\*' "$r" | sed 's/^[-*] \*\*Evidence:\*\*//' | tr -d '`,'); do
+        case "$e" in —|-|'<'*) continue;; esac
+        [ -e "$e" ] || [ -e "$d/$e" ] || echo "  ?     $r: Evidence: $e does not exist"
+      done
+    done
+
+    # Structure of the plan, and each step's derived state.
+    open=1
+    grep -qE "^\|[[:space:]]*$id[[:space:]]*\|[^|]*\|[[:space:]]*(accepted|abandoned)" "$IM/LOG.md" 2>/dev/null && open=0
+    # A plan not yet released is not executable: its steps get no state, only structure findings.
+    released=1
+    grep -qE '^[-*] \*\*Status:\*\*[[:space:]]*released' "$plan" || released=0
+    known=" "; states=" "; warn=""; list=""
+    while IFS='|' read -r sid deps ho ngates bad; do
+      [ -n "$sid" ] || continue
+      for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
+        case "$known" in *" $dep "*) ;; *) warn="$warn  ?     $id: $sid depends on $dep, which is not an earlier step\n";; esac
+      done
+      for dep in $(printf '%s' "$deps" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+'); do
+        [ -d "$IM/$dep" ] || warn="$warn  ?     $id: $sid depends on $dep, which does not exist\n"
+      done
+      [ "$ngates" -eq 0 ] && warn="$warn  ?     $id: $sid has no gate\n"
+      [ "$bad" -gt 0 ] && warn="$warn  ?     $id: $sid has $bad gate(s) with no → expected value\n"
+      known="$known$sid "
+
+      rev=$(ls "$d"/reviews/"$sid"__*.md 2>/dev/null | sort | tail -1)
+      run=$(ls "$d"/runs/"$sid"__*.md 2>/dev/null | sort | tail -1)
+      v=""; [ -n "$rev" ] && v=$(grep -m1 -oE '^[-*] \*\*Verdict:\*\*[[:space:]]*[a-z]+' "$rev" | awk '{print $NF}')
+      if [ "$v" = accepted ]; then s=accepted
+      elif [ -n "$run" ]; then
+        s=$(grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*[a-z]+' "$run" | awk '{print $NF}')
+        if [ "$s" = passed ]; then
+          ng=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*' "$run"); np=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*[[:space:]]*pass\b' "$run")
+          [ "$ng" -gt 0 ] && [ "$np" -eq "$ng" ] || s=inconsistent
+          [ "$v" = rejected ] && [ "$(basename "$rev")" \> "$(basename "$run")" ] && s=rejected
+        fi
+      else
+        s=ready; wait=""
+        for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
+          case "$states" in *" $dep=accepted "*|*" $dep=passed:mechanical "*) ;; *) s=waiting; wait="$wait $dep";; esac
+        done
+        # A whole package as a dependency, which is how a branch holds the step it unblocks.
+        for dep in $(printf '%s' "$deps" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+'); do
+          grep -qE "^\|[[:space:]]*$dep[[:space:]]*\|[^|]*\|[[:space:]]*accepted" "$IM/LOG.md" 2>/dev/null \
+            || { s=waiting; wait="$wait $dep"; }
+        done
+      fi
+      states="$states$sid=$s:$ho "
+      [ "$s" = accepted ] && states="$states$sid=accepted "
+      if [ "$open" -eq 1 ]; then
+        case "$s" in
+          waiting) list="$list$(printf '    %-6s %-13s on%s' "$sid" "$s" "$wait")\n";;
+          ready|accepted) list="$list$(printf '    %-6s %s' "$sid" "$s")\n";;
+          *) list="$list$(printf '    %-6s %-13s %s' "$sid" "$s" "${run#$d/}")\n";;
+        esac
+      fi
+    done < <(awk '
+      function flush() { if (id) print id "|" deps "|" ho "|" ng "|" bad }
+      /^### S-[0-9]+/ { flush(); id=$2; deps=""; ho=""; ng=0; bad=0; next }
+      /^## /          { flush(); id="" }
+      id && /^[-*] \*\*Depends on:\*\*/ { sub(/^[-*] \*\*Depends on:\*\*[ \t]*/, ""); deps=$0 }
+      id && /^[-*] \*\*Handoff:\*\*/    { sub(/^[-*] \*\*Handoff:\*\*[ \t]*/, ""); ho=$1 }
+      id && /^[-*] \*\*Gate [^:]*:\*\*/ { ng++; if ($0 !~ /→/) bad++ }
+      END { flush() }' "$plan")
+    printf '%b' "$warn"
+    if [ "$open" -eq 1 ] && [ "$released" -eq 0 ]; then echo "  $id ($(basename "$plan"), not released — no step is executable)"
+    elif [ "$open" -eq 1 ]; then echo "  $id ($(basename "$plan"))"; printf '%b' "$list"; fi
+  done
+fi
+
 n "Field value distribution (P-130 — diagnostic only, no threshold)"
 # A dictionary field that stays healthy shows a spread across its declared values. Values
 # appended by hand beyond the dictionary mean the field is being asked two questions at once;
@@ -429,6 +575,22 @@ if [ -f "$SB/CAVEATS.yaml" ]; then
   echo "  CAVEATS.yaml severity:"
   grep -oE '^\s*severity:\s*\S+' "$SB/CAVEATS.yaml" 2>/dev/null | awk '{print $2}' \
     | sort | uniq -c | sort -rn | sed 's/^/    /'
+fi
+
+# Session Configuration, a dictionary field whose names CONFIGURATIONS.md declares. One adopter
+# recorded Solo on every session while the free-text Participants field collected about twenty
+# role strings: the axis that varied was never one this field asked about. Counts only, with no
+# mark on values outside the dictionary. Those sit in closed records, which are immutable, so a
+# mark could never clear (ADR-013 §4). A value that is not a declared name shows plainly enough in
+# the list.
+cfgs=$(for f in "$SB"/sessions/*.md; do
+         case "$(basename "$f")" in LOG.md|_TEMPLATE.md) continue;; esac
+         grep -m1 -E '^[-*] \*\*Configuration:\*\*' "$f" 2>/dev/null \
+           | sed 's/^[-*] \*\*Configuration:\*\*[[:space:]]*//; s/[[:space:]]*$//'
+       done)
+if [ -n "$cfgs" ]; then
+  echo "  sessions Configuration:"
+  printf '%s\n' "$cfgs" | sort | uniq -c | sort -rn | sed 's/^/    /'
 fi
 
 printf '\n\033[2madvisory only — nothing here blocks a commit\033[0m\n'
