@@ -107,11 +107,18 @@ them once here means not deciding it separately later.
    explicitly: "no rule changes" is information, and its absence is indistinguishable from an
    oversight.
 5. Add the section here if the bump is MAJOR.
-6. **Publish the branch and its tags together.**
+6. **Publish the branch and its tags together.** The release is cut on `next`, where all work
+   lands, and after the root has been raised to it. `main` moves only now, so that `skeleton/` on
+   `main` is always a tagged release (`AGENTS.md`, *Branches*):
 
    ```bash
-   git push --follow-tags
+   git switch main && git merge --ff-only next && git push --follow-tags origin main next
+   git switch next
    ```
+
+   `--ff-only` refuses if `main` holds anything `next` does not, which means a fix was made on
+   `main` directly and must be merged into `next` first. Without the branch rule, a skeleton change
+   pushed to `main` between releases is installed by `install.sh` under the previous tag's name.
 
    `git push --tags` pushes the tags and **not the branch**. What that leaves on the remote is a
    version that exists and content that does not: the tag resolves, the default branch is still
