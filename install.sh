@@ -57,6 +57,18 @@ version=$(cd "$src" && git describe --tags --abbrev=0 2>/dev/null) || version=""
        Fix:  git -C $src fetch --tags"
 sha=$(cd "$src" && git log -1 --format=%h -- skeleton/ 2>/dev/null)
 [ -n "$sha" ] || die "cannot find the commit skeleton/ was last changed at in this clone"
+
+# The label is what .template-version records. It is the tag only when skeleton/ is exactly that
+# release: no committed change since the tag, and no uncommitted or untracked change now. Otherwise
+# it names the commit skeleton/ last changed at, so an install from an unreleased skeleton is not
+# recorded as the release it differs from. See DESIGN.md §2.1 and §2.2.
+skel_dirty=$(cd "$src" && git status --porcelain -- skeleton/ 2>/dev/null)
+if [ -z "$skel_dirty" ] && git -C "$src" diff --quiet "$version" HEAD -- skeleton/ 2>/dev/null; then
+  label="$version"
+else
+  label="$version+$sha"
+  [ -n "$skel_dirty" ] && label="$label-dirty"
+fi
 today=$(date +%F)
 
 say "Preparing $version for $dest"
@@ -78,7 +90,7 @@ rm -f "$candidate/README.md"
 
 name_sed=$(printf '%s' "$name" | sed 's/[&|]/\\&/g')
 date_sed=$(printf '%s' "$today" | sed 's/[&|]/\\&/g')
-version_sed=$(printf '%s' "$version" | sed 's/[&|]/\\&/g')
+label_sed=$(printf '%s' "$label" | sed 's/[&|]/\\&/g')
 sha_sed=$(printf '%s' "$sha" | sed 's/[&|]/\\&/g')
 
 # _TEMPLATE.md files are copied per entry rather than filled in place, so they keep theirs.
@@ -90,7 +102,7 @@ while IFS= read -r f; do
 done < <(grep -rlI --exclude-dir=.git -e '<PROJECT_NAME>' -e '<DATE>' "$candidate" 2>/dev/null)
 
 if [ -f "$candidate/.template-version" ]; then
-  sed -i "s|<VERSION>|$version_sed|; s|<SHA>|$sha_sed|; s|<DATE>|$date_sed|" "$candidate/.template-version"
+  sed -i "s|<VERSION>|$label_sed|; s|<SHA>|$sha_sed|; s|<DATE>|$date_sed|" "$candidate/.template-version"
 fi
 
 # Resolve the identity without changing the destination. A supplied value wins; otherwise an
@@ -244,7 +256,10 @@ fi
 # ─── Step 3a — report the mechanical substitutions ───────────────────────────
 did "$n files had <PROJECT_NAME> and <DATE> substituted"
 if [ -f "$dest/.template-version" ]; then
-  did ".template-version records $version, skeleton @ $sha, applied $today"
+  did ".template-version records $label, skeleton @ $sha, applied $today"
+fi
+if [ "$label" != "$version" ]; then
+  did "unreleased: skeleton/ differs from $version; recorded as $label"
 fi
 if [ -n "$slug" ] && [ -f "$dest/ai-sandbox/CHECKPOINT-$slug.md" ]; then
   did "thread opened: ai-sandbox/CHECKPOINT-$slug.md, held by ${effective_mail:-unassigned}"
