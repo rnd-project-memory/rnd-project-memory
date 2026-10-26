@@ -2,10 +2,9 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`, and the root runs it. Gap 5's check is
-  built in `skeleton/` and unreleased. Every remaining item is a design decision for the author:
-  Gaps 3, 4 and 6, and Gap 5's schema half. Triage is in
-  `sessions/2026-10-25-adopter-review-triage.md`.
+- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`. Gaps 5 and 6 are built on `next` and
+  unreleased, waiting for `v3.7.0`. Gaps 3 and 4, and Gap 5's schema half, wait on design decisions
+  by the author.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
   prototype-phase project. Do not quote, paraphrase or name anything identifying the adopter: its
@@ -51,14 +50,13 @@ values, with no mark on values outside the dictionary, since those sit in immuta
 (`sessions/2026-10-25-configuration-distribution.md`). Left for design: whether the schema gains a
 *session mode* axis, and whether `severity:` is redefined.
 
-### Gap 6 — planned threads and model handoff (priority: medium, design; issue #2)
+### Gap 6 — implementation packages (built on `next`, unreleased; issue #2)
 
-Plan files with command-plus-expected-value gates, and a procedure for handing implementation to a
-cheaper model. The adopter built both unprompted, and issue #2 proposes the same shape: a design,
-then `PLAN-<thread-slug>.md` with validation gates. Two sources, but one author, so not
-independent. In the adopter, plan status drifted across three files. Bears on
-`Q-who-keeps-the-history`. Not started.
-
+Built on 2026-10-26 to the author's decisions: `implementations/IMP-<date>-<slug>/` with templates,
+`plan-implementation.md`, `execute-step.md` with a review section, `check.sh`'s derived step states,
+and four bootstrap gates (`sessions/2026-10-26-planned-threads-options.md`). What remains is
+release, raising the root (which then gets its own `implementations/LOG.md`), and closing issue #2.
+Not yet exercised on a real change.
 ---
 
 ## Out of scope for this thread
