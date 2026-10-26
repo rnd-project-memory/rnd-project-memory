@@ -77,7 +77,9 @@ The green-start programme is closed. Its arc and lessons are in
 `sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from
 confident fiction, a boundary `ADR-013` recorded.
 
-Open questions: `Q-who-keeps-the-history` and `Q-session-boundary` 🟡 now have adopter evidence.
+**`Q-positioning-against-prior-art` 🔴** asks whether this adds anything over shipped memory and
+spec-driven tools, to be settled by a pre-registered comparison. `Q-who-keeps-the-history` and
+`Q-session-boundary` 🟡 now have adopter evidence.
 `Q-unexercised-components` 🟡 is down to the hook. `Q-oss-intake` 🟡 and `Q-contribution-flow` 🟢
 need answers from outside this repository.
 

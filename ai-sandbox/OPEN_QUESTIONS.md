@@ -168,6 +168,47 @@ resolve to a different question. A slug, once assigned, is never changed.
   above, measured outside this repository. Whether the cause is this gesture or the adopter's habit
   of one session per task is not separable from the files.
 
+## Q-positioning-against-prior-art · What does this system add over built-in memory and spec-driven tools? 🔴
+
+- **Raised:** 2026-10-26 · **Owner:** esdevop (human)
+- **Source:** `sessions/2026-10-26-what-this-adds-over-prior-art.md`
+- **Question:** Built-in assistant memory and spec-driven development tools now ship out of the box.
+  Does this system prevent failures they do not, and if so, which? If it prevents none, the
+  project should stop rather than grow.
+- **Why it matters:** It decides whether further work is invention or reinvention. A thorough answer
+  by reasoning is cheap and proves nothing, because *failures generalise, successes do not*
+  (`ADR-013`).
+- **Progress:** A landscape read on 2026-10-26 found three categories, and one where nothing is
+  ready-made.
+  - **Persistent memory is commodity.** `[S-claude-code-memory-docs]`,
+    `[S-github-copilot-agentic-memory]` and `[S-cline-memory-bank]` all ship it. What they keep is
+    automatic or summarised and rewritten. Copilot's memories expire after 28 days. Nothing found
+    separates settled knowledge, in-flight state and immutable history by write mode.
+  - **Spec-driven execution is crowded.** `[S-github-spec-kit-history]` is at 1.0 with dozens of
+    agent integrations. `[S-openspec-overview]`'s living spec with archived change folders mirrors
+    `docs/` plus `implementations/`. `[S-fowler-sdd-tools-2025]` names their weak point as agents not
+    following the plan, which is what attempt reports and re-run reviews address. Whether current
+    versions close that gap was **not checked**.
+  - **Agent task graphs exist as tools.** `[S-beads-agent-tracker]` derives ready work from
+    dependencies, like `check.sh`'s step states, but as a binary.
+  - **Evidence-backed R&D memory exists only as research prototypes**
+    (`[S-research-agent-provenance-2026]`). No out-of-the-box product was found.
+
+  A working position, not a conclusion: the distinctive part is the epistemics — write modes,
+  claims with a basis, negative knowledge, the no-invention rule, verification apart from verdict,
+  source sensitivity — plus the verification layer of implementation packages, all tool-neutral.
+  Implementation packages may be better positioned as a thin layer over Spec Kit or OpenSpec output
+  than as a format of their own.
+- **What would answer it:** a comparison pre-registered before either arm is run. The same R&D task
+  is given to built-in memory plus a spec-driven tool (for example Claude Code auto memory and
+  Spec Kit), and to this system. The coarse outcomes, fixed in advance:
+  - invented facts;
+  - an unverified *done* accepted;
+  - history unrecoverable after a session gap.
+
+  Fine counts are recorded but do not decide. If this system prevents none of the three beyond the
+  other arm, that is the answer.
+
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟡
 
 - **Raised:** 2026-08-19 · **Owner:** esdevop (human)
