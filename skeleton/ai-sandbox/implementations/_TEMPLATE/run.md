@@ -3,6 +3,7 @@
 - **Status:** running
 - **Plan:** `PLAN.md`
 - **Executor:** <role — model · effort>
+- **Session:** <the session record this attempt ran in: `sessions/<file>.md`>
 - **Commit:** <sha the gates ran against>
 - **Evidence:** <paths to files the gates produced, or —>
 

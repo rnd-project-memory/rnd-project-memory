@@ -3,12 +3,18 @@
 - **Status:** draft
 - **Approved by:** <human name> · <YYYY-MM-DD>
 - **Thread:** `<thread-slug>`
+- **Sessions:** <the session records where the design was discussed: `sessions/<file>.md`, …>
+- **Unblocks:** — | `IMP-<YYYY-MM-DD>-<slug>/S-<nn>`, when this package is a branch of another
 - **Supersedes:** —
 
 > **The contract the plan is written against.** Drafted with the capable model, in sessions whose
 > records hold the reasoning. It is approved by a named human, always: a design approved by nobody
 > but its author has checked nothing. Then `Status:` becomes `approved`, and the file is never
 > edited again. A change after approval is `DESIGN.r<n>.md`, with `Supersedes:` and a reason.
+>
+> **Links point backwards.** A record names the earlier records it rests on, once, when it is
+> written. Closed records are never edited to point forwards, so the reverse direction is found by
+> search: `rg 'IMP-<YYYY-MM-DD>-<slug>' ai-sandbox/`.
 >
 > Number the sections. Plan steps cite them in `Read:`, so an executor loads the sections its
 > step needs and not this whole file. Settled decisions here are promoted to `docs/` when the

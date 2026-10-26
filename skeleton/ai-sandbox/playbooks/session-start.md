@@ -86,13 +86,13 @@ Before calling anything unknown, new, or unresolved, check whether it has alread
 answered. The archive is only worth writing if something triggers reading it:
 
 ```bash
-rg -i "<topic>" ai-sandbox/sessions/LOG.md ai-sandbox/experiments/LOG.md
+rg -i "<topic>" ai-sandbox/*/LOG.md
 rg -i "<topic>" docs/ ai-sandbox/OPEN_QUESTIONS.md
 ```
 
-Search the two `LOG.md` files first — that is what they are for, and it is how "find the row
-by topic or date" is meant to be done without reading them whole. A hit gives a filename;
-open that file, not the log.
+Search the `LOG.md` files first — sessions, experiments, implementations. That is what they are
+for, and it is how "find the row by topic or date" is meant to be done without reading them
+whole. A hit gives a filename or a package ID. Open that, not the log.
 
 If the topic has been named differently before, the tag column in each log is the fallback:
 `rg '#<tag>' ai-sandbox/*/LOG.md`.

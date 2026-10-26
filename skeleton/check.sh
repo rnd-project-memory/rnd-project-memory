@@ -383,7 +383,7 @@ n "Tag frequencies (singletons are usually a second spelling)"
 # Table rows only, and a tag with or without backticks. Matching only the backticked form printed
 # nothing for a log written with bare tags — and an empty section reads as clean, not as unread
 # (one adopter's session log: 151 distinct tags, 93 used once, none reported).
-tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md 2>/dev/null \
+tags=$(grep -h '^|' "$SB"/sessions/LOG.md "$SB"/experiments/LOG.md "$SB"/implementations/LOG.md 2>/dev/null \
   | grep -oE '(^|[[:space:]`|])#[a-z][a-z0-9-]*' | sed 's/^[^#]*//')
 if [ -n "$tags" ]; then
   printf '%s\n' "$tags" | sort | uniq -c | sort -rn | sed 's/^/  /'
@@ -463,6 +463,25 @@ else
       [ -n "$st" ] && echo "  ?     $id: $(basename "$f") is $st and fixed — revert the edit; a change is a new revision file"
     done
 
+    # Backward links in records not yet committed: does each one name something that exists?
+    # Session paths resolve from ai-sandbox/, package paths from the package directory.
+    for r in $(git status --porcelain --untracked-files=all -- "$d" 2>/dev/null | awk '{print $NF}'); do
+      [ -f "$r" ] || continue
+      for fld in 'Session' 'Sessions' 'Plan' 'Design' 'Run reviewed' 'Supersedes'; do
+        for ref in $(grep -m1 -E "^[-*] \*\*$fld:\*\*" "$r" | sed "s/^[-*] \*\*$fld:\*\*//" | tr -d '`,'); do
+          case "$ref" in —|-|'<'*|'|') continue;; esac
+          [ -e "$ref" ] || [ -e "$SB/$ref" ] || [ -e "$d/$ref" ] \
+            || echo "  ?     $r: $fld: $ref does not exist"
+        done
+      done
+      ub=$(grep -m1 -oE '^[-*] \*\*Unblocks:\*\*.*' "$r" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+/S-[0-9]+')
+      if [ -n "$ub" ]; then
+        ubp=${ub%/*}; ubs=${ub#*/}
+        if [ ! -d "$IM/$ubp" ]; then echo "  ?     $r: Unblocks: $ubp does not exist"
+        elif ! grep -qE "^### $ubs " "$IM/$ubp"/PLAN*.md 2>/dev/null; then echo "  ?     $r: Unblocks: $ubp has no step $ubs"; fi
+      fi
+    done
+
     # Attempt reports not yet committed: does the report agree with itself?
     for r in $(git status --porcelain --untracked-files=all -- "$d/runs" 2>/dev/null | awk '{print $NF}'); do
       [ -f "$r" ] || continue
@@ -486,11 +505,17 @@ else
     # Structure of the plan, and each step's derived state.
     open=1
     grep -qE "^\|[[:space:]]*$id[[:space:]]*\|[^|]*\|[[:space:]]*(accepted|abandoned)" "$IM/LOG.md" 2>/dev/null && open=0
+    # A plan not yet released is not executable: its steps get no state, only structure findings.
+    released=1
+    grep -qE '^[-*] \*\*Status:\*\*[[:space:]]*released' "$plan" || released=0
     known=" "; states=" "; warn=""; list=""
     while IFS='|' read -r sid deps ho ngates bad; do
       [ -n "$sid" ] || continue
       for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
         case "$known" in *" $dep "*) ;; *) warn="$warn  ?     $id: $sid depends on $dep, which is not an earlier step\n";; esac
+      done
+      for dep in $(printf '%s' "$deps" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+'); do
+        [ -d "$IM/$dep" ] || warn="$warn  ?     $id: $sid depends on $dep, which does not exist\n"
       done
       [ "$ngates" -eq 0 ] && warn="$warn  ?     $id: $sid has no gate\n"
       [ "$bad" -gt 0 ] && warn="$warn  ?     $id: $sid has $bad gate(s) with no → expected value\n"
@@ -512,6 +537,11 @@ else
         for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
           case "$states" in *" $dep=accepted "*|*" $dep=passed:mechanical "*) ;; *) s=waiting; wait="$wait $dep";; esac
         done
+        # A whole package as a dependency, which is how a branch holds the step it unblocks.
+        for dep in $(printf '%s' "$deps" | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+'); do
+          grep -qE "^\|[[:space:]]*$dep[[:space:]]*\|[^|]*\|[[:space:]]*accepted" "$IM/LOG.md" 2>/dev/null \
+            || { s=waiting; wait="$wait $dep"; }
+        done
       fi
       states="$states$sid=$s:$ho "
       [ "$s" = accepted ] && states="$states$sid=accepted "
@@ -531,7 +561,8 @@ else
       id && /^[-*] \*\*Gate [^:]*:\*\*/ { ng++; if ($0 !~ /→/) bad++ }
       END { flush() }' "$plan")
     printf '%b' "$warn"
-    [ "$open" -eq 1 ] && { echo "  $id ($(basename "$plan"))"; printf '%b' "$list"; }
+    if [ "$open" -eq 1 ] && [ "$released" -eq 0 ]; then echo "  $id ($(basename "$plan"), not released — no step is executable)"
+    elif [ "$open" -eq 1 ]; then echo "  $id ($(basename "$plan"))"; printf '%b' "$list"; fi
   done
 fi
 

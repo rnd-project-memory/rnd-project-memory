@@ -178,8 +178,18 @@ instructions are cited from `DATA_ENVIRONMENT.md` or `playbooks/local/`, never c
 
 **Plans change by new files.** A wrong gate or a missing step is a revision, written by the capable
 model from the executors' `blocked` reports. Work the design did not foresee is a new package that
-names the step it unblocks. Executors never edit the plan. `implementations/LOG.md` records each
-package's events (`opened`, `revised`, `branched`, `accepted`, `abandoned`), one row each.
+names the step it unblocks, and the parent's revision adds that package to the step's
+`Depends on:`, so the step waits until the branch is accepted. Executors never edit the plan.
+`implementations/LOG.md` records each package's events (`opened`, `revised`, `branched`,
+`accepted`, `abandoned`), one row each, with tags on the `opened` row.
+
+**Links point backwards, written once, by the later record.** A design names the sessions it was
+discussed in, a plan its design and session, an attempt its plan and session, a review its attempt
+and session, and a branch the step it unblocks. Links both ways are impossible here, and wanting
+them is a trap: the earlier record is closed, so pointing it forwards would mean editing an
+immutable file, the failure a frozen parallel session showed. The forward direction is found by
+search (`rg 'IMP-…/S-03' ai-sandbox/`), which works because a step is always cited in that one
+form. `check.sh` checks that each link in an uncommitted record names something that exists.
 
 The checkpoint holds only `Resume from:` and `Do not do until re-verified:`, plus `Plan:` pointing
 at the package. Step identifiers do not appear in it. The procedures are

@@ -118,12 +118,17 @@ cat > "$pk/PLAN.md" <<'PLAN'
 - **Depends on:** —
 - **Handoff:** mechanical
 - **Gate G-03-1:** `true` → exit 0
+### S-04 · d
+- **Depends on:** IMP-2000-01-02-branch
+- **Handoff:** mechanical
+- **Gate G-04-1:** `true` → exit 0
 PLAN
-printf '| IMP-2000-01-01-fixture | 2000-01-01 | opened | first-thread | fixture |\n' \
+mkdir -p "$dest/ai-sandbox/implementations/IMP-2000-01-02-branch"
+printf '| IMP-2000-01-01-fixture | 2000-01-01 | opened | first-thread | `#fixture` | fixture |\n' \
   >> "$dest/ai-sandbox/implementations/LOG.md"
 printf -- '- **Status:** passed\n- **Commit:** %s\n- **Gate G-01-1:** pass — exit 0\n' \
   "$(git -C "$dest" rev-parse --short HEAD)" > "$pk/runs/S-01__20000101T0000Z.md"
-printf -- '- **Status:** passed\n- **Commit:** %s\n- **Gate G-03-1:** fail — exit 1\n' \
+printf -- '- **Status:** passed\n- **Session:** `sessions/no-such-session.md`\n- **Commit:** %s\n- **Gate G-03-1:** fail — exit 1\n' \
   "$(git -C "$dest" rev-parse --short HEAD)" > "$pk/runs/S-03__20000101T0000Z.md"
 pout=$(cd "$dest" && ./check.sh 2>&1)
 printf '%s\n' "$pout" | grep -qE 'S-02 +waiting +on S-01' \
@@ -135,11 +140,23 @@ printf '%s\n' "$pout" | grep -qE 'S-03 +inconsistent' \
 printf '%s\n' "$pout" | grep -q 'S-03__20000101T0000Z.md: passed, but 1 of 1' \
   && ok "the uncommitted contradicting report is reported" \
   || bad "the uncommitted contradicting report is not reported"
+printf '%s\n' "$pout" | grep -qE 'S-04 +waiting +on IMP-2000-01-02-branch' \
+  && ok "a step depending on a whole package waits until that package is accepted" \
+  || bad "S-04 does not wait on the package it depends on"
+printf '%s\n' "$pout" | grep -q 'Session: sessions/no-such-session.md does not exist' \
+  && ok "a backward link to a record that does not exist is reported" \
+  || bad "a dangling Session: link is not reported"
 printf -- '- **Verdict:** accepted\n' > "$pk/reviews/S-01__20000101T0100Z.md"
 (cd "$dest" && ./check.sh 2>&1) | grep -qE 'S-02 +ready' \
   && ok "accepting the judgement step makes its dependant ready" \
   || bad "S-02 is not ready after S-01 was accepted"
-rm -rf "$pk"; git -C "$dest" checkout -q -- ai-sandbox/implementations/LOG.md
+printf '| IMP-2000-01-02-branch | 2000-01-02 | accepted | first-thread | | fixture |\n' \
+  >> "$dest/ai-sandbox/implementations/LOG.md"
+(cd "$dest" && ./check.sh 2>&1) | grep -qE 'S-04 +ready' \
+  && ok "accepting the package releases the step that depends on it" \
+  || bad "S-04 is not ready after the package it depends on was accepted"
+rm -rf "$pk" "$dest/ai-sandbox/implementations/IMP-2000-01-02-branch"
+git -C "$dest" checkout -q -- ai-sandbox/implementations/LOG.md
 
 [ -f "$dest/.template-version" ] \
   && ok ".template-version reached the consumer" \
