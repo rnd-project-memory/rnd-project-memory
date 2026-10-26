@@ -59,3 +59,26 @@ depend on how an individual clone is configured.
 ## Commits
 
 Conventional Commits. Types used here: `docs`, `feat`, `fix`, `refactor`, `chore`, `exp`.
+
+## Branches
+
+**All work lands on `next`. `main` moves only at a release**: fast-forwarded to `next` once the
+release is tagged and the root raised, so that `skeleton/` on `main` is always exactly a tagged
+release. Memory commits go to `next` as well, since a session record describing a change belongs
+beside the change. On `main`, `check.sh`'s *skeleton/ vs .template-version* section must read `ok`.
+`DRIFT` there means the rule was broken.
+
+The reason is `install.sh`. It installs `skeleton/` from the working tree but takes the version
+from the last tag. A skeleton change pushed to `main` between releases is therefore installed under
+the previous release's name, for example `v3.6.0  skeleton @ <a later commit>`, and every later
+upgrade starts from a version the project does not have. Keeping `main` at a release means the
+README's `git clone` always installs a real one.
+
+- Push `next` freely. It is the backup and the shared work in progress, and it is not a release.
+- A release is cut on `next` (`MIGRATIONS.md`, *Cutting a release*). Then fast-forward `main` to
+  it and push both.
+- An urgent fix while `next` holds unshippable work: branch from `main`, release from there, then
+  merge `main` back into `next`.
+
+**Assistant: check the branch at session start**, alongside the clone settings above. On `main` with
+no release in progress, switch to `next` before writing anything.

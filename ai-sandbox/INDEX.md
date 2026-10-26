@@ -63,7 +63,7 @@ template, and `adopter-review` covers what real adopters' memories show.
 > is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
 > This file loads into every session; `check.sh` reports this section past 15 lines.
 
-**Two threads are open.** `install-path` holds six install findings, none of which needs an
+**Two threads are open.** `install-path` holds seven install findings, none of which needs an
 experiment, and Gap 4: a work identity in published commit history, which is undecided.
 `adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
 detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).

@@ -5,8 +5,8 @@
 - **Resume from:** the green-start programme is finished. Two releases have shipped since. `v3.5.0`
   was cut on 2026-09-26, in sessions that deliberately left this file alone because it is held here.
   `v3.6.0` was cut on 2026-10-25 from the `adopter-review` thread, and the root runs it. Neither
-  release touched the six findings below. They stand as written on 2026-08-28, and none needs an
-  experiment. `v3.5.0` opened one gap of its own: the six commits it arrived in carry a work
+  release touched findings 1–6 below. They stand as written on 2026-08-28, and none needs an
+  experiment. Finding 7 was added on 2026-10-26. `v3.5.0` opened one gap of its own: the six commits it arrived in carry a work
   identity as author (Gap 4). Push state is not recorded here — it has gone
   stale three times — so read it from `git status`.
   **Do not do until re-verified:** do not claim the template makes an assistant stop where it
@@ -41,13 +41,13 @@
 
 ## In progress
 
-### Gap 1 — six findings, none needing an experiment (priority: high)
+### Gap 1 — seven findings, none needing an experiment (priority: high)
 
 The pre-registered design is closed: three runs, both questions answered, nothing further under
 it. What remains is ordinary work. Each is statable without naming a model, so `ADR-013`'s first
-gate is satisfied for all six; the second sends most to a check or to prose rather than `RULES.md`.
+gate is satisfied for all of them; the second sends most to a check or to prose rather than `RULES.md`.
 Re-read on 2026-10-25. `v3.5.0` made the install collision-safe and stopped it removing an
-adopter's README. `v3.6.0` made `check.sh` report an unrenamed checkpoint template. None of the six
+adopter's README. `v3.6.0` made `check.sh` report an unrenamed checkpoint template. None of findings 1–6
 moved.
 
 1. **`OPEN_QUESTIONS.md`'s example entry carries no marker**, so an untouched register cannot be
@@ -63,12 +63,18 @@ moved.
    of seven were left that way in the first assisted arm, in the two session-loaded files.
 6. **Provider, interface and prompt phrasing are confounded** across the arms. *"Create a project"*
    invites completion; *"adopt this template"* might not, and that is cheap and untested.
+7. **`install.sh` labels unreleased content with the last tag.** Files come from the working tree,
+   and the version comes from `git describe --tags --abbrev=0`. Installing from a commit past the
+   tag records `v<last>  skeleton @ <later sha>`, a release name on content that is not that
+   release. Found 2026-10-26 (`sessions/2026-10-26-next-branch.md`). This repository's `main` is now
+   protected by branch rule (`AGENTS.md`, *Branches*). Anyone else's copy is not. The candidate
+   fixes are to refuse, or to record `v<last>+<sha>` honestly.
 
 ### Gap 2 — what the mechanical layer cannot see (priority: high)
 
 `check.sh` was clean on the arm that invented broadly and on all five that did not. It sees that a
 blank was answered, never whether the answer is true. Recorded under `ADR-013` as a boundary
-rather than a defect; none of the six findings closes it, and on day one there is no human
+rather than a defect; none of the seven findings closes it, and on day one there is no human
 reviewer either, the project having no history and nobody having read anything yet.
 
 ### Gap 3 — the recurring cost, still unmeasured (priority: medium)
