@@ -3,6 +3,7 @@
 - **Status:** draft
 - **Released:** <YYYY-MM-DD> by <who>
 - **Design:** `DESIGN.md`
+- **Session:** <the session record the plan was written and released in>
 - **Supersedes:** —
 - **Changed steps:** —
 - **Runtime:** <pointer to `DATA_ENVIRONMENT.md` or `playbooks/local/<recipe>.md` — cited, never copied here>
@@ -17,8 +18,10 @@
 >
 > **A card is the executor's context budget.** An executor reads this header, its own card, what
 > the card lists under `Read:`, and the runtime pointer. Nothing else. Write the card so that is
-> enough. Steps are listed in an order they can run in, and `Depends on:` names only earlier steps.
-> Steps with no dependency between them can run in parallel.
+> enough. Steps are listed in an order they can run in, and `Depends on:` names only earlier steps,
+> or a whole other package (`IMP-…`), satisfied once that package is accepted. That is how a branch
+> holds the step it unblocks: the revision opening the branch adds it as a dependency. Steps with
+> no dependency between them can run in parallel.
 >
 > **A gate is a command or an artefact assertion, plus an expected value.** The expected value is
 > what a weaker executor cannot invent. `Handoff: judgement` marks a step whose result needs a

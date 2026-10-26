@@ -19,7 +19,8 @@ if there is no revision.
 ## 2. Claim it
 
 Create `runs/S-<nn>__<YYYYMMDD>T<HHMM>Z.md` from `implementations/_TEMPLATE/run.md`, in UTC, with
-`Status: running`. Commit it, or push it, if other executors work in other clones.
+`Status: running` and `Session:` naming this session's record. In the session record, name the
+step as `IMP-<YYYY-MM-DD>-<slug>/S-<nn>`, so a search finds the attempt from either side. Commit it, or push it, if other executors work in other clones.
 
 **Another executor's `running` file is not yours to change.** It is either live in parallel or was
 cut short, and only the person can say which, the same rule as session files (`RULES.md`). Pick

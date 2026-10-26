@@ -10,18 +10,29 @@ them, and anyone checking afterwards, whether they are done. Follow the steps **
 
 ## 1. Open the package
 
+Search `implementations/LOG.md` first (`rg -i "<topic>"`). The change may already have a package,
+or an `abandoned` row saying why it was given up.
+
 - ID `IMP-<YYYY-MM-DD>-<slug>`, the slug named for the change. It is also the directory name:
   `ai-sandbox/implementations/IMP-<YYYY-MM-DD>-<slug>/`. A numeric suffix only breaks a genuine
   collision, the same rule as session files.
 - Copy `implementations/_TEMPLATE/DESIGN.md` and `PLAN.md` into it.
-- Add an `opened` row to `implementations/LOG.md`.
+- Add an `opened` row to `implementations/LOG.md`, with its tags. Tags go on this row only.
 - The package belongs to a thread. Point its checkpoint's `Plan:` at the package directory, or open
   a thread for it (`checkpoint.md`).
 
 ## 2. Design, then approval
 
 Discuss the design in session and write it into `DESIGN.md`, with numbered sections. The
-reasoning, including paths rejected, belongs in the session record. The design holds conclusions.
+reasoning, including paths rejected, belongs in the session record. The design holds conclusions,
+and its `Sessions:` names every record where it was discussed, so *why* stays one hop away.
+
+**Links point backwards, and are written once.** Each record names the earlier records it rests on
+when it is written: a design its sessions, a plan its design and session, an attempt its plan and
+session, a review its attempt and session, a branch the step it unblocks. A closed record is never
+edited to point forwards, so the forward direction is found by search. That only works if IDs are
+written the same way everywhere. A step is cited as `IMP-<YYYY-MM-DD>-<slug>/S-<nn>`, in session
+records too.
 
 **A named human approves it.** Set `Status: approved` and `Approved by:` with a name and date. From
 then on `DESIGN.md` is fixed. A change is `DESIGN.r<n>.md`: a full copy with `Supersedes:` and the
@@ -66,15 +77,18 @@ reports are what this step reads.
   unchanged steps keep theirs, so their reports stay valid. Release it as in step 4, and add a
   `revised` row to the log.
 - **Branch** when execution uncovers work the design did not foresee, which must be done before a
-  step can proceed. Open a new package, with its own design and plan, whose header names the step
-  it unblocks: `Unblocks: IMP-…/S-<nn>`. The blocked step's next attempt depends on the child's
-  acceptance. Add a `branched` row naming the child, and give the child its own thread if it
-  resumes independently.
+  step can proceed. Open a new package, with its own design and plan, whose `DESIGN.md` names the
+  step it unblocks: `Unblocks: IMP-…/S-<nn>`. Then revise the parent. The step's replacement in
+  `PLAN.r<n>.md` adds the child to `Depends on:`, so `check.sh` holds it until the child is
+  accepted. Add a `branched` row naming the child, and give the child its own thread if it resumes
+  independently.
 
 ## 6. Accept and close
 
 - When every step is accepted, write `reviews/package__<YYYYMMDD>T<HHMM>Z.md`: the package against
-  its design. Then add an `accepted` row. A package given up gets an `abandoned` row with the reason.
+  its design. Then add an `accepted` row naming what was delivered, the review, and any
+  `OPEN_QUESTIONS.md` entry it answered. A package given up gets an `abandoned` row with the
+  reason.
 - Promote what the design settled and the gates proved (`promote.md`): a decision that outlives the
   package becomes an ADR, and a method claim goes to `docs/` with `IMP-…` as its basis.
 - Close or rewrite the thread checkpoint (`checkpoint.md`).

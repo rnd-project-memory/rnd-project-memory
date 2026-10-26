@@ -3,6 +3,7 @@
 - **Verdict:** accepted | rejected
 - **Reviewer:** <role — model · effort, or a human name>
 - **Run reviewed:** `runs/S-<nn>__<YYYYMMDD>T<HHMM>Z.md`
+- **Session:** <the session record this review was written in>
 
 > Acceptance of one attempt, in `reviews/S-<nn>__<YYYYMMDD>T<HHMM>Z.md`, or of the whole package in
 > `reviews/package__…`. Immutable once written. The reviewer re-runs the gates instead of reading
