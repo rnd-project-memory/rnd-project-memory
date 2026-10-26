@@ -84,3 +84,5 @@ Ask to follow one of these by path:
 | `ai-sandbox/playbooks/ingest-source.md` | Adding a PDF, wiki page, or transcript |
 | `ai-sandbox/playbooks/run-experiment.md` | Running and recording an analysis |
 | `ai-sandbox/playbooks/upgrade-template.md` | Raising the project to a later template release |
+| `ai-sandbox/playbooks/plan-implementation.md` | Designing a change whose execution will be handed off, and releasing its plan |
+| `ai-sandbox/playbooks/execute-step.md` | Executing or reviewing one step of a released plan |

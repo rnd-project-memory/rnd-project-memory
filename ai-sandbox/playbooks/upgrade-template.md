@@ -20,6 +20,11 @@ If it disagrees with the structure — it names a version whose files are not wh
 earlier upgrade was interrupted. **Trust the structure**, not the file, and re-run from the version
 the structure implies.
 
+A version of the form `v<x>+<sha>` (or `…-dirty`) was installed between releases, from a skeleton
+past tag `v<x>`. Upgrade as from `v<x>`, and expect mechanism files to differ from `v<x>`'s hashes
+where the unreleased skeleton changed them. Compare those by hand before step 4 replaces them. Do
+not treat the suffix as a release.
+
 ## 2. Read every migration between the two versions
 
 Fetch the target release and read `MIGRATIONS.md`. Execute **every** section strictly between your

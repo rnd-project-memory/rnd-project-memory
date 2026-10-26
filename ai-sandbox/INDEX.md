@@ -18,6 +18,7 @@ artefact, never as working notes — see `AGENTS.md`.
 | In-flight reasoning | `CHECKPOINT-<thread>.md` (one per thread, see below) |
 | What happened in a session | `sessions/<date>-<slug>.md` |
 | What an experiment produced | `experiments/EXP-<YYYY-MM-DD>-<slug>.md` |
+| A change designed here and executed by others | `implementations/IMP-<YYYY-MM-DD>-<slug>/` |
 | Where a fact came from | `SOURCES.md` |
 
 `ai-sandbox/` is **not a second copy** of `docs/`. Matured conclusions move out.
@@ -39,6 +40,8 @@ artefact, never as working notes — see `AGENTS.md`.
 | `RATIONALE.md` | Why each rule exists; failure modes | read on demand |
 | `sessions/LOG.md` | One row per session | append only |
 | `experiments/LOG.md` | One row per experiment | append only |
+| `implementations/IMP-…/` | Design and plan, fixed once approved and released; one report per attempt; reviews | design and plan fixed, revised by new file; runs and reviews immutable |
+| `implementations/LOG.md` | One row per package event | append only |
 
 `DATA_ENVIRONMENT.md` is deliberately absent: this project has no data environment, and the
 template's own rule says content that instructs falsely is worse than content that is missing.
@@ -67,8 +70,8 @@ template, and `adopter-review` covers what real adopters' memories show.
 experiment, and Gap 4: a work identity in published commit history, which is undecided.
 `adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
 detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).
-Built on `next` for `v3.7.0`: implementation packages (issue #2, dogfooded once; `ADR-014` awaits
-sign-off) and the configuration distribution. Still design: working decisions, staleness, a session-mode axis.
+`v3.7.0` shipped implementation packages (`ADR-014`, issue #2) and the configuration
+distribution. Still design: working decisions, staleness, a session-mode axis.
 
 The green-start programme is closed. Its arc and lessons are in
 `sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from

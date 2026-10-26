@@ -249,13 +249,18 @@ worth it" — the latter question is out of scope by design, not by oversight.
 
 ### Delivery state resolves from artefacts, not from prose
 
-For a thread with a plan, the plan is a contract (tasks, gates), and what actually happened lives
-in artefacts on disk (a manifest per task, a decision per gate) — never typed by hand, and their
-absence is itself informative (no manifest means not yet certified, not "assume it passed"). The
-one-command recipe that reads the artefact directory and reports status belongs in
-`playbooks/local/`, named for what it checks, and it has to read the directory, not the plan's
-task table: the table states intent and can drift (a task added mid-flight may never make it back
-into the table), while the directory only ever states fact.
+For a thread with a plan, the plan is a contract (steps, gates) and what actually happened lives
+in files execution produces: in an implementation package, one report per attempt and one review
+per acceptance. Their absence is informative too: no report means not yet done, not "assume it
+passed". Status is derived from those files and never typed, and `check.sh` does the deriving. It
+reads `runs/` and `reviews/`, never a status field, because a typed status states intent and
+drifts. One adopter's plans carried typed status, and an item came to read *done* and *not done*
+at once, beside gates reported passed with nothing on disk behind them.
+
+The plan itself never changes after release, for the same reason a record never does. An edited
+gate and an edited status line look the same in a diff, so a plan that may be edited is a contract
+nobody can hold an executor to. A revision is a new file, so every report still names the plan it
+ran against.
 
 ### A record that describes a check is not rewritten to satisfy it
 
