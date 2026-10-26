@@ -28,7 +28,7 @@ ok()  { echo "  ok    $1"; }
 dest=$(mktemp -d) || exit 1
 collision_dest=$(mktemp -d) || exit 1
 preserve_dest=$(mktemp -d) || exit 1
-trap 'rm -rf "$dest" "$collision_dest" "$preserve_dest"' EXIT
+trap 'rm -rf "$dest" "$collision_dest" "$preserve_dest" "$lbl_src" "$lbl_A" "$lbl_B" "$lbl_C"' EXIT
 
 # The install itself, performed by the file an adopter is pointed at. Anything wrong in here is
 # wrong for them too, which is the property this gate exists to have.
@@ -294,6 +294,49 @@ if ./install.sh "$preserve_dest" preserve-project test@example.invalid >/dev/nul
   esac
 else
   bad "install with a non-conflicting existing README failed"
+fi
+
+say "Version label gate"
+# The first field of .template-version must say what the install was made from. Expected values
+# come from the clone's own git output, not from re-deriving the installer's logic.
+lbl_src=$(mktemp -d) || exit 1
+lbl_A=$(mktemp -d) || exit 1
+lbl_B=$(mktemp -d) || exit 1
+lbl_C=$(mktemp -d) || exit 1
+root=$(pwd)
+git clone -q --local "$root" "$lbl_src" 2>/dev/null || bad "version label: could not clone the repository"
+T=$(git -C "$lbl_src" describe --tags --abbrev=0 2>/dev/null)
+if [ -z "$T" ]; then
+  bad "version label: the clone has no tag, so there is no release to expect"
+else
+  git -C "$lbl_src" checkout -q "$T"
+  git -C "$lbl_src" config user.email test@example.invalid
+  git -C "$lbl_src" config user.name bootstrap-test
+
+  # Case 1: as tagged, clean.
+  (cd "$lbl_src" && "$root/install.sh" "$lbl_A" lbl test@example.invalid) >/dev/null 2>&1
+  got=$(awk '{print $1; exit}' "$lbl_A/.template-version" 2>/dev/null)
+  [ "$got" = "$T" ] \
+    && ok "version label: clean tag records $T" \
+    || bad "version label: clean tag recorded '$got', expected '$T'"
+
+  # Case 2: a committed change under skeleton/ moves the label to T+<sha>.
+  printf 'version label fixture, committed\n' >> "$lbl_src/skeleton/README.md"
+  git -C "$lbl_src" commit -qam "fixture: committed skeleton change" >/dev/null 2>&1
+  sha=$(git -C "$lbl_src" log -1 --format=%h -- skeleton/)
+  (cd "$lbl_src" && "$root/install.sh" "$lbl_B" lbl test@example.invalid) >/dev/null 2>&1
+  got=$(awk '{print $1; exit}' "$lbl_B/.template-version" 2>/dev/null)
+  [ "$got" = "$T+$sha" ] \
+    && ok "version label: committed change records $T+$sha" \
+    || bad "version label: committed change recorded '$got', expected '$T+$sha'"
+
+  # Case 3: an uncommitted change adds -dirty to the same sha.
+  printf 'version label fixture, uncommitted\n' >> "$lbl_src/skeleton/README.md"
+  (cd "$lbl_src" && "$root/install.sh" "$lbl_C" lbl test@example.invalid) >/dev/null 2>&1
+  got=$(awk '{print $1; exit}' "$lbl_C/.template-version" 2>/dev/null)
+  [ "$got" = "$T+$sha-dirty" ] \
+    && ok "version label: uncommitted change records $T+$sha-dirty" \
+    || bad "version label: uncommitted change recorded '$got', expected '$T+$sha-dirty'"
 fi
 
 say "Result"
