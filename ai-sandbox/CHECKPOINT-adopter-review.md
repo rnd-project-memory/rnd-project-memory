@@ -50,13 +50,15 @@ values, with no mark on values outside the dictionary, since those sit in immuta
 (`sessions/2026-10-25-configuration-distribution.md`). Left for design: whether the schema gains a
 *session mode* axis, and whether `severity:` is redefined.
 
-### Gap 6 — implementation packages (built on `next`, unreleased; issue #2)
+### Gap 6 — implementation packages (built and dogfooded on `next`, unreleased; issue #2)
 
-Built on 2026-10-26 to the author's decisions: `implementations/IMP-<date>-<slug>/` with templates,
-`plan-implementation.md`, `execute-step.md` with a review section, `check.sh`'s derived step states,
-and four bootstrap gates (`sessions/2026-10-26-planned-threads-options.md`). What remains is
-release, raising the root (which then gets its own `implementations/LOG.md`), and closing issue #2.
-Not yet exercised on a real change.
+Built 2026-10-26 to the author's decisions, then dogfooded on
+`IMP-2026-10-26-install-unreleased-label`: four steps on a cheaper model, two of them in parallel,
+all accepted. Thirteen findings were folded back into the templates and playbooks
+(`sessions/2026-10-26-dogfood-install-label.md`). The decision is written as
+`docs/decisions/ADR-014-implementation-packages.md`, `proposed`, **awaiting the author's
+sign-off** and not yet committed. What remains is the sign-off, the `v3.7.0` release, raising the
+root, and closing issue #2. Not yet exercised on a change with a revision or a branch.
 ---
 
 ## Out of scope for this thread
