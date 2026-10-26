@@ -67,7 +67,8 @@ template, and `adopter-review` covers what real adopters' memories show.
 experiment, and Gap 4: a work identity in published commit history, which is undecided.
 `adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
 detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).
-The rest is design: working decisions, staleness, single-valued fields, planned threads (issue #2).
+Built on `next` for `v3.7.0`: implementation packages (issue #2) and the configuration
+distribution. Still design: working decisions, staleness, a session-mode axis.
 
 The green-start programme is closed. Its arc and lessons are in
 `sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from
