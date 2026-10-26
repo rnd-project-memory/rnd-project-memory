@@ -405,6 +405,14 @@ Two consequences worth internalising:
   document's identity, not the claim you wanted from it, and live with it. Renaming breaks
   every citation silently, because a stale citation still looks perfectly valid. This is the
   one real cost of dropping counters, and it is paid by discipline rather than by tooling.
+- **For work, the identity is the objective.** A session or an implementation package is named
+  for what it sets out to settle or deliver, not for the activity (`brainstorming`, `review`,
+  `follow-up`), the approach (`add-sha-suffix`), a person, or a ticket number. The objective is
+  what stays true: a plan revision can replace the approach, and a session can wander, while
+  the slug cannot change. A listing of activity names is unsearchable by topic. One adopter's
+  session log had about a quarter of its names of that kind. A ticket number belongs in the
+  record's text. A session's slug is fixed when its file is first committed. Until then,
+  renaming the file once the focus is agreed costs nothing.
 
 These schemes are also what make the archive safe when more than one person contributes:
 nothing needs a shared counter, so two people working at once collide only when they created
