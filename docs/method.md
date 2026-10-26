@@ -1,6 +1,6 @@
 # rnd-project-memory — Method
 
-- **Updated:** 2026-08-27
+- **Updated:** 2026-10-26
 
 > Current best understanding of how the template is built, versioned and delivered. **No history
 > here** — no "we used to think". Rationale for contested choices lives in `decisions/`; evidence
@@ -73,6 +73,11 @@ its own memory at the root, vendored from a released tag.
 | Failures generalise and successes do not: one observed failure licenses a fix, one clean run never licenses "works" | `ADR-013` |
 | Disagreement between providers is evidence about the document; disagreement between runs of one model is noise until it recurs | `ADR-013` |
 | Every advisory warning must be clearable, and a warning is elevated to blocking, never to a rule | `ADR-013` |
+| A change executed outside the session that designed it runs through an implementation package: an approved design and a released plan, both fixed, and one immutable report per attempt | `ADR-014` |
+| Delivery status is derived from attempt reports and reviews by `check.sh`, never typed | `ADR-014` |
+| A review re-runs the gates in a clean checkout of exactly the report's commit, never in the executor's tree | `ADR-014` |
+| Links between records point backwards, written once by the later record; the forward direction is found by search | `ADR-014` |
+| A session or package slug names the objective, never the approach, the activity, a person or a ticket | `ADR-014` |
 
 ## Known limitations
 
