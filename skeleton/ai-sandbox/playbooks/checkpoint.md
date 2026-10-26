@@ -62,10 +62,10 @@ that already has a file:
   didn't make sense, what is suspected belongs in the session file, not here.
 - Update `Resume from:` and `Do not do until re-verified:` to reflect exactly where this session
   left the thread — not what was done, the state of the break itself.
-- **If the thread has a `Plan:` file**, do not restate it here. No task identifiers (`T-###`)
-  in this header — state for a planned thread lives in the plan (contract), run artefacts (what
-  happened, read from disk, not from the plan's table — the table is intent, the directory is
-  fact), and this header (distrust and prohibitions only, since artefacts can't express those).
+- **If the thread has a `Plan:` package**, do not restate it here. No step identifiers (`S-03`)
+  in this header. State for a planned thread lives in the package: the design and plan are the
+  contract, and `runs/` and `reviews/` record what happened, with `check.sh` deriving each step's
+  state. This header holds only distrust and prohibitions, since those files can't express them.
 - Check the limit: `wc -l ai-sandbox/CHECKPOINT-<thread-slug>.md` ≤ 150.
 
 **If it exceeds 150 lines**, something needs promoting — that is not a signal to shorten

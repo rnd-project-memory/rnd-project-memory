@@ -94,6 +94,53 @@ grep -q 'never appended' "$dest/ai-sandbox/INDEX.md" \
   && ok "Current focus guidance survives answering the blank" \
   || bad "INDEX.md lost its Current focus guidance once the blank was answered"
 
+say "Implementation package gate"
+# Status in a package is derived, never typed. If the derivation is wrong, every executor picks the
+# wrong step, so it is tested on a package with a judgement dependency, an independent step and a
+# report that contradicts itself.
+case "$out" in
+  *"Implementation packages"*"  none"*) ok "no package findings on a fresh install";;
+  *) bad "check.sh reports implementation packages on a fresh install";;
+esac
+pk="$dest/ai-sandbox/implementations/IMP-2000-01-01-fixture"
+mkdir -p "$pk/runs" "$pk/reviews"
+cat > "$pk/PLAN.md" <<'PLAN'
+- **Status:** released
+### S-01 · a
+- **Depends on:** —
+- **Handoff:** judgement
+- **Gate G-01-1:** `true` → exit 0
+### S-02 · b
+- **Depends on:** S-01
+- **Handoff:** mechanical
+- **Gate G-02-1:** `true` → exit 0
+### S-03 · c
+- **Depends on:** —
+- **Handoff:** mechanical
+- **Gate G-03-1:** `true` → exit 0
+PLAN
+printf '| IMP-2000-01-01-fixture | 2000-01-01 | opened | first-thread | fixture |\n' \
+  >> "$dest/ai-sandbox/implementations/LOG.md"
+printf -- '- **Status:** passed\n- **Commit:** %s\n- **Gate G-01-1:** pass — exit 0\n' \
+  "$(git -C "$dest" rev-parse --short HEAD)" > "$pk/runs/S-01__20000101T0000Z.md"
+printf -- '- **Status:** passed\n- **Commit:** %s\n- **Gate G-03-1:** fail — exit 1\n' \
+  "$(git -C "$dest" rev-parse --short HEAD)" > "$pk/runs/S-03__20000101T0000Z.md"
+pout=$(cd "$dest" && ./check.sh 2>&1)
+printf '%s\n' "$pout" | grep -qE 'S-02 +waiting +on S-01' \
+  && ok "a judgement step that passed but is not accepted holds its dependants" \
+  || bad "S-02 is not waiting on an unaccepted judgement step"
+printf '%s\n' "$pout" | grep -qE 'S-03 +inconsistent' \
+  && ok "a passed report over a failing gate shows as inconsistent" \
+  || bad "a self-contradicting report is not shown as inconsistent"
+printf '%s\n' "$pout" | grep -q 'S-03__20000101T0000Z.md: passed, but 1 of 1' \
+  && ok "the uncommitted contradicting report is reported" \
+  || bad "the uncommitted contradicting report is not reported"
+printf -- '- **Verdict:** accepted\n' > "$pk/reviews/S-01__20000101T0100Z.md"
+(cd "$dest" && ./check.sh 2>&1) | grep -qE 'S-02 +ready' \
+  && ok "accepting the judgement step makes its dependant ready" \
+  || bad "S-02 is not ready after S-01 was accepted"
+rm -rf "$pk"; git -C "$dest" checkout -q -- ai-sandbox/implementations/LOG.md
+
 [ -f "$dest/.template-version" ] \
   && ok ".template-version reached the consumer" \
   || bad "no .template-version — §11 names it and the skeleton does not ship it"

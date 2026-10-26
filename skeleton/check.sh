@@ -257,6 +257,10 @@ for id in $(grep -rhE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/n
             | skip_examples | grep -oE 'EXP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' | sort -u); do
   ls "$SB"/experiments/"$id".md >/dev/null 2>&1 || echo "  $id cited but no record file"
 done
+for id in $(grep -rhE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' docs/ 2>/dev/null \
+            | skip_examples | grep -oE 'IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' | sort -u); do
+  [ -d "$SB/implementations/$id" ] || echo "  $id cited but no package directory"
+done
 
 n "Registers: resolved entries should be deleted, not marked"
 # Same exclusion: each register's own preamble explains that `Resolved` must never be used — and
@@ -418,6 +422,117 @@ if [ -n "$stale" ]; then
   grep -B3 'Status:.*stale' "$SB/PUBLICATIONS.md" | grep -v '<' | grep -E '^## |Status:' | sed 's/^/  /'
 else
   echo "  none"
+fi
+
+n "Implementation packages"
+# A package is implementations/IMP-<date>-<slug>/: an approved DESIGN.md, a released PLAN.md that
+# never changes, one immutable report per attempt in runs/, reviews in reviews/. Status is derived
+# here from those files and is typed nowhere. One adopter typed status into its plans. One item
+# then read both done and not done, and gates reported passed had no artefacts behind them.
+#
+# Reports and fixed files are judged only while uncommitted, the moment a mistake is free to fix.
+# A committed record is immutable, so a warning on it could never clear (ADR-013 §4). The derived
+# state still shows a committed contradiction, as `inconsistent`.
+IM="$SB/implementations"
+pkgs=$(find "$IM" -mindepth 1 -maxdepth 1 -type d -name 'IMP-*' 2>/dev/null | sort)
+if [ -z "$pkgs" ]; then
+  echo "  none"
+else
+  for d in $pkgs; do
+    id=$(basename "$d")
+    grep -qE "^\|[[:space:]]*$id[[:space:]]*\|[^|]*\|[[:space:]]*opened" "$IM/LOG.md" 2>/dev/null \
+      || echo "  ?     $id: no 'opened' row in $IM/LOG.md"
+  done
+  for id in $(grep -oE '^\|[[:space:]]*IMP-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+' "$IM/LOG.md" 2>/dev/null \
+              | tr -d '| ' | sort -u); do
+    [ -d "$IM/$id" ] || echo "  ?     $id: in LOG.md, but no package directory"
+  done
+
+  for d in $pkgs; do
+    id=$(basename "$d")
+    plan=$(ls "$d"/PLAN.r*.md 2>/dev/null | sort -V | tail -1)
+    [ -n "$plan" ] || plan="$d/PLAN.md"
+    [ -f "$plan" ] || { echo "  ?     $id: no PLAN.md"; continue; }
+
+    # A fixed file edited before the edit is committed. A change is a new revision file.
+    for f in "$d"/DESIGN*.md "$d"/PLAN*.md; do
+      [ -f "$f" ] || continue
+      git cat-file -e "HEAD:$f" 2>/dev/null || continue
+      git diff --quiet HEAD -- "$f" 2>/dev/null && continue
+      st=$(git show "HEAD:$f" | grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*(released|approved)' | awk '{print $NF}')
+      [ -n "$st" ] && echo "  ?     $id: $(basename "$f") is $st and fixed — revert the edit; a change is a new revision file"
+    done
+
+    # Attempt reports not yet committed: does the report agree with itself?
+    for r in $(git status --porcelain --untracked-files=all -- "$d/runs" 2>/dev/null | awk '{print $NF}'); do
+      [ -f "$r" ] || continue
+      rs=$(grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*[a-z]+' "$r" | awk '{print $NF}')
+      ng=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*' "$r")
+      np=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*[[:space:]]*pass\b' "$r")
+      [ "$rs" = passed ] && [ "$np" -ne "$ng" ] \
+        && echo "  ?     $r: passed, but $((ng - np)) of $ng gate(s) are not pass"
+      [ "$rs" = passed ] && [ "$ng" -eq 0 ] && echo "  ?     $r: passed, with no gate lines"
+      sha=$(grep -m1 -oE '^[-*] \*\*Commit:\*\*[[:space:]]*[0-9a-f]{7,40}' "$r" | awk '{print $NF}')
+      if [ "$rs" != running ]; then
+        if [ -z "$sha" ]; then echo "  ?     $r: closed without a Commit:"
+        elif ! git cat-file -e "$sha^{commit}" 2>/dev/null; then echo "  ?     $r: Commit: $sha does not exist"; fi
+      fi
+      for e in $(grep -m1 -E '^[-*] \*\*Evidence:\*\*' "$r" | sed 's/^[-*] \*\*Evidence:\*\*//' | tr -d '`,'); do
+        case "$e" in —|-|'<'*) continue;; esac
+        [ -e "$e" ] || [ -e "$d/$e" ] || echo "  ?     $r: Evidence: $e does not exist"
+      done
+    done
+
+    # Structure of the plan, and each step's derived state.
+    open=1
+    grep -qE "^\|[[:space:]]*$id[[:space:]]*\|[^|]*\|[[:space:]]*(accepted|abandoned)" "$IM/LOG.md" 2>/dev/null && open=0
+    known=" "; states=" "; warn=""; list=""
+    while IFS='|' read -r sid deps ho ngates bad; do
+      [ -n "$sid" ] || continue
+      for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
+        case "$known" in *" $dep "*) ;; *) warn="$warn  ?     $id: $sid depends on $dep, which is not an earlier step\n";; esac
+      done
+      [ "$ngates" -eq 0 ] && warn="$warn  ?     $id: $sid has no gate\n"
+      [ "$bad" -gt 0 ] && warn="$warn  ?     $id: $sid has $bad gate(s) with no → expected value\n"
+      known="$known$sid "
+
+      rev=$(ls "$d"/reviews/"$sid"__*.md 2>/dev/null | sort | tail -1)
+      run=$(ls "$d"/runs/"$sid"__*.md 2>/dev/null | sort | tail -1)
+      v=""; [ -n "$rev" ] && v=$(grep -m1 -oE '^[-*] \*\*Verdict:\*\*[[:space:]]*[a-z]+' "$rev" | awk '{print $NF}')
+      if [ "$v" = accepted ]; then s=accepted
+      elif [ -n "$run" ]; then
+        s=$(grep -m1 -oE '^[-*] \*\*Status:\*\*[[:space:]]*[a-z]+' "$run" | awk '{print $NF}')
+        if [ "$s" = passed ]; then
+          ng=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*' "$run"); np=$(grep -cE '^[-*] \*\*Gate [^:]*:\*\*[[:space:]]*pass\b' "$run")
+          [ "$ng" -gt 0 ] && [ "$np" -eq "$ng" ] || s=inconsistent
+          [ "$v" = rejected ] && [ "$(basename "$rev")" \> "$(basename "$run")" ] && s=rejected
+        fi
+      else
+        s=ready; wait=""
+        for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
+          case "$states" in *" $dep=accepted "*|*" $dep=passed:mechanical "*) ;; *) s=waiting; wait="$wait $dep";; esac
+        done
+      fi
+      states="$states$sid=$s:$ho "
+      [ "$s" = accepted ] && states="$states$sid=accepted "
+      if [ "$open" -eq 1 ]; then
+        case "$s" in
+          waiting) list="$list$(printf '    %-6s %-13s on%s' "$sid" "$s" "$wait")\n";;
+          ready|accepted) list="$list$(printf '    %-6s %s' "$sid" "$s")\n";;
+          *) list="$list$(printf '    %-6s %-13s %s' "$sid" "$s" "${run#$d/}")\n";;
+        esac
+      fi
+    done < <(awk '
+      function flush() { if (id) print id "|" deps "|" ho "|" ng "|" bad }
+      /^### S-[0-9]+/ { flush(); id=$2; deps=""; ho=""; ng=0; bad=0; next }
+      /^## /          { flush(); id="" }
+      id && /^[-*] \*\*Depends on:\*\*/ { sub(/^[-*] \*\*Depends on:\*\*[ \t]*/, ""); deps=$0 }
+      id && /^[-*] \*\*Handoff:\*\*/    { sub(/^[-*] \*\*Handoff:\*\*[ \t]*/, ""); ho=$1 }
+      id && /^[-*] \*\*Gate [^:]*:\*\*/ { ng++; if ($0 !~ /→/) bad++ }
+      END { flush() }' "$plan")
+    printf '%b' "$warn"
+    [ "$open" -eq 1 ] && { echo "  $id ($(basename "$plan"))"; printf '%b' "$list"; }
+  done
 fi
 
 n "Field value distribution (P-130 — diagnostic only, no threshold)"

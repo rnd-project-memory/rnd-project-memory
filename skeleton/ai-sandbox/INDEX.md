@@ -14,6 +14,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | In-flight reasoning on one thread | `CHECKPOINT-<thread>.md` (one per thread, holder-only write) |
 | What happened in a session | `sessions/<date>-<slug>.md` |
 | What an analysis produced | `experiments/EXP-<YYYY-MM-DD>-<slug>.md` |
+| A change designed here and executed by others | `implementations/IMP-<YYYY-MM-DD>-<slug>/` |
 | Where a fact came from | `SOURCES.md` |
 
 `ai-sandbox/` is **not a second copy** of `docs/`. Matured conclusions move out.
@@ -35,6 +36,8 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | `RATIONALE.md` | Why each rule exists; failure modes | read on demand |
 | `sessions/LOG.md` | One row per session | append only |
 | `experiments/LOG.md` | One row per experiment | append only |
+| `implementations/IMP-…/` | Design and plan, fixed once approved and released; one report per attempt; reviews | design and plan fixed, revised by new file; runs and reviews immutable |
+| `implementations/LOG.md` | One row per package event | append only |
 
 ---
 
