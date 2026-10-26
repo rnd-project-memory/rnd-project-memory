@@ -47,6 +47,10 @@ that is a gap in the design, not a choice to make in the plan. Return to step 2.
   context. `Read:` lists the design sections and files the step needs, and nothing else.
 - **Every gate is a command or an artefact assertion, plus an expected value.** Without the
   expected value a weaker executor will supply one. A gate tests the result, not the process.
+- **A gate tests its own step only.** A gate on a whole-suite result, such as *no failures
+  anywhere*, couples the step to every other step: it fails or passes depending on whether a
+  parallel step has finished. Whole-suite gates belong on a final step that depends on all the
+  others.
 - **`Stop if:`** names where the executor must stop and report rather than improvise: an input
   that does not match, a decision the card does not settle.
 - **`Handoff: judgement`** marks a step no gate fully decides. It counts as done only once
