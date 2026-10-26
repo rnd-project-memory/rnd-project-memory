@@ -6,6 +6,7 @@
 - **Session:** <the session record the plan was written and released in>
 - **Supersedes:** —
 - **Changed steps:** —
+- **Base:** <the branch or ref every step starts from and commits to>
 - **Runtime:** <pointer to `DATA_ENVIRONMENT.md` or `playbooks/local/<recipe>.md` — cited, never copied here>
 
 > **Steps and gates. No status.** Written by the capable model from the approved design. When

@@ -47,6 +47,11 @@ that is a gap in the design, not a choice to make in the plan. Return to step 2.
   context. `Read:` lists the design sections and files the step needs, and nothing else.
 - **Every gate is a command or an artefact assertion, plus an expected value.** Without the
   expected value a weaker executor will supply one. A gate tests the result, not the process.
+- **A gate must still mean something when re-run at the report's commit.** A reviewer re-runs it
+  later, at that commit. Test content, or a commit range (`git diff A B`), never working-tree
+  cleanliness, which is clean at every commit and so proves nothing after the fact.
+- **When a gate reads output, the card states the exact output the step must produce**, not an
+  example of it. A `Stop if:` names a condition the executor can observe, not a judgement.
 - **A gate tests its own step only.** A gate on a whole-suite result, such as *no failures
   anywhere*, couples the step to every other step: it fails or passes depending on whether a
   parallel step has finished. Whole-suite gates belong on a final step that depends on all the
@@ -58,6 +63,8 @@ that is a gap in the design, not a choice to make in the plan. Return to step 2.
 - **Order and dependencies.** Steps are listed in an order they can run in. `Depends on:` names
   earlier steps only, which keeps the graph free of cycles by construction. Independent steps run
   in parallel.
+- **`Base:` names the branch every step starts from.** An executor's clone or worktree may start
+  elsewhere, from the default branch, where neither the plan nor the playbook exists.
 - **Runtime instructions are cited, never copied.** How to reach the data, run a job, or use a
   cluster lives once, in `DATA_ENVIRONMENT.md` or `playbooks/local/`. A plan that carries its own
   copy drifts from the next plan's.

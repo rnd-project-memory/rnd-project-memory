@@ -3,10 +3,12 @@
 - **Verdict:** accepted | rejected
 - **Reviewer:** <role — model · effort, or a human name>
 - **Run reviewed:** `runs/S-<nn>__<YYYYMMDD>T<HHMM>Z.md`
+- **Reviews:** —
 - **Session:** <the session record this review was written in>
 
 > Acceptance of one attempt, in `reviews/S-<nn>__<YYYYMMDD>T<HHMM>Z.md`, or of the whole package in
-> `reviews/package__…`. Immutable once written. The reviewer re-runs the gates instead of reading
+> `reviews/package__…`. Immutable once written. A package review has no single attempt: its
+> `Run reviewed:` is `—`, and `Reviews:` lists the step reviews it rests on. The reviewer re-runs the gates instead of reading
 > the report's claims. A deterministic re-run is the strongest check on the independence ladder
 > and costs no model time (`CONFIGURATIONS.md`). A same-family model reviewing does not make the
 > result independently verified.
