@@ -2,7 +2,7 @@
 
 - **Held by:** <your `git config user.email`> · since <DATE>
 - **Status:** active | paused
-- **Plan:** <path to a plan file, if this thread has one — omit the line if it does not>
+- **Plan:** <`implementations/IMP-<YYYY-MM-DD>-<slug>/`, if this thread has a package — omit the line if it does not>
 - **Resume from:** <the single fact that says where the break is — not "what's done", the state
   of the break itself>
   **Do not do until re-verified:** <the specific things not to do until this is checked — the
@@ -24,13 +24,13 @@
 > that lives in the session file. This file holds facts about the thread: where it stands, what
 > not to trust yet, what not to do until that changes.
 >
-> **If this thread has a `Plan:` file**, this checkpoint does not restate it. No task
-> identifiers (e.g. `T-###`) belong in this header — if they start appearing here, the pointer
-> has stopped working and needs a mechanical check, not a reminder. State for a planned thread
-> lives in three places, jointly: the plan (contract — tasks, dependencies, gates), run
-> artefacts (what actually happened — produced by execution, never written by hand; a missing
-> artefact means "not yet certified", not "assume it's fine"), and this header (what artefacts
-> can't express: distrust and prohibitions).
+> **If this thread has a `Plan:` package**, this checkpoint does not restate it. No step
+> identifiers (e.g. `S-03`) belong in this header. If they start appearing here, the pointer has
+> stopped working. State for a planned thread lives in three places, jointly: the package's
+> design and plan (the contract, fixed once approved and released), its `runs/` and `reviews/`
+> (what actually happened, one immutable file per attempt; `check.sh` derives each step's state
+> from them, and a missing report means "not yet done", not "assume it's fine"), and this header
+> (what those files can't express: distrust and prohibitions).
 >
 > **Closing a thread** splits what's left to both addresses at once, never a choice between
 > them: settled parts go to `docs/` via `promote.md`, anything still hanging becomes one

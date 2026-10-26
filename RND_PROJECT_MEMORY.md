@@ -48,6 +48,7 @@ table before any file format.
 | In-flight reasoning on one thread of work, not yet resolved | `ai-sandbox/CHECKPOINT-<thread>.md` | **rewrite**, ≤150 lines, holder only |
 | What happened in a session | `ai-sandbox/sessions/<date>-<slug>.md` | create once, **immutable** |
 | What an analysis run produced | `ai-sandbox/experiments/EXP-<YYYY-MM-DD>-<slug>.md` | create once, **immutable** |
+| A change designed here and executed by others: design, plan, every attempt, every review | `ai-sandbox/implementations/IMP-<YYYY-MM-DD>-<slug>/` | design and plan **fixed** once approved and released; attempts and reviews **immutable** |
 | Where a fact came from | `ai-sandbox/SOURCES.md` | append; edit status only |
 | A data or tool trap — a plausible, silently wrong answer | `ai-sandbox/CAVEATS.yaml` | append; corrected in place, never deleted |
 | A question with no answer yet | `ai-sandbox/OPEN_QUESTIONS.md` | add; **delete** when answered |
@@ -146,19 +147,44 @@ The cap is **per file**, so each thread gets its own budget. One shared budget a
 in-flight threads either overflows constantly — firing spurious promotion pressure when it merely
 holds two unrelated threads' work — or lets one thread crowd out the other.
 
-### A thread with its own plan file stays thin a different way
+### A thread with its own plan stays thin a different way
 
-Once a thread has a plan — tasks, dependencies, gates, in its own file — the checkpoint does not
-restate it. State for a planned thread lives in three places, jointly, and none of them
-duplicates another: the plan (contract — what was agreed, unchanged once written), run artefacts
-(what actually happened — a manifest per task, a decision per gate, produced by execution and
-never typed by hand; a missing artefact means *not yet certified*, not *assume it passed*), and
-the checkpoint header (what artefacts structurally cannot express — see "Negative knowledge",
-below). The checkpoint holds only `Resume from:` and `Do not do until re-verified:`, plus a
-pointer to the plan. Task identifiers do not appear in the header; if they start showing up there,
-the pointer discipline has broken and needs a mechanical check, not a reminder — the table in the
-plan states intent and can drift, the artefact directory only ever states fact, so status is read
-from the directory, never the table.
+Some changes are designed in one place and executed in another: by a cheaper model, by several
+executors in parallel, or later. The design and the plan are where judgement is spent, so a
+capable model and a person write them. The steps are where tokens are spent, so a cheaper executor
+runs them, and each step's gates tell the executor, and anyone checking afterwards, whether it is
+done. Such a change is an **implementation package**, `ai-sandbox/implementations/IMP-<date>-<slug>/`,
+and it separates four things a single plan document mixes:
+
+| File | Written by | Write mode |
+|------|-----------|-----------|
+| `DESIGN.md` | capable model and a person; a named human approves | fixed once approved |
+| `PLAN.md`: step cards, dependencies, gates with expected values | capable model | fixed once released; a change is `PLAN.r<n>.md` |
+| `runs/<step>__<utc>.md`: one attempt, every gate's observed value | the executor | immutable, one file per attempt |
+| `reviews/<step>__<utc>.md`: gates re-run, accepted or rejected | a reviewer | immutable |
+
+This is §1's separation applied to delivery. A plan with status typed into it mixes the contract
+with its own history. That fails in practice: status drifts until an item reads *done* and *not
+done* at once, a failed attempt is overwritten by the next one, parallel executors conflict on one
+file, and a gate can be quietly edited, since in a diff that looks the same as a status update. In
+a package, **status is never typed**. `check.sh` derives each step's state from the reports and
+reviews: a missing report means *not yet done*, not *assume it passed*, and a report claiming
+`passed` over a failing gate shows as `inconsistent`.
+
+**A card is the executor's context budget.** It lists what to read, what to produce, what not to
+do, and when to stop and report rather than improvise. A cheaper executor loading the whole design
+spends the tokens the split exists to save, and is invited to decide what the card did not. Runtime
+instructions are cited from `DATA_ENVIRONMENT.md` or `playbooks/local/`, never copied into a plan.
+
+**Plans change by new files.** A wrong gate or a missing step is a revision, written by the capable
+model from the executors' `blocked` reports. Work the design did not foresee is a new package that
+names the step it unblocks. Executors never edit the plan. `implementations/LOG.md` records each
+package's events (`opened`, `revised`, `branched`, `accepted`, `abandoned`), one row each.
+
+The checkpoint holds only `Resume from:` and `Do not do until re-verified:`, plus `Plan:` pointing
+at the package. Step identifiers do not appear in it. The procedures are
+`playbooks/plan-implementation.md` and `playbooks/execute-step.md`. A change one session can finish
+needs no package.
 
 ### Negative knowledge needs a home as much as positive knowledge does
 
@@ -296,10 +322,12 @@ ai-sandbox/                    ← working memory between sessions
   env/<source>.md              ← optional: one source's own file, once it outgrows DATA_ENVIRONMENT.md
   results/<what>__<timestamp>.json  ← evidence cited from experiment records; immutable once written
   playbooks/                   ← procedures: session-start, checkpoint, promote,
-                                 ingest-source, run-experiment, upgrade-template
+                                 ingest-source, run-experiment, upgrade-template,
+                                 plan-implementation, execute-step
     local/                     ← the project's own procedures — content, not mechanism (§7)
   sessions/LOG.md + <date>-<slug>.md
   experiments/LOG.md + EXP-<YYYY-MM-DD>-<slug>.md
+  implementations/LOG.md + IMP-<YYYY-MM-DD>-<slug>/   ← DESIGN.md, PLAN.md[, PLAN.r<n>.md], runs/, reviews/
 
 src/                           ← analysis code, in whatever the project uses
 sources/                       ← committable source material only (§9)
@@ -472,10 +500,11 @@ delivery. The copies are gone.
 | `ai-sandbox/DATA_ENVIRONMENT.md` | Access (one block per source), a generated-catalog pointer, run recipes. **The profile layer** — the one file that names the stack (§15). Omit it if the project has no data environment |
 | `ai-sandbox/RATIONALE.md` | Why each rule exists; failure-mode table |
 | `ai-sandbox/ASSISTANT_PROFILE.md` | Optional; how to pitch explanations. `@`-import it or it does nothing |
-| `ai-sandbox/playbooks/*.md` | The six procedures — see §7 |
+| `ai-sandbox/playbooks/*.md` | The eight procedures — see §7 |
 | `ai-sandbox/playbooks/local/_TEMPLATE.md` | Shape for the project's own procedures — content, not mechanism |
 | `MANIFEST` · `.template-version` · `.template-hashes` | Which files upstream owns, which release you took, and what those files hashed to when it shipped — see §15 |
 | `ai-sandbox/sessions/LOG.md` + `_TEMPLATE.md` | Session index and record — the record's header now also names its **configuration**, **participants**, and whether it was **signed off** |
+| `ai-sandbox/implementations/LOG.md` + `_TEMPLATE/` | Package event log, and the shapes of a design, a plan, an attempt report and a review — see §3 |
 | `ai-sandbox/experiments/LOG.md` + `_TEMPLATE.md` | Experiment index and record — the record now also carries **who verified it**, **how**, and a **run ID** for remote/async execution |
 | `docs/CLAIMS.md` | Index of every claim in `docs/`: shorthand, file, date, basis |
 | `docs/problem.md` | Problem statement, success criteria, stakeholders |
@@ -513,7 +542,7 @@ and that change is itself logged as an event (§14).
 
 ## 7. Playbooks
 
-**Also normative in the skeleton, for the same reason as §6.** The six procedures live in
+**Also normative in the skeleton, for the same reason as §6.** The eight procedures live in
 `ai-sandbox/playbooks/`. What follows is what each is *for* and the one decision inside it that
 is easy to get wrong — not its text.
 
@@ -530,6 +559,8 @@ Follow ai-sandbox/playbooks/checkpoint.md
 | `promote.md` | Move a matured conclusion into `docs/` | Step 2 — find *every* file the conclusion touches. Updating one and missing another leaves `docs/` self-contradictory, which is worse than not recording it. |
 | `ingest-source.md` | Take in a PDF, wiki page, or transcript | Sensitivity is decided **before** reading, defaulting to `reference-only`. |
 | `run-experiment.md` | Run and record an analysis | The question is written **before** the run. An experiment with no stated question cannot fail, and so teaches nothing. |
+| `plan-implementation.md` | Design a change, then release a gated plan others execute | **Every gate carries an expected value**, or a weaker executor supplies one. After release the plan never changes: a revision is a new file. |
+| `execute-step.md` | Execute, or review, one step of a released plan | **Re-run the gates you build on** before building. A report says what happened then, and a re-run says what is true now. Never edit the plan. |
 | `upgrade-template.md` | Raise the project to a later template release | It diffs `RULES.md` and reports every changed rule. A rule delivered by file replacement arrives silently; this step is the only thing that makes it visible (§15). |
 
 ### Why playbooks rather than custom agents
@@ -1082,7 +1113,7 @@ deliberately different severity:
 
 | Artifact | Checks | Mode |
 |----------|--------|------|
-| `check.sh` | This clone's `core.hooksPath` and `user.email`, reported first · each checkpoint's `Held by:` against this clone's identity · unfilled `<<FILL: …>>` install blanks · mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · the `.gitignore` upstream block · credential patterns supplied by the profile layer · checkpoint line limits · a checkpoint still the shipped template · `INDEX.md`'s *Current focus* past 15 lines · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · `Owner:` fields carrying an address · adoption notes · counters on session filenames not yet committed · session files missing a `LOG.md` row · sessions left open · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
+| `check.sh` | This clone's `core.hooksPath` and `user.email`, reported first · each checkpoint's `Held by:` against this clone's identity · unfilled `<<FILL: …>>` install blanks · mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · the `.gitignore` upstream block · credential patterns supplied by the profile layer · checkpoint line limits · a checkpoint still the shipped template · `INDEX.md`'s *Current focus* past 15 lines · implementation packages: log against directories, plan structure, fixed files edited, uncommitted attempt reports against themselves, derived step states · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · `Owner:` fields carrying an address · adoption notes · counters on session filenames not yet committed · session files missing a `LOG.md` row · sessions left open · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
 | `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —

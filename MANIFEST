@@ -78,8 +78,14 @@ mechanism  ai-sandbox/playbooks/promote.md
 mechanism  ai-sandbox/playbooks/ingest-source.md
 mechanism  ai-sandbox/playbooks/run-experiment.md
 mechanism  ai-sandbox/playbooks/upgrade-template.md
+mechanism  ai-sandbox/playbooks/plan-implementation.md
+mechanism  ai-sandbox/playbooks/execute-step.md
 mechanism  ai-sandbox/sessions/_TEMPLATE.md
 mechanism  ai-sandbox/experiments/_TEMPLATE.md
+mechanism  ai-sandbox/implementations/_TEMPLATE/DESIGN.md
+mechanism  ai-sandbox/implementations/_TEMPLATE/PLAN.md
+mechanism  ai-sandbox/implementations/_TEMPLATE/run.md
+mechanism  ai-sandbox/implementations/_TEMPLATE/review.md
 mechanism  ai-sandbox/playbooks/local/_TEMPLATE.md
 mechanism  docs/decisions/_TEMPLATE.md
 mechanism  docs/techniques/_TEMPLATE.md
@@ -117,6 +123,7 @@ scaffold   ai-sandbox/PUBLICATIONS.md
 scaffold   ai-sandbox/CONFIGURATIONS.md
 scaffold   ai-sandbox/sessions/LOG.md
 scaffold   ai-sandbox/experiments/LOG.md
+scaffold   ai-sandbox/implementations/LOG.md
 scaffold   docs/CLAIMS.md
 
 # Temporary by design — exists only until the 3-week staleness threshold is validated against
@@ -136,6 +143,7 @@ scaffold   ai-sandbox/results/README.md
 # ─── content: project-generated, upstream never touches ──────────────────────
 content    ai-sandbox/sessions/*.md
 content    ai-sandbox/experiments/EXP-*.md
+content    ai-sandbox/implementations/IMP-*/**
 content    ai-sandbox/CHECKPOINT-*.md
 content    ai-sandbox/env/*.md
 content    ai-sandbox/results/*.json
