@@ -36,3 +36,4 @@ or experiment log where one fits, since one vocabulary across the three logs is 
 | ID | Date | Event | Thread | Tags | Note |
 |----|------|-------|--------|------|------|
 | IMP-2026-10-26-install-unreleased-label | 2026-10-26 | opened | `install-path` | `#template` `#distribution` | `install-path` finding 7: label an unreleased skeleton honestly. First use of implementation packages. |
+| IMP-2026-10-26-install-unreleased-label | 2026-10-26 | accepted | `install-path` | | `install.sh` now records `T`, `T+<sha>` or `T+<sha>-dirty` and says so when unreleased; `bootstrap-test.sh` gates all three; `upgrade-template.md` step 1 explains the suffix. Review `reviews/package__20261026T2255Z.md`. Closes `install-path` finding 7. Four steps on a cheaper executor, each accepted first time after a re-run. |

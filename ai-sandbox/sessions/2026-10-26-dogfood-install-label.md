@@ -1,6 +1,6 @@
 # 2026-10-26 · Dogfooding implementation packages on the install-label fix
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Participants:** author — claude-opus-5-5
 - **Signed off:** no
@@ -85,3 +85,111 @@ S-03 had run. It was corrected before release, to count only S-02's own `version
 `plan-implementation.md` step 3 gains the general form: a gate tests its own step, and whole-suite
 gates belong on a final step that depends on all the others.
 
+**Execution, round 1: S-01 and S-03 in parallel.** Two Haiku executors, each in its own git
+worktree, were given only the playbook's path, the step, and four environment facts. Each claimed,
+worked, reported `passed`, and committed three commits on its own branch. Each listed its
+difficulties, as asked.
+
+- **`IMP-2026-10-26-install-unreleased-label/S-01`** was accepted after an independent re-run at
+  `8592660`, in a detached worktree. The re-run gave 1 `ok` and 2 `FAIL`, matching the report.
+  Fast-forwarded into `next`. Review `reviews/S-01__20261026T2200Z.md`.
+- **`IMP-2026-10-26-install-unreleased-label/S-03`** was accepted after a re-run at `615a7eb` and a
+  reading against design §2.4. Merged into `next`. Review `reviews/S-03__20261026T2210Z.md`.
+- The parallel work produced no conflicts: disjoint files, separate worktrees. S-02 was then
+  dispatched the same way.
+
+**Dogfood findings 3–11, from the executors' reports and the reviews:**
+
+3. **A vacuous gate.** S-03's G-03-2 checked the working tree for changes to a file. That is clean
+   at any commit, so the gate could not fail once the work was committed. A gate must still mean
+   something when a reviewer re-runs it at the report's commit. State it against a commit range or
+   against content, not against working-tree cleanliness. The fault was in the card.
+4. **No base ref.** Both executors' worktrees started from the default branch, where neither the
+   playbook nor the package exists. Both fast-forwarded to `next` themselves. The plan header's
+   `Runtime:` said *on branch `next`*, but `execute-step.md` never tells the executor to check out
+   the plan's base. That needs a field, or a step zero.
+5. **Who writes the session record.** `execute-step.md` step 2 tells the executor to name the step
+   in its session record. An executor running inside another session, as a subagent, has no
+   session record of its own, and was told not to edit the coordinator's. The playbook must say
+   that such an executor reports to the hosting session, which records the step.
+6. **The order behind `Commit:`.** Neither the playbook nor the template says to commit the work
+   before running the gates, or that claim, work and close are separate commits. Both executors
+   inferred the same order: claim, then work, gates run against the work commit, then close.
+   That order should be written down.
+7. **`Evidence:` for gates that produce only output.** Both wrote `—`. The template should say that
+   `—` is right when the observed values in *Gates* are the whole evidence.
+8. **Attribution.** The coordinator gave the first two executors a trailer naming the wrong model.
+   This was the coordinator's error, not the template's, and it was corrected for S-02. The report's
+   `Executor:` field carried the true model in both cases.
+9. **`./check.sh` in an unreleased repository.** It is only true of the template repository while
+   dogfooding, where the root's copy lags `skeleton/`. Not a template defect.
+10. **Design imprecision found by a judgement review.** §2.4 places the risk of a `+<sha>` install in
+    the hash comparison. The project's own hashes match it, and the risk is in migrations that
+    assume `v<x>`'s files. The paragraph was accepted as cautious rather than wrong, and the point is
+    recorded in the review for the next edit of `upgrade-template.md`.
+11. **Card authoring.** S-01's gates grep for an exact message format, which the card stated only
+    by example. One executor also found the *Stop if* for case 1 ambiguous: does a `bad` line count
+    as stopping? `plan-implementation.md` should say that when a gate greps output, the card states
+    the exact format the step must produce, and that *Stop if* names an observable condition.
+
+The template edits for 3–7 and 11 wait until the package is accepted. S-04's gate expects the
+hash list to change by exactly one line, and editing mechanism files mid-package would break it for
+a reason outside the step: finding 2's coupling, met again.
+
+**Execution, round 2.**
+
+- **`IMP-2026-10-26-install-unreleased-label/S-02`** was accepted after a re-run at `df89093`. The
+  same run showed two hash failures caused by S-03's edit, and S-02's narrowed gate passed
+  correctly through them. Finding 2's fix, observed working.
+- **`IMP-2026-10-26-install-unreleased-label/S-04`** was accepted after a re-run at `67ee69b`.
+- The package was accepted against its design. Review `reviews/package__20261026T2255Z.md`, and an
+  `accepted` row in the log.
+- §2.4, which no gate covered, was checked directly. An install from `next` recorded
+  `v3.6.0+67ee69b` and printed the `unreleased:` line, and that project's `check.sh` reported
+  `ok all match v3.6.0+67ee69b`.
+- All four executor worktrees were removed after merging. Each was checked to be clean and merged
+  first.
+
+**Dogfood findings 12–13:**
+
+12. **A report true in its gates and false in its notes.** S-04's executor wrote that the bootstrap
+    run *had FAIL lines that the gate does not look at*. The reviewer's re-run counted zero, and
+    `pass` already implies zero. Every gate line was correct. A hallucination in prose, where no
+    check reaches, caught only by re-running. This is the author's caveat 2, observed once.
+13. **A package review has no single attempt.** Its `Run reviewed:` was written as prose, and the
+    link check reported each word as a missing file. The record was corrected before commit, to
+    `Run reviewed: —` plus a `Reviews:` field listing the step reviews, which the check now also
+    resolves.
+
+**Folded back into the template**, after acceptance so that no step's gate was disturbed:
+
+| Finding | Change |
+|---|---|
+| 3 | gates must hold when re-run at the report's commit: test content or a commit range |
+| 4 | `Base:` in the plan header; step 0 of `execute-step.md`, start from it |
+| 5 | an executor inside another session names it in `Session:` and reports back, without editing it |
+| 6 | three commits (claim, work, close); the work is committed before the gates run, and `Commit:` is that commit; the claim file is closed in place |
+| 7 | `Evidence: —` when the observed values are the whole evidence |
+| 11 | a gate that reads output gets the exact output stated; `Stop if:` names an observable condition |
+| 12 | review checks a report's notes against the re-run |
+| 13 | the package-review shape in the review template and playbook |
+
+Field guidance was put in each template's blockquote, not in field values. A placeholder left in a
+link field would otherwise be split into words by the link check: finding 13's mechanism,
+anticipated. `bootstrap-test.sh` passes. `ADR-014`'s consequences and *Does not license* were
+updated with what the dogfood showed. It stays `proposed` and uncommitted until the author signs it.
+
+**Not changed:** finding 8 (attribution, the coordinator's error), finding 9 (only true of this
+repository while dogfooding), and finding 10 (recorded in S-03's review for the next edit).
+
+## Decisions
+
+- Design approved by esdevop. Executors on a cheaper model, in parallel worktrees. The coordinator
+  reviews each attempt by re-running its gates.
+- Findings folded into the template only after the package was accepted.
+- `ADR-014` stays uncommitted until signed off.
+
+## Next
+
+The author reads and signs `ADR-014`. Then `v3.7.0`: the root raised, `main` fast-forwarded, issue
+#2 closed.
