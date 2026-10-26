@@ -467,7 +467,7 @@ else
     # Session paths resolve from ai-sandbox/, package paths from the package directory.
     for r in $(git status --porcelain --untracked-files=all -- "$d" 2>/dev/null | awk '{print $NF}'); do
       [ -f "$r" ] || continue
-      for fld in 'Session' 'Sessions' 'Plan' 'Design' 'Run reviewed' 'Supersedes'; do
+      for fld in 'Session' 'Sessions' 'Plan' 'Design' 'Run reviewed' 'Reviews' 'Supersedes'; do
         for ref in $(grep -m1 -E "^[-*] \*\*$fld:\*\*" "$r" | sed "s/^[-*] \*\*$fld:\*\*//" | tr -d '`,'); do
           case "$ref" in —|-|'<'*|'|') continue;; esac
           [ -e "$ref" ] || [ -e "$SB/$ref" ] || [ -e "$d/$ref" ] \

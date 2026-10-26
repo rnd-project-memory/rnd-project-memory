@@ -12,6 +12,8 @@
 > Another attempt is another file, so a failed attempt keeps what it observed. Another executor's
 > `running` file is not yours to change.
 >
+> `Evidence:` is `—` when the observed values under *Gates* are the whole evidence.
+>
 > Every gate in the card gets a line. `passed` means every gate is `pass`. Observed values are
 > copied from the output, not paraphrased. On `fail` or `not run`, say what blocked it and what
 > was tried: the next attempt starts from that, not from a repeat.

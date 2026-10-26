@@ -9,6 +9,11 @@ accepting what an executor produced. Packages are opened and plans released by
 card was written to be enough. Where it is not, that is a `blocked` report, not a reason to read
 further and decide.
 
+## 0. Start from the plan's base
+
+Bring your clone or worktree to the plan header's `Base:` before reading anything else. A
+worktree created from the default branch may not contain the package, or this playbook, at all.
+
 ## 1. Pick a step
 
 `./check.sh` lists each open package's steps with a derived state. Take a step marked `ready`: no
@@ -19,8 +24,14 @@ if there is no revision.
 ## 2. Claim it
 
 Create `runs/S-<nn>__<YYYYMMDD>T<HHMM>Z.md` from `implementations/_TEMPLATE/run.md`, in UTC, with
-`Status: running` and `Session:` naming this session's record. In the session record, name the
-step as `IMP-<YYYY-MM-DD>-<slug>/S-<nn>`, so a search finds the attempt from either side. Commit it, or push it, if other executors work in other clones.
+`Status: running` and `Session:` naming the session record this attempt runs under. That record
+names the step as `IMP-<YYYY-MM-DD>-<slug>/S-<nn>`, so a search finds the attempt from either side.
+**If you run inside another session**, as a subagent dispatched by a coordinator, that session's
+record is the coordinator's to write. Name it in `Session:`, do not edit it, and report the step
+back for the coordinator to record.
+
+**Three commits, in order:** the claim; then the work; then the closed report. The claim file is
+the report, so it is closed in place, and it is immutable from that commit on. Commit it, or push it, if other executors work in other clones.
 
 **Another executor's `running` file is not yours to change.** It is either live in parallel or was
 cut short, and only the person can say which, the same rule as session files (`RULES.md`). Pick
@@ -47,7 +58,9 @@ from the output.
   `blocked` if something outside the step stopped it.
 - **On `fail` or `not run`, record what blocked it and what was tried.** The next attempt starts
   from that, not from a repeat of yours.
-- Fill `Commit:`, the commit the gates ran against, and `Evidence:`, the files the gates produced.
+- Commit the work **before** running the gates, and put that commit in `Commit:`, so a reviewer
+  can re-run them at exactly what you ran them on. Fill `Evidence:` with the files the gates
+  produced, or `—` when the observed values under *Gates* are the whole evidence.
 - Run `./check.sh` before committing. While the report is uncommitted, it catches a `passed` with a
   failing gate, a commit that does not exist, and an evidence path that does not.
 
@@ -68,10 +81,13 @@ continue.
 
 1. Re-run the reviewed attempt's gates against its `Commit:`, without reading its claims first.
 2. Compare what you observe with what it reported. Check its `Evidence:` exists and says what the
-   gate expects.
+   gate expects. Then read its notes, and check any factual claim in them against the re-run. No
+   check reaches prose, and a report can be right in every gate line and wrong in a note.
 3. For a judgement step, judge the result against the design sections its card cites.
 4. Write `reviews/S-<nn>__<YYYYMMDD>T<HHMM>Z.md` from `implementations/_TEMPLATE/review.md`:
-   `accepted`, or `rejected` with what a new attempt must change.
+   `accepted`, or `rejected` with what a new attempt must change. The review of a whole package,
+   `reviews/package__…`, has no single attempt. Its `Run reviewed:` is `—`, and `Reviews:` lists
+   the step reviews it rests on.
 
 A reviewer of the same model family as the executor is not independent (`CONFIGURATIONS.md`). The
 re-run is what makes a review worth more than the report. Its verdict does not license promotion
