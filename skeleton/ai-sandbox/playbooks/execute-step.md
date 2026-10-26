@@ -79,16 +79,40 @@ continue.
 
 ## Reviewing an attempt
 
-1. Re-run the reviewed attempt's gates against its `Commit:`, without reading its claims first.
-2. Compare what you observe with what it reported. Check its `Evidence:` exists and says what the
-   gate expects. Then read its notes, and check any factual claim in them against the re-run. No
-   check reaches prose, and a report can be right in every gate line and wrong in a note.
-3. For a judgement step, judge the result against the design sections its card cites.
-4. Write `reviews/S-<nn>__<YYYYMMDD>T<HHMM>Z.md` from `implementations/_TEMPLATE/review.md`:
-   `accepted`, or `rejected` with what a new attempt must change. The review of a whole package,
-   `reviews/package__…`, has no single attempt. Its `Run reviewed:` is `—`, and `Reviews:` lists
-   the step reviews it rests on.
+The re-run is the review. A report says what the executor saw, and a re-run says what is true of
+the commit it names. Only the second can be accepted.
+
+1. **Check out exactly the report's `Commit:`, clean and separate**, for example
+   `git worktree add --detach <tmp> <sha>`. Never re-run in the executor's working tree. A gate
+   that passed on uncommitted work, under a `Commit:` that lacks it, passes again there and proves
+   nothing. In a clean checkout it fails, and that failure is the finding.
+2. **Re-run every gate before reading the reported values.** Then compare. Where a value
+   legitimately differs between runs, such as a sha made fresh by the gate itself or a timestamp,
+   compare its shape, and say so in the review.
+3. **Read the commit's diff against the card.** Does it stay inside `Produces:` and clear of
+   `Do not:`? A gate tests the result, not what else was touched.
+4. **Ask whether each gate could have failed.** A gate that passes at any commit, such as one
+   checking working-tree cleanliness, proves nothing. Re-run it in the form it should have had, and
+   record the defect as the card's, not the executor's.
+5. **Check `Evidence:`**: it exists and says what the gate expects.
+6. **Check the notes against the re-run.** No check reaches prose, and a report can be right in
+   every gate line and wrong in a note.
+7. For a judgement step, judge the result against the design sections its card cites.
+8. Write `reviews/S-<nn>__<YYYYMMDD>T<HHMM>Z.md` from `implementations/_TEMPLATE/review.md`:
+   `accepted`, or `rejected` with what a new attempt must change. Record where the re-run ran and
+   what it observed. Remove the checkout afterwards.
+
+### Reviewing the whole package
+
+Every step `accepted` does not mean the design is delivered. A design section no gate covered is
+not checked by any of them.
+
+- Write `reviews/package__<YYYYMMDD>T<HHMM>Z.md`. Its `Run reviewed:` is `—`, and `Reviews:` lists
+  the step reviews it rests on.
+- Map every design section to what delivered it and how that was checked, as a table.
+- **For each section no gate covers, check it directly now**, and record how.
 
 A reviewer of the same model family as the executor is not independent (`CONFIGURATIONS.md`). The
-re-run is what makes a review worth more than the report. Its verdict does not license promotion
-to `docs/` on its own. That still goes through `promote.md` at package acceptance.
+re-run, a check of a different kind, is what makes a review worth more than the report. Its verdict
+does not license promotion to `docs/` on its own. That still goes through `promote.md` at package
+acceptance.
