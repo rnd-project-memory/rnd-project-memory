@@ -2,6 +2,31 @@
 # BLOCKING. The one rule a later edit cannot repair: once a secret is committed
 # it is in git history on every clone. Install: git config core.hooksPath .githooks
 set -u
+
+# Identity: blocking, but only once the project lists who may commit, in .githooks/identity.allow.
+# Commit metadata is published with the history and cannot be withdrawn, like a secret. An empty
+# list means no check, so a project that has not opted in sees no false positive, and none
+# tempts --no-verify. Checked before anything else, since a commit with nothing staged still
+# records who made it.
+allowlist=$(grep -vE '^[[:space:]]*(#|$)' .githooks/identity.allow 2>/dev/null | tr -d '[:blank:]')
+if [ -n "$allowlist" ]; then
+  for who in AUTHOR COMMITTER; do
+    e=$(git var "GIT_${who}_IDENT" | sed -n 's/.*<\(.*\)>.*/\1/p' | tr '[:upper:]' '[:lower:]')
+    ok=0
+    while IFS= read -r pat; do
+      pat=$(printf '%s' "$pat" | tr '[:upper:]' '[:lower:]')
+      # shellcheck disable=SC2254
+      case "$e" in $pat) ok=1; break;; esac
+    done <<< "$allowlist"
+    if [ "$ok" -eq 0 ]; then
+      echo "BLOCKED: $(printf '%s' "$who" | tr '[:upper:]' '[:lower:]') <$e> is not listed in .githooks/identity.allow"
+      echo "  Identity metadata is published with the history and cannot be withdrawn."
+      echo "  Fix it, do not bypass it:  git config user.email <a listed address>"
+      exit 1
+    fi
+  done
+fi
+
 staged=$(git diff --cached --name-only --diff-filter=ACM)
 [ -z "$staged" ] && exit 0
 fail=0

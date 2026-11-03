@@ -161,6 +161,25 @@ The one rule here whose violation a later edit cannot repair. Once committed, th
 git history on every clone, and removal means rewriting history everywhere. Default every source
 to `reference-only`; committing is the deliberate exception.
 
+### Identities are guarded like secrets, but only where a project opts in
+
+Author, committer and tagger are published with every commit and tag, and no later edit
+withdraws them. Rewriting history changes every hash after the point of rewrite and still leaves
+the old objects in existing clones and in the host's caches. That is the secret scan's class of
+failure: detectable before publishing, unrecoverable after. Under `ADR-013` that calls for a
+blocking hook and a rule. The hooks are `pre-commit` for the commit being made, and `pre-push` for
+every commit and tag being published, which also covers rebased commits, commits made before the
+list existed, and tags.
+
+The cause is quiet. A clone with no local identity takes the global one, which on a work machine
+is the work address. A public repository worked on from that machine leaks it with the first
+commit, and nothing errors.
+
+**Opt-in is what keeps it alive.** The list ships empty, and an empty list checks nothing. A check
+that fires on a project that never asked for it would be answered with `--no-verify`, and that
+flag also disables the secret scan sharing the hook. A listed identity matches exactly or by an
+explicit glob, so there is no heuristic to misfire.
+
 ### A thread's checkpoint exists only while something is unpromoted and unclosed
 
 The obvious rule is "open a checkpoint when a thread pauses", and it fails on the thread that

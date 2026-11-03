@@ -96,6 +96,7 @@ mechanism  docs/techniques/_TEMPLATE.md
 # data and never sourced; the core list is inline and cannot go missing. Keeping this file
 # hashable matters more than for any other entry: it is the file you most need to know is intact.
 mechanism  .githooks/pre-commit
+mechanism  .githooks/pre-push
 
 # ─── profile: substituted per stack ──────────────────────────────────────────
 profile    ai-sandbox/DATA_ENVIRONMENT.md
@@ -105,6 +106,7 @@ profile    ai-sandbox/DATA_ENVIRONMENT.md
 # matches every line) and discards the whole file if it does not compile (a malformed pattern
 # makes grep exit 2, which reads as "found nothing" and would silently disable the scan).
 profile    .githooks/patterns.profile
+profile    .githooks/identity.allow
 
 # ─── scaffold: seeded once, the project's own thereafter ─────────────────────
 # The register and index files below carry an upstream preamble above project entries. They

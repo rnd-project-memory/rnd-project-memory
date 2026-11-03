@@ -286,6 +286,7 @@ fi
 
 [ -f "$dest/ai-sandbox/CHECKPOINT-thread.md" ] \
   && left "name your first thread: rerun with a fourth argument, or rename ai-sandbox/CHECKPOINT-thread.md by hand and set Held by:"
+left "if the repository is public, list who may commit in .githooks/identity.allow — it ships empty, which checks nothing"
 left "delete sources/ and src/ if the project already keeps those somewhere, under any name"
 left "verify instruction loading in a fresh assistant session — it cannot be checked from"
 echo "        inside the session that wrote AGENTS.md, which is why no script does it"

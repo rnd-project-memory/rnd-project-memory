@@ -71,6 +71,13 @@
 - Search before concluding something is unknown: `rg -i "<topic>" ai-sandbox/*/LOG.md docs/`.
 - Every number that enters `docs/` carries a date and a source.
 - Never commit credentials, tokens, PII, or raw extracted data. See `ai-sandbox/SOURCES.md`.
+- **Commit, tag and push only as an identity `.githooks/identity.allow` lists, once it lists any.**
+  Author, committer and tagger are published with the history and cannot be withdrawn by a later
+  edit, like a secret. A clone with no local `user.email` inherits the global one silently, and on
+  a work machine that is the work address. When the hook blocks on identity, fix
+  `git config user.email` (and `user.name`). Never bypass it with `--no-verify`, and never
+  add an address to the list just to get past it. Listing who may commit is the project owner's
+  call: ask.
 
 ## Procedures
 

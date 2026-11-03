@@ -296,6 +296,41 @@ else
   bad "install with a non-conflicting existing README failed"
 fi
 
+say "Identity guard gate"
+# Published identity metadata cannot be withdrawn, so the guard blocks. It must stay silent until a
+# project lists anyone, since a check firing on a project that never asked teaches --no-verify,
+# and must block both at commit and at push once a list exists.
+case "$out" in
+  *"identity guard off"*) ok "the identity guard ships off, with an empty list";;
+  *) bad "check.sh does not report the identity guard as off on a fresh install";;
+esac
+idr=$(mktemp -d) || exit 1
+git init -q --bare "$idr/remote.git"
+git -C "$dest" remote add idtest "$idr/remote.git"
+cp "$dest/.githooks/identity.allow" "$idr/allow.orig"
+printf 'someone@else.invalid\n' >> "$dest/.githooks/identity.allow"
+printf 'x\n' > "$dest/identity-fixture.txt"; git -C "$dest" add identity-fixture.txt
+if (cd "$dest" && git commit -qm "identity fixture" >/dev/null 2>&1); then
+  bad "a commit by an unlisted identity was not blocked"
+else
+  ok "a commit by an unlisted identity is blocked"
+fi
+printf '*@EXAMPLE.invalid\n' >> "$dest/.githooks/identity.allow"
+(cd "$dest" && git commit -qm "identity fixture" >/dev/null 2>&1) \
+  && ok "a commit by a listed identity, matched by glob and case-insensitively, passes" \
+  || bad "a commit by a listed identity was blocked"
+(cd "$dest" && GIT_COMMITTER_EMAIL=tagger@else.invalid GIT_COMMITTER_NAME=t git tag -a idtag -m t)
+if (cd "$dest" && git push -q idtest idtag >/dev/null 2>&1); then
+  bad "a tag by an unlisted tagger was pushed"
+else
+  ok "a tag by an unlisted tagger is blocked at push"
+fi
+(cd "$dest" && git push -q idtest HEAD:refs/heads/main >/dev/null 2>&1) \
+  && ok "commits by a listed identity push" \
+  || bad "a push of listed commits was blocked"
+git -C "$dest" tag -d idtag >/dev/null; git -C "$dest" remote remove idtest
+git -C "$dest" reset -q --hard HEAD~1; cp "$idr/allow.orig" "$dest/.githooks/identity.allow"; rm -rf "$idr"
+
 say "Version label gate"
 # The first field of .template-version must say what the install was made from. Expected values
 # come from the clone's own git output, not from re-deriving the installer's logic.

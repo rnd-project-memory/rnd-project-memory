@@ -1,0 +1,13 @@
+# Identities allowed to author, commit, tag and push in this repository: one per line.
+# An exact address, or a shell glob such as *@example.org. Blank lines and # comments are ignored.
+#
+# EMPTY, AS SHIPPED, MEANS NO IDENTITY CHECK. List an identity here and the hooks block any other:
+# .githooks/pre-commit for the commit being made, .githooks/pre-push for every commit and tag being
+# published.
+#
+# Why it exists. Commit metadata (author, committer, tagger) is published with the history and
+# cannot be withdrawn by a later edit, exactly like a committed secret. A clone with no local
+# identity silently inherits the global one: on a work machine, the work address. A public
+# repository worked on from such a machine needs this list. See ai-sandbox/RULES.md.
+#
+# Read as data, never sourced.

@@ -29,14 +29,21 @@ hook *file* travels with the repository; the setting that runs it does not. A fr
 anything is off. Every contributor runs these once, per clone:
 
 ```bash
-git config core.hooksPath .githooks        # runs the secret scan — nothing else does
+git config core.hooksPath .githooks        # runs the secret scan and the identity guard
 git config user.email "you@example.org"    # this clone's identity
 ```
+
+**If this repository is public**, list who may commit in `.githooks/identity.allow`, one address
+or glob per line. It ships empty, which checks nothing. Once it lists anyone, `pre-commit` and
+`pre-push` block every other author, committer and tagger, because published identity metadata
+cannot be withdrawn (`ai-sandbox/RULES.md`). The trap it closes: a clone with no local
+`user.email` inherits the global one, which on a work machine is the work address.
 
 **Assistant: check both at session start**, before other work. `./check.sh` reports them in its
 first section. If the hooks path is unset, say so and stop there — until it is set, the one check
 whose failure a later edit cannot repair is not running. If `user.email` is empty, ask for it;
-never infer it from commit history or from another file.
+never infer it from commit history or from another file. If `check.sh` reports that `user.email`
+is not in `.githooks/identity.allow`, stop and ask. Do not add the address to the list yourself.
 
 If the project has CI, run the same secret scan there as well. It is the only layer that does not
 depend on how an individual clone is configured.

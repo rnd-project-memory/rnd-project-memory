@@ -728,6 +728,16 @@ This is the one rule in the system where a mistake is not repaired by editing a 
 committed, the content lives in git history, and removing it means rewriting history on every
 clone. Treat `reference-only` as the default and `committable` as the deliberate exception.
 
+**Identity metadata is the same class of mistake, and easier to make.** Author, committer and
+tagger are published with every commit and tag. A clone with no local `user.email` inherits the
+global one without a word, which on a work machine is the work address. The content scan never
+reads metadata. A project whose repository is public lists who may commit in
+`.githooks/identity.allow`. It ships empty, and empty checks nothing. Once it lists anyone,
+`pre-commit` blocks any other committing identity and `pre-push` any other author, committer or
+tagger about to be published (`RULES.md`). Unlike `core.hooksPath`, the list is a tracked file, so
+it reaches every clone. This repository learned it the expensive way: a work identity in published
+commits and tags, removed only by rewriting all history after it (`ADR-015`).
+
 The template does not decide whether generic data-file extensions or a `data/` directory are
 ignored: that policy belongs to the adopting project, whose patterns go above the `.gitignore`
 upstream marker. The blocking pre-commit data-file check is separate: visibility in Git does not
@@ -1132,7 +1142,8 @@ deliberately different severity:
 | Artifact | Checks | Mode |
 |----------|--------|------|
 | `check.sh` | This clone's `core.hooksPath` and `user.email`, reported first · each checkpoint's `Held by:` against this clone's identity · unfilled `<<FILL: …>>` install blanks · mechanism files against their released hashes · retired vocabulary from past MAJORs · `skeleton/` vs `.template-version` (self-hosting only) · the `.gitignore` upstream block · credential patterns supplied by the profile layer · checkpoint line limits · a checkpoint still the shipped template · `INDEX.md`'s *Current focus* past 15 lines · implementation packages: log against directories, plan structure, fixed files edited, uncommitted attempt reports against themselves, derived step states · dangling `[S-…]` / `[EXP-…]` citations · `Resolved` in registers · `Owner:` fields carrying an address · adoption notes · counters on session filenames not yet committed · session files missing a `LOG.md` row · sessions left open · `docs/` edited without `CLAIMS.md` · tag frequencies · numbers without dates · unverified experiments · stale publications · dictionary-field value distributions | **Always exits 0.** Advisory output only |
-| `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed | **Blocking** |
+| `.githooks/pre-commit` | Secret patterns, `gitleaks` if installed; the committing identity, once `.githooks/identity.allow` lists any | **Blocking** |
+| `.githooks/pre-push` | Author, committer and tagger of every commit and tag being published, once `.githooks/identity.allow` lists any | **Blocking** |
 
 They are separate on purpose. `check.sh` includes heuristics that will produce false positives —
 version strings read as undated numbers, for instance — and a noisy check sharing an exit code
