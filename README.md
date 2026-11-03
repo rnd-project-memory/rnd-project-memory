@@ -47,7 +47,7 @@ commits by default.
 
 ## Status
 
-`v3.8.0`. Nineteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.9.0`. Twenty releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -123,6 +123,14 @@ History was rewritten once, with a hash map left for every old citation. From no
 `.githooks/identity.allow` lists who may commit. `pre-commit` and a new `pre-push` block anyone
 else: author, committer and tagger, including tags and rebased commits. The list ships empty, and
 empty checks nothing, so a project that never opted in sees no false positive.
+
+**`v3.9.0` closes the design gaps the adopter's memory showed.** A choice too young for an ADR now
+has a home, `DECISIONS.md`. It is written when the choice is taken, while its reasons are fresh,
+and moved into an ADR once it has held: R&D decisions prove themselves by surviving, and by then
+nobody remembers why they were made. A stalled thread is deferred only by its holder, and only
+with a revisit date, where the adopter's assistant deferred everything every session. Sessions
+carry a `Mode:`. `CAVEATS.yaml` `severity:` measures what a miss costs. Register examples no longer
+pose as entries, and `check.sh` sees a half-removed install blank.
 
 What is still narrow: one adopting project besides these three starts and one more read after
 weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
