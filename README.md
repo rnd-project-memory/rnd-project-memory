@@ -49,7 +49,7 @@ commits by default.
 
 ## Status
 
-`v3.7.0`. Eighteen releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.8.0`. Nineteen releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -117,6 +117,14 @@ fix that makes `install.sh` label an unreleased skeleton honestly (`v3.6.0+<sha>
 a cheaper model, two in parallel, all accepted. Along the way, one executor's report proved right
 in every gate and false in a note, and only the reviewer's re-run caught it. Exercised so far on
 one small change, with no revision or branch.
+
+**`v3.8.0` guards identity like a secret** (`ADR-015`). This repository's published history carried
+two work identities, in commit and tag metadata and in one record's text. The content scan never
+reads metadata, and a clone with no local `user.email` inherits the global one without a word.
+History was rewritten once, with a hash map left for every old citation. From now on
+`.githooks/identity.allow` lists who may commit. `pre-commit` and a new `pre-push` block anyone
+else: author, committer and tagger, including tags and rebased commits. The list ships empty, and
+empty checks nothing, so a project that never opted in sees no false positive.
 
 What is still narrow: one adopting project besides these three starts and one more read after
 weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
