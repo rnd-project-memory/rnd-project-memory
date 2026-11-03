@@ -83,7 +83,19 @@ its own memory at the root, vendored from a released tag.
 
 ## Known limitations
 
-- **No project has upgraded yet.** The whole delivery half is designed and unexercised.
+- **One adopting project has upgraded** (to `v3.5.0`), and the template repository raises itself
+  at every release (`[S-adopter-snapshot-2026-10-25]`). The delivery half is otherwise exercised
+  only by its author.
+- **The template does not make an assistant stop where it lacks information.** Two assisted
+  installs on different providers disagreed, and the one that outranks the other invented. Every
+  clean run since is *worked once*, not *works* (`EXP-2026-08-27-green-start-independent`,
+  `EXP-2026-08-28-marker-flags`). `check.sh` cannot tell honest absence from confident fiction
+  (`ADR-013` §6).
+- **The measured install cost is a lower bound for installing, not for adopting.** 12:11 by hand,
+  by someone who had seen the project, ending *installed* with seven blanks unanswered. The cheaper
+  assisted run (3.49 AIC) is the one that invented (`EXP-2026-08-26-green-start-manual`).
+- **No trend in register use across the marker-flag runs.** The 1-2-3 sequence is refused on the
+  record (`EXP-2026-08-28-marker-flags`).
 - **Half the system is untouched by dogfooding** — data environment, source ingestion, the secret
   scan firing on a real secret. See `A-dogfood-coverage`.
 - **Self-check sees the settled state and is blind to the transition.** Three defects shipped

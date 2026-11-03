@@ -52,11 +52,10 @@ template's own rule says content that instructs falsely is worse than content th
 
 | Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
-| `install-path` | esdevop@gmail.com | active | 2026-08-26 |
 | `adopter-review` | esdevop@gmail.com | active | 2026-10-25 |
 
-Both threads hold work that has nowhere else to live yet. `install-path` covers installing the
-template, and `adopter-review` covers what real adopters' memories show.
+`adopter-review` holds what real adopters' memories show. `install-path` closed on 2026-11-03.
+Its prohibitions are in `docs/method.md`, and its last finding is `Q-prompt-phrasing-confound`.
 
 ---
 
@@ -66,8 +65,8 @@ template, and `adopter-review` covers what real adopters' memories show.
 > is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
 > This file loads into every session; `check.sh` reports this section past 15 lines.
 
-**Two threads are open.** `install-path` holds six open install findings, none needing an
-experiment. Its Gap 4 closed in `v3.8.0`: history rewritten, identity guard on (`ADR-015`).
+**One thread is open.** `install-path` closed on 2026-11-03: history rewritten, identity guard
+on (`ADR-015`, `v3.8.0`), and install findings fixed on `next`.
 `adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
 detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).
 `v3.7.0` shipped implementation packages (`ADR-014`, issue #2) and the configuration
@@ -87,10 +86,10 @@ need answers from outside this repository.
 
 ## Latest completed session
 
-2026-10-25: `v3.6.0` was cut and the root raised to it. `check.sh` now reports an over-long
-*Current focus*, an unrenamed checkpoint template and bare log tags, all from
-`[S-adopter-snapshot-2026-10-25]`. The same day `CHECKPOINT-install-path.md` was rewritten against
-`v3.5.0`, and its Gap 4 opened.
+2026-11-03: `install-path` closed. Work identities were removed from all published history, and an
+opt-in identity guard shipped in `v3.8.0` (`ADR-015`). Install findings 1–5 were fixed on `next`,
+unreleased. The thread's prohibitions moved to `docs/method.md`, and finding 6 became
+`Q-prompt-phrasing-confound`.
 
 ## What a new session does
 

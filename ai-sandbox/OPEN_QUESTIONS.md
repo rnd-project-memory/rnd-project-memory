@@ -1,6 +1,6 @@
 # rnd-project-memory — Open Questions
 
-- **Updated:** 2026-10-25
+- **Updated:** 2026-11-03
 
 > **Open questions only.** A question leaves this file in one of two ways, and both are
 > deletions — status `Resolved` is never used, because a register of resolved entries is one
@@ -208,6 +208,22 @@ resolve to a different question. A slug, once assigned, is never changed.
 
   Fine counts are recorded but do not decide. If this system prevents none of the three beyond the
   other arm, that is the answer.
+
+## Q-prompt-phrasing-confound · Does the request's wording change whether an assistant invents? 🟢
+
+- **Raised:** 2026-11-03 · **Owner:** esdevop (human)
+- **Source:** `install-path` finding 6, closed into this entry with the thread
+  (`sessions/2026-11-03-close-install-path-thread.md`)
+- **Question:** Across the green-start arms, provider, interface and prompt wording varied together.
+  *Create a project* invites completion, and *adopt this template* might not. Is part of what was
+  read as a provider difference actually a wording difference?
+- **Why it matters:** `docs/method.md` limits what may be claimed about the template stopping
+  invention. If wording alone moves the outcome, the install guide's suggested request is itself an
+  instrument, and the cheapest one to change.
+- **Progress:** None. Untested.
+- **What would answer it:** two runs on one provider and one interface, differing only in the
+  request's wording, with the coarse outcomes `EXP-2026-08-28-marker-flags` pre-registered:
+  invention, and register use.
 
 ## Q-oss-intake · Does the employer require an intake review for external open-source material? 🟡
 
