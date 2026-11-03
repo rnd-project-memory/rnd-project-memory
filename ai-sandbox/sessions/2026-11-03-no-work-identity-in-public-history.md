@@ -1,6 +1,6 @@
 # 2026-11-03 · No work identity in public history, now or later
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Participants:** author — claude-opus-5-5
 - **Signed off:** no
@@ -101,3 +101,41 @@ fix for a cost already paid, it ships at once under the branch rule.
 
 **Waiting on the author:** the sign-off of `ADR-015` and the `constraints.md` amendment, and the
 go-ahead for the force-push.
+
+**Sign-off and release.**
+
+- The author signed `ADR-015` in the file itself. My edit script expected the unsigned line,
+  failed on it, and a commit went ahead without the status change, because the commands were not
+  chained. That commit was unpublished, and it was amended: status `accepted`, plus two
+  `method.md` claims with `CLAIMS.md` rows.
+- `v3.8.0`, MINOR, on `93b6264`. The tag notes name the new `RULES.md` rule and the
+  `AGENTS.md` setup text.
+- Root raised. `check.sh`, `RULES.md`, `RATIONALE.md` and `pre-commit` were replaced, and
+  `pre-push` added and executable. The root's `AGENTS.md` now says the guard is on here, and
+  `check.sh` reports *identity guard on (1 listed); user.email is listed*.
+
+**Published.**
+
+- `main` was fast-forwarded to `next`, and both were force-pushed with all 19 tags. The new
+  `pre-push` checked every commit and tag going out, and passed them. That was its first real use.
+- Verified from a fresh mirror clone of the remote: 118 commits and 21 refs; no occurrence of
+  either address or either name in any object; every author, committer and tagger
+  `esdevop@gmail.com`; the old `main` tip not reachable.
+
+**Left for the author**, outside this repository:
+
+- ask GitHub Support to purge cached views of the unreferenced old commits;
+- check whether any issue or comment links an old commit, since such links keep it reachable;
+- re-clone, or reset, any other clone made before 2026-11-03;
+- delete the backup bundle in the session scratchpad when no longer wanted. It contains the
+  identities.
+
+## Decisions
+
+- Option A, the rewrite, and the opt-in guard, as the author decided. `ADR-015` accepted.
+- One closed record edited, minimally and visibly, under the binding constraint.
+- `v3.8.0` released at once, as a fix for a cost already paid.
+
+## Next
+
+`install-path` findings 1–6, then the `adopter-review` design gaps.

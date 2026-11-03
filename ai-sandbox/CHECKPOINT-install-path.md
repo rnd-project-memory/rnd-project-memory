@@ -17,7 +17,8 @@
   seen the project before, with seven blanks unanswered at the endpoint. Do not treat `3.49 AIC`
   as a saving against it: the cheap run is the one that invented. Do not revive the 1-2-3
   register-entry trend; it is refused on the record in `EXP-2026-08-28-marker-flags`. Do not
-  rewrite published history to remove the work identity until that is decided (Gap 4).
+  restore or re-publish anything from the pre-2026-11-03 backup bundle: it carries the work
+  identities (Gap 4).
 
 > This file belongs to one thread, named for what is being worked on. Only whoever it names as
 > `Held by:` writes it. Rewritten, never appended; only what is unsettled.
@@ -82,13 +83,12 @@ assisted. The half that repeats every session has never been timed by hand: a se
 written, a checkpoint rewritten, the registers swept. That is where the availability dependency
 actually lives, and it is why the question is still open with its install half answered.
 
-### Gap 4 — a work identity in published history (priority: high, in progress)
+### Gap 4 — closed 2026-11-03, with residue outside the repository
 
-Decided on 2026-11-03 by the author: rewrite (option A), plus an opt-in identity guard in the
-template and this repository. Rewritten locally and verified clean: 21 commits and 4 tags affected
-across two work addresses, and one record redacted. `ADR-015` is drafted. **Not yet pushed.** The
-author signs `ADR-015`, then `v3.8.0` is cut and `main`, `next` and the tags are force-pushed
-(`sessions/2026-11-03-no-work-identity-in-public-history.md`).
+The history was rewritten and force-pushed, the identity guard shipped in `v3.8.0` and is on
+here, and `ADR-015` is accepted. The verified state is in
+`sessions/2026-11-03-no-work-identity-in-public-history.md`. What remains is the author's, at the
+host: a cache-purge request to GitHub Support, and any old-commit links in issues.
 ---
 
 ## Promotion candidates
