@@ -94,6 +94,9 @@ its own memory at the root, vendored from a released tag.
 - **The measured install cost is a lower bound for installing, not for adopting.** 12:11 by hand,
   by someone who had seen the project, ending *installed* with seven blanks unanswered. The cheaper
   assisted run (3.49 AIC) is the one that invented (`EXP-2026-08-26-green-start-manual`).
+- **Adopter evidence rests on one project, one author, one snapshot.** What the adopter review
+  found is a failure observed once, which licenses a fix, never a claim about adopters in general
+  (`ADR-013` §3; `[S-adopter-snapshot-2026-10-25]`).
 - **No trend in register use across the marker-flag runs.** The 1-2-3 sequence is refused on the
   record (`EXP-2026-08-28-marker-flags`).
 - **Half the system is untouched by dogfooding** — data environment, source ingestion, the secret

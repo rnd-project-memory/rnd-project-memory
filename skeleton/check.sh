@@ -286,17 +286,18 @@ for f in "$SB"/CHECKPOINT-*.md; do
 done
 [ "$stalled" -eq 0 ] && echo "  none"
 
-n "Working decisions ripe for an ADR (held 28+ days)"
+n "Working decisions ripe for an ADR (held 60+ days)"
 # DECISIONS.md takes a choice when it is made, while its reasons are fresh. It matures by holding:
 # days since Decided:, which a revision resets. Ripe entries are listed for the holder to move
-# into an ADR, or to revise. 28 days is a starting guess, not a measurement. Not a warning: the
+# into an ADR, or to revise. 60 days, the author's choice: R&D decisions prove themselves over
+# months, and a shorter wait lists choices still being tried. Not a warning: the
 # list empties when entries move or change.
 ripe=$(awk -v now="$(date +%s)" '
   /^## D-/ { id = $2 }
   id && /^[-*] \*\*Decided:\*\*/ {
     if (match($0, /[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
       d = substr($0, RSTART, RLENGTH); cmd = "date -d " d " +%s"; cmd | getline t; close(cmd)
-      age = int((now - t) / 86400); if (age >= 28) printf "  ripe  %s: held %d days\n", id, age
+      age = int((now - t) / 86400); if (age >= 60) printf "  ripe  %s: held %d days\n", id, age
     }
     id = ""
   }' "$SB/DECISIONS.md" 2>/dev/null)

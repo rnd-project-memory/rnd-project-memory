@@ -93,3 +93,4 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | The template does not make an assistant stop where it lacks information | `docs/method.md` | 2026-11-03 | `EXP-2026-08-27-green-start-independent`, `EXP-2026-08-28-marker-flags` |
 | The measured install cost is a lower bound for installing, not for adopting | `docs/method.md` | 2026-11-03 | `EXP-2026-08-26-green-start-manual` |
 | No trend in register use across the marker-flag runs | `docs/method.md` | 2026-11-03 | `EXP-2026-08-28-marker-flags` |
+| Adopter evidence rests on one project, one author, one snapshot | `docs/method.md` | 2026-11-03 | `ADR-013`, `S-adopter-snapshot-2026-10-25` |

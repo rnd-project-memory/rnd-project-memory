@@ -53,10 +53,10 @@ template's own rule says content that instructs falsely is worse than content th
 
 | Thread | Held by (`user.email`) | Status | Since |
 |--------|---------|--------|-------|
-| `adopter-review` | esdevop@gmail.com | active | 2026-10-25 |
 
-`adopter-review` holds what real adopters' memories show. `install-path` closed on 2026-11-03.
-Its prohibitions are in `docs/method.md`, and its last finding is `Q-prompt-phrasing-confound`.
+No thread is open. `install-path` and `adopter-review` both closed on 2026-11-03. Their
+prohibitions are in `docs/method.md` and `docs/constraints.md`. `install-path`'s last finding is
+`Q-prompt-phrasing-confound`.
 
 ---
 
@@ -66,9 +66,8 @@ Its prohibitions are in `docs/method.md`, and its last finding is `Q-prompt-phra
 > is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
 > This file loads into every session; `check.sh` reports this section past 15 lines.
 
-**`adopter-review` has shipped every gap**, through `v3.9.0`, and is ready to close once its
-prohibitions have a home. `install-path` closed on 2026-11-03. History was rewritten and the
-identity guard is on (`ADR-015`).
+**No thread is open.** Both closed on 2026-11-03, with everything they found shipped through
+`v3.9.0`. On `next`, unreleased: working decisions ripen at 60 days.
 
 **`Q-positioning-against-prior-art` 🔴** is the live question: does this add anything over
 shipped memory and spec-driven tools, settled by a pre-registered comparison.
@@ -78,10 +77,9 @@ shipped memory and spec-driven tools, settled by a pre-registered comparison.
 
 ## Latest completed session
 
-2026-11-03: `v3.9.0` released. A working-decisions register (`DECISIONS.md`), deferrals that need a
-human and a revisit date, `Mode:` on sessions, severity by consequence, register examples as
-blockquotes, and the install findings. `install-path` closed earlier the same day. `adopter-review`
-has shipped every gap and is ready to close.
+2026-11-03: `adopter-review` closed, its scope limit moved to `docs/method.md`. Working decisions
+ripen at 60 days, the author's choice (`D-decisions-ripen-at-60-days`), on `next` for the next
+release. Earlier the same day: `v3.9.0`, and `install-path` closed.
 
 ## What a new session does
 

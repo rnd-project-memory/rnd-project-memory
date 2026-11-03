@@ -21,8 +21,8 @@
 > - **Drop** a decision that was abandoned: delete it.
 >
 > Moving and dropping both delete, and the `sessions/LOG.md` row names the outcome. `check.sh`
-> lists entries that have held unchanged for 28 days as ripe for an ADR. That number is a starting
-> guess, not a measurement.
+> lists entries that have held unchanged for 60 days as ripe for an ADR. R&D decisions prove
+> themselves over months, and a shorter wait would list choices still being tried.
 >
 > **IDs are slugs**, `D-<slug>`, named for what was chosen. `Decided … by:` takes a human name. When
 > none was given, ask the user who decided. The assistant is never the one who decided.

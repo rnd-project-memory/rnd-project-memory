@@ -21,8 +21,8 @@
 > - **Drop** a decision that was abandoned: delete it.
 >
 > Moving and dropping both delete, and the `sessions/LOG.md` row names the outcome. `check.sh`
-> lists entries that have held unchanged for 28 days as ripe for an ADR. That number is a starting
-> guess, not a measurement.
+> lists entries that have held unchanged for 60 days as ripe for an ADR. R&D decisions prove
+> themselves over months, and a shorter wait would list choices still being tried.
 >
 > **IDs are slugs**, `D-<slug>`, named for what was chosen. `Decided … by:` takes a human name. When
 > none was given, ask the user who decided. The assistant is never the one who decided.
@@ -80,3 +80,14 @@
 - **Reopen if:** a second contributor needs to work on `main`-based branches, or `install.sh`'s own
   `+<sha>` label makes the rule redundant. Since `v3.7.0` it records unreleased installs honestly.
 - **Basis:** `sessions/2026-10-26-next-branch.md`
+
+## D-decisions-ripen-at-60-days · A working decision is ripe for an ADR after 60 days unchanged
+
+- **Decided:** 2026-11-03 · **by:** esdevop
+- **Why now:** `DECISIONS.md` shipped in `v3.9.0` with 28 days, a starting guess the assistant made,
+  which the register's own rule says a person must decide.
+- **Decision:** 60 days unchanged makes an entry ripe, and `check.sh` lists it from then on.
+- **Rejected:** 28 days, which in R&D would list choices still being tried.
+- **Reopen if:** ripe entries are routinely revised soon after, which would mean the wait is too
+  short, or entries sit unpromoted long past 60 days, which would mean the listing is not acted on.
+- **Basis:** `sessions/2026-11-03-ripeness-60-days-and-close-adopter-review.md`

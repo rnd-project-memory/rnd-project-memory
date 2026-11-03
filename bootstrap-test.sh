@@ -315,15 +315,15 @@ mv "$dest/ai-sandbox/INDEX.md.orig" "$dest/ai-sandbox/INDEX.md"
 
 say "Working decisions gate"
 dc="$dest/ai-sandbox/DECISIONS.md"; cp "$dc" "$dc.orig"
-printf '\n## D-held-choice · held\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '40 days ago' +%F)" >> "$dc"
-printf '\n## D-young-choice · young\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '3 days ago' +%F)" >> "$dc"
+printf '\n## D-held-choice · held\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '70 days ago' +%F)" >> "$dc"
+printf '\n## D-young-choice · young\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '40 days ago' +%F)" >> "$dc"
 dout=$(cd "$dest" && ./check.sh 2>&1)
-printf '%s\n' "$dout" | grep -q 'ripe  D-held-choice: held 40 days' \
-  && ok "a decision held 40 days is listed as ripe for an ADR" \
-  || bad "a decision held 40 days is not listed as ripe"
+printf '%s\n' "$dout" | grep -q 'ripe  D-held-choice: held 70 days' \
+  && ok "a decision held 70 days is listed as ripe for an ADR" \
+  || bad "a decision held 70 days is not listed as ripe"
 printf '%s\n' "$dout" | grep -q 'D-young-choice' \
-  && bad "a 3-day-old decision is listed as ripe" \
-  || ok "a young decision is not listed"
+  && bad "a 40-day-old decision is listed as ripe, under the 60-day threshold" \
+  || ok "a decision younger than 60 days is not listed"
 mv "$dc.orig" "$dc"
 
 say "Staleness gate"
