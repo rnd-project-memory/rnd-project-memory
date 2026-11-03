@@ -362,6 +362,7 @@ automates the mechanical half.
 | A claim nobody can trace | Source was never registered | Register it retroactively, or drop the claim |
 | An experiment that cannot be re-run | Reproducibility fields not captured | Treat its result as unverified |
 | An experiment cited from `docs/` whose evidence file is gitignored | The record didn't say what stands in as evidence | Add a `results/` pointer, or don't promote it |
+| A stalled-thread notice deferred at every session | The deferral had no end, or was written by an assistant | Only the holder defers, with a revisit date; `check.sh` honours the date and nothing else |
 | Another session file left `Status: open` | Running in parallel, or interrupted; the file cannot say which | Ask. Leave it if live; freeze as `abandoned` only on the person's word; never backfill |
 | `docs/CLAIMS.md` disagrees with `docs/` | The index was updated separately, or not at all | Re-sync; it belongs in the same change as the promotion |
 | A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |

@@ -13,9 +13,11 @@
 #   kind      Free text — e.g. `table`, `tool`. Deliberately no fixed dictionary: a trap in the
 #             project's own instrument (kind: tool) behaves exactly like a data trap and belongs
 #             in the same list, not a separate section.
-#   severity  critical | moderate | minor. `critical` means one thing only: fails silently — no
-#             error, no empty-result warning, just a wrong answer that looks fine. Not "important",
-#             not "frequent".
+#   severity  invalidates-results | costs-a-rerun | minor: what missing this trap costs.
+#             Every caveat fails silently, since that is what makes it a caveat, so silence cannot
+#             also be a severity. The old scale defined `critical` as *fails silently*, and one
+#             adopter's register put it on 21 of 28 entries. Entries written before v3.9.0 carry
+#             critical | moderate | minor, and keep them.
 #   what      What actually happens, in prose.
 #   found     Date discovered.
 #   basis     EXP-… / sessions/… / S-… — or `—` if genuinely none exists. Never point at the
@@ -33,7 +35,7 @@
 # - id: C-<slug>
 #   subject: <table, column, or script path>
 #   kind: table
-#   severity: critical
+#   severity: invalidates-results
 #   what: >
 #     <what happens, and why it looks fine until it doesn't>
 #   found: <DATE>

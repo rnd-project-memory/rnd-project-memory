@@ -2,9 +2,10 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gaps 1, 2 and 7 shipped in `v3.6.0`, and Gaps 5 (check half) and 6 in
-  `v3.7.0`. The root runs `v3.7.0`. Every remaining item is a design decision for the author:
-  Gaps 3 and 4, and Gap 5's schema half.
+- **Resume from:** Gaps 4 and 5 are built on `next` and unreleased. Gap 3's design was revised by
+  the author's observation, that R&D decisions mature by holding over time while their memory
+  fades. The proposal is a working-decisions register in `ai-sandbox/` that matures into ADRs, and
+  it awaits confirmation. Then build, and release.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
   prototype-phase project. Do not quote, paraphrase or name anything identifying the adopter: its
@@ -30,23 +31,23 @@
 
 ## In progress
 
-### Gap 3 — no home for working decisions (priority: high, design)
+### Gap 3 — no home for working decisions (priority: high; design revised, awaiting confirmation)
 
-Nothing moved to `docs/` after adoption, and decisions settled into `ASSUMPTIONS.md` and INDEX.
-This is not detectable and is no rule's business. The question is whether a slot is missing (a
-provisional decision, a light ADR, engineering facts allowed in `docs/`), or whether this is the
-correct state of a project with no settled method yet. One snapshot cannot separate the two.
+Proposed: `ai-sandbox/DECISIONS.md`, `D-<slug>`. Written at the moment of decision, with what was
+decided, why now, the alternatives rejected, who decided, and what would reopen it. It matures by
+age unchanged, and `check.sh` lists long-held entries as ADR candidates. On maturity it moves into
+an ADR. If dropped, it is deleted with a `LOG.md` row. Reasoning:
+`sessions/2026-11-03-staleness-exit-and-session-mode.md`.
 
-### Gap 5 — the schema half of single-valued fields (priority: medium, design)
+### Gap 5 — built on `next`, unreleased
 
-The `Configuration:` distribution check shipped in `v3.7.0`. Still open: whether the session schema
-gains a *session mode* axis, and whether `CAVEATS.yaml` `severity:` is redefined.
+`Mode:` on session records, counted by `check.sh`, and `severity:` redefined by consequence, with
+old values kept.
 
-### Gap 4 — staleness without an exit (priority: medium, design)
+### Gap 4 — built on `next`, unreleased
 
-`STALENESS_LOG.md` exists to validate its own 3-week threshold. The adopter gives the first outside
-evidence: the notice fired every session and was deferred every time, by the assistant. That points
-at the response, not at the number. The decision is the author's.
+Only the holder defers, with a revisit date. `check.sh` reports stalled threads and honours only a
+human's dated deferral.
 
 ---
 

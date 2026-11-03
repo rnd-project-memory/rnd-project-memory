@@ -260,6 +260,32 @@ for f in "$SB"/CHECKPOINT-*.md; do
                    || echo "  ok    $f: $l"
 done
 
+n "Stalled threads (3+ weeks untouched)"
+# A thread's age is the days since its checkpoint was last committed, which no one can type. A
+# stalled thread is reported until its holder decides. A STALENESS_LOG.md row deferring it, with a
+# revisit date still ahead, quiets the notice until that date. Only the holder defers. A row whose
+# Who is an assistant does not count. One adopter's log filled with assistant deferrals, several a
+# session, that ended nothing. Every notice clears: the holder closes the thread, touches it, or
+# defers it with an end.
+today=$(date +%F); now=$(date +%s); stalled=0
+for f in "$SB"/CHECKPOINT-*.md; do
+  [ -e "$f" ] || continue
+  grep -m1 -qE '^[-*] \*\*Held by:\*\*[[:space:]]*<' "$f" && continue   # template residue, reported above
+  t=$(git log -1 --format=%ct -- "$f" 2>/dev/null); [ -n "$t" ] || continue
+  age=$(( (now - t) / 86400 )); [ "$age" -ge 21 ] || continue
+  slug=$(basename "$f" .md); slug=${slug#CHECKPOINT-}
+  row=$(grep -E "^\|[^|]*\|[^|]*$slug" "$SB/STALENESS_LOG.md" 2>/dev/null | tail -1)
+  rev=$(printf '%s' "$row" | awk -F'|' '{print $7}' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+  who=$(printf '%s' "$row" | awk -F'|' '{print $6}')
+  n=$(grep -cE "^\|[^|]*\|[^|]*$slug[^|]*\|[^|]*\|[[:space:]]*deferred" "$SB/STALENESS_LOG.md" 2>/dev/null)
+  case "$who" in *[Aa]ssistant*) rev="";; esac
+  if [ -n "$rev" ] && [ ! "$rev" \< "$today" ]; then continue; fi
+  stalled=1
+  echo "  ?     Stalled: $(basename "$f") — $age days, deferred ${n:-0} time(s). Its holder closes it,"
+  echo "        or defers it in STALENESS_LOG.md with a revisit date. An assistant does neither."
+done
+[ "$stalled" -eq 0 ] && echo "  none"
+
 n "INDEX.md Current focus (limit 15)"
 # INDEX.md loads into every session, and its Current focus is rewritten, never appended. The
 # bound used to live only in the <<FILL: marker, which answering the blank deletes, so nothing
@@ -626,6 +652,17 @@ cfgs=$(for f in "$SB"/sessions/*.md; do
 if [ -n "$cfgs" ]; then
   echo "  sessions Configuration:"
   printf '%s\n' "$cfgs" | sort | uniq -c | sort -rn | sed 's/^/    /'
+fi
+# Session Mode, the axis one adopter's free-text Participants field kept reaching for: the same
+# session shape described twenty ways. A field with a dictionary can be counted, and prose cannot.
+modes=$(for f in "$SB"/sessions/*.md; do
+          case "$(basename "$f")" in LOG.md|_TEMPLATE.md) continue;; esac
+          grep -m1 -E '^[-*] \*\*Mode:\*\*' "$f" 2>/dev/null \
+            | sed 's/^[-*] \*\*Mode:\*\*[[:space:]]*//; s/[[:space:]]*$//'
+        done)
+if [ -n "$modes" ]; then
+  echo "  sessions Mode:"
+  printf '%s\n' "$modes" | sort | uniq -c | sort -rn | sed 's/^/    /'
 fi
 
 printf '\n\033[2madvisory only — nothing here blocks a commit\033[0m\n'

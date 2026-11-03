@@ -2,6 +2,7 @@
 
 - **Status:** open
 - **Configuration:** <name from `CONFIGURATIONS.md`>
+- **Mode:** <explore | design | implement | execute | review | admin>
 - **Participants:** <role — model · effort, one per participant with a verification role>
 - **Signed off:** <human name, or "no">
 

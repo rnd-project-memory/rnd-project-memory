@@ -8,11 +8,17 @@
 > this file — a tool that outlives its question becomes exactly the kind of permanent fixture
 > this system exists to prevent.
 >
-> Append-only. `session-start.md`'s staleness check writes one row **every time it fires**,
-> including — especially — when the decision is to defer again. A notice that repeats unchanged
-> stops being read after two weeks; the count of how many times a thread was deferred is what
-> makes the fourth "still working on something else" line read differently from the first.
+> Append-only. **A row is a human decision, made by the thread's holder**: `closed`, or
+> `deferred`, with a revisit date. An assistant notices a stalled thread and reports it. It never
+> writes a deferral, because a deferral nobody chose is not a decision, and one adopter's log
+> filled with assistant deferrals, several each session, that ended nothing.
+>
+> **A deferral names its end.** `check.sh` stays quiet about the thread until the revisit date,
+> then reports it again. Re-deferring is a new row with a new date, so the count of rows still
+> shows how often a thread was put off, the way the fourth *still working on something else* line
+> reads differently from the first. Rows from before the *Revisit* column have no date, and count
+> as no deferral.
 
-| Date | Thread | Age (days) | Decision | Who |
-|------|--------|-----------|----------|-----|
-| | | | deferred \| closed | |
+| Date | Thread | Age (days) | Decision | Who | Revisit |
+|------|--------|-----------|----------|-----|---------|
+| | | | deferred \| closed | | |

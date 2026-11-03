@@ -105,21 +105,21 @@ If the topic has been named differently before, the tag column in each log is th
 
 ## Staleness checks
 
-- **Stalled thread — report and count, do not force a verdict.** For each
-  `CHECKPOINT-<thread>.md`, check its age against `sessions/LOG.md`. Anything 3+ weeks old
-  prints one line and stops there:
+- **Stalled thread — report it; only its holder decides.** `check.sh` lists each
+  `CHECKPOINT-<thread>.md` untouched for 3+ weeks that has no deferral still running. Put each in
+  the report, one line:
 
   ```
   Stalled: CHECKPOINT-<thread>.md — 40 days, deferred twice.
   ```
 
-  This check fires ahead of whoever opened the session, and under the thread axis that is
-  usually not the thread's holder — demanding a verdict from someone who doesn't own the thread
-  produces either a rubber-stamped extension or a closure nobody understood. "Deferred" is a
-  legitimate outcome, not an evasion. Whatever is decided — deferred or closed — log it as one
-  row in `ai-sandbox/STALENESS_LOG.md`: date, thread, age, decision, who. The count in the
-  printed line comes from this log, and it is what keeps a repeated notice from going unread
-  after two weeks the way an unchanging one does.
+  That ends the assistant's part. The check fires ahead of whoever opened the session, who is
+  often not the holder, and a verdict demanded of someone else, or supplied by an assistant,
+  is either a rubber stamp or a closure nobody understood. **An assistant never writes a
+  deferral.** If the holder is present and decides, record it as one row in
+  `ai-sandbox/STALENESS_LOG.md`: date, thread, age, decision, who, and for `deferred` a revisit
+  date, which `check.sh` respects until it passes. A deferral without an end is not a decision. It
+  is how one adopter's log came to defer every thread at every session.
 - **Aging numbers.** If the checkpoint holds figures marked unverified and the session
   touches them, offer to re-check against the data before reasoning on top of them.
 - **Mutable sources.** If a claim in play cites a Confluence page read more than a few

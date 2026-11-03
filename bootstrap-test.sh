@@ -313,6 +313,29 @@ printf 'what is left of a marker.>>\n' >> "$dest/ai-sandbox/INDEX.md"
   || bad "a half-removed marker is not reported"
 mv "$dest/ai-sandbox/INDEX.md.orig" "$dest/ai-sandbox/INDEX.md"
 
+say "Staleness gate"
+# Only a human defers a stalled thread, and a deferral names its end. Tested on a checkpoint whose
+# last commit is forty days old, against four states of the log.
+sl="$dest/ai-sandbox/STALENESS_LOG.md"; cp "$sl" "$sl.orig"
+old=$(date -d '40 days ago' '+%Y-%m-%dT12:00:00')
+cp "$dest/ai-sandbox/CHECKPOINT-first-thread.md" "$dest/ai-sandbox/CHECKPOINT-old-thread.md"
+git -C "$dest" add ai-sandbox/CHECKPOINT-old-thread.md
+(cd "$dest" && GIT_COMMITTER_DATE="$old" GIT_AUTHOR_DATE="$old" git commit -qm "an old thread" >/dev/null 2>&1)
+stale() { (cd "$dest" && ./check.sh 2>&1) | grep -q 'Stalled: CHECKPOINT-old-thread.md'; }
+ahead=$(date -d '10 days' +%F); behind=$(date -d '1 day ago' +%F)
+stale && ok "a thread untouched for 40 days, never deferred, is reported" \
+      || bad "a 40-day-old thread with no deferral is not reported"
+printf '| %s | old-thread | 40 | deferred | assistant (session-start sweep) | %s |\n' "$(date +%F)" "$ahead" >> "$sl"
+stale && ok "a deferral recorded by an assistant does not quiet it" \
+      || bad "an assistant's deferral quieted a stalled thread"
+printf '| %s | old-thread | 40 | deferred | esdevop | %s |\n' "$(date +%F)" "$ahead" >> "$sl"
+stale && bad "the holder's deferral with a revisit date ahead did not quiet the notice" \
+      || ok "the holder's deferral quiets it until the revisit date"
+printf '| %s | old-thread | 40 | deferred | esdevop | %s |\n' "$(date +%F)" "$behind" >> "$sl"
+stale && ok "a deferral past its revisit date reports the thread again" \
+      || bad "a lapsed deferral still quiets the thread"
+git -C "$dest" reset -q --hard HEAD~1; mv "$sl.orig" "$sl"
+
 say "Identity guard gate"
 # Published identity metadata cannot be withdrawn, so the guard blocks. It must stay silent until a
 # project lists anyone, since a check firing on a project that never asked teaches --no-verify,
