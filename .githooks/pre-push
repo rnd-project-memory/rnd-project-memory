@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# BLOCKING. Checks every commit and tag about to be published against .githooks/identity.allow:
+# author, committer and tagger. pre-commit sees only the commit being made. This hook also sees
+# rebased and cherry-picked commits, commits made before the list existed, and tags, which no
+# commit hook ever sees. An empty list means no check. Install: git config core.hooksPath .githooks
+set -u
+allowlist=$(grep -vE '^[[:space:]]*(#|$)' .githooks/identity.allow 2>/dev/null | tr -d '[:blank:]')
+[ -n "$allowlist" ] || exit 0
+
+listed() {
+  local e p
+  e=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
+  while IFS= read -r p; do
+    p=$(printf '%s' "$p" | tr '[:upper:]' '[:lower:]')
+    # shellcheck disable=SC2254
+    case "$e" in $p) return 0;; esac
+  done <<< "$allowlist"
+  return 1
+}
+
+remote=$1
+zero=0000000000000000000000000000000000000000
+fail=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue                       # a deletion publishes nothing
+  # Tags: the tagger of an annotated tag.
+  if [ "$(git cat-file -t "$local_sha")" = tag ]; then
+    t=$(git cat-file -p "$local_sha" | sed -n 's/^tagger .*<\(.*\)>.*/\1/p')
+    listed "$t" || { echo "BLOCKED: $local_ref is tagged by <$t>, not listed in .githooks/identity.allow"; fail=1; }
+  fi
+  # Commits the remote does not have yet.
+  if [ "$remote_sha" != "$zero" ] && git cat-file -e "$remote_sha" 2>/dev/null; then
+    range="$remote_sha..$local_sha"
+  else
+    range="$local_sha --not --remotes=$remote"
+  fi
+  # shellcheck disable=SC2086
+  while read -r c ae ce; do
+    listed "$ae" || { echo "BLOCKED: $c on $local_ref is authored by <$ae>, not listed"; fail=1; }
+    listed "$ce" || { echo "BLOCKED: $c on $local_ref is committed by <$ce>, not listed"; fail=1; }
+  done < <(git log --format='%h %ae %ce' $range)
+done
+
+if [ "$fail" -eq 1 ]; then
+  echo
+  echo "Identity metadata is published with the history and cannot be withdrawn by a later edit."
+  echo "Rewrite the listed commits or tags under a listed identity before pushing. Do not bypass."
+  exit 1
+fi
+exit 0

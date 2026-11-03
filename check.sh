@@ -40,6 +40,25 @@ else
   echo "            git config user.email \"you@example.org\""
 fi
 
+# The identity guard: who may author, commit and tag here (.githooks/identity.allow). Reported
+# every run because the failure it prevents, an identity published with the history, cannot be
+# withdrawn, and because a clone with no local user.email inherits the global one silently.
+ids=$(grep -vE '^[[:space:]]*(#|$)' .githooks/identity.allow 2>/dev/null | tr -d '[:blank:]')
+if [ -z "$ids" ]; then
+  echo "  none  identity guard off: .githooks/identity.allow lists nobody, so any identity can"
+  echo "        commit and push. A public repository worked on from a work machine needs it."
+else
+  m=0; lem=$(printf '%s' "$em" | tr '[:upper:]' '[:lower:]')
+  while IFS= read -r p; do
+    p=$(printf '%s' "$p" | tr '[:upper:]' '[:lower:]')
+    # shellcheck disable=SC2254
+    case "$lem" in $p) m=1; break;; esac
+  done <<< "$ids"
+  [ -x .githooks/pre-push ] || echo "  OFF   .githooks/pre-push is missing or not executable: tags and pushed commits go unchecked"
+  if [ "$m" -eq 1 ]; then echo "  ok    identity guard on ($(printf '%s\n' "$ids" | wc -l | tr -d ' ') listed); user.email is listed"
+  else echo "  ?     identity guard on, but user.email=${em:-unset} is not listed: every commit here will be blocked"; fi
+fi
+
 # Held by: is bound to this identity (ADR-012). Placeholder values are skipped: an unfilled
 # template is not a mismatch, and reporting one would put a failure on the first line of output an
 # adopter ever sees. Advisory by design — the same false-positive tolerance that keeps this out of
