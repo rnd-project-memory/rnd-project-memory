@@ -1,6 +1,6 @@
 # rnd-project-memory — Method
 
-- **Updated:** 2026-10-26
+- **Updated:** 2026-11-03
 
 > Current best understanding of how the template is built, versioned and delivered. **No history
 > here** — no "we used to think". Rationale for contested choices lives in `decisions/`; evidence
@@ -78,6 +78,8 @@ its own memory at the root, vendored from a released tag.
 | A review re-runs the gates in a clean checkout of exactly the report's commit, never in the executor's tree | `ADR-014` |
 | Links between records point backwards, written once by the later record; the forward direction is found by search | `ADR-014` |
 | A session or package slug names the objective, never the approach, the activity, a person or a ticket | `ADR-014` |
+| Identity metadata is guarded like secrets: an opt-in list of who may commit, enforced at commit and at push | `ADR-015` |
+| A closed record is edited only when a binding constraint requires it, minimally and with a visible marker | `ADR-015` |
 
 ## Known limitations
 

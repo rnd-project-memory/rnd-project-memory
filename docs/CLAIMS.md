@@ -1,6 +1,6 @@
 # rnd-project-memory — Claims Index
 
-- **Updated:** 2026-10-26
+- **Updated:** 2026-11-03
 
 > **An index, not a second copy.** One line per claim: a shorthand, the file it lives in, when
 > it landed, and what it rests on. The claim's actual wording stays in its file — restating it
@@ -87,3 +87,5 @@ basis was itself would be circular. Rows index claims in ordinary `docs/` files 
 | Review re-runs gates in a clean checkout of the report's commit | `docs/method.md` | 2026-10-26 | `ADR-014` |
 | Links point backwards, written once by the later record | `docs/method.md` | 2026-10-26 | `ADR-014` |
 | A work slug names the objective | `docs/method.md` | 2026-10-26 | `ADR-014` |
+| Identity metadata is guarded like secrets, opt-in, at commit and push | `docs/method.md` | 2026-11-03 | `ADR-015` |
+| A closed record is edited only under a binding constraint, visibly | `docs/method.md` | 2026-11-03 | `ADR-015` |
