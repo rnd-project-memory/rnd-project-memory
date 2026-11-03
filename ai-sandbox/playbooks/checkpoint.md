@@ -102,6 +102,12 @@ now depends on — those are the obsolete exit's usual catch.
 `EXP-…` or `S-…`) and **deleted** here; there is no `CONFIRMED` resting state, only the move; one proven false is deleted, with its consequence recorded in the
 checkpoint as a gap; add new assumptions surfaced this session.
 
+`DECISIONS.md` — add every choice this session made that is too young for an ADR, now, while its
+reasons are fresh: why now, what was rejected, what would reopen it. A decision revised this
+session is edited in place with `Decided:` reset, and the session record says what it replaced.
+One that `check.sh` lists as ripe and that still holds is moved into an ADR via `promote.md`. One
+abandoned is deleted. Either deletion gets a `LOG.md` row naming the outcome.
+
 `SOURCES.md` — add any source consulted this session that is not yet registered.
 
 ## 5. Update the log and index

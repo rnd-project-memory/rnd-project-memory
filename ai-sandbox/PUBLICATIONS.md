@@ -13,10 +13,14 @@
 
 ---
 
-## P-<slug> · <title>
-
-- **Where:** <external location the published copy lives>
-- **Version:** <published version identifier, and the date it went out>
-- **Collected:** <script path, and whether it is idempotent — or "by hand">
-- **Basis:** <what in `docs/` this rests on, plus that claim's own basis>
-- **Status:** current | stale — <if stale, the specific gap>
+> **Shape of an entry.** Copy it below this line without the `> `, one per entry. It sits in a
+> blockquote so that an untouched register reads as empty, and no check counts the example as
+> an entry: a live example left beside real entries cannot be told from one.
+>
+> ## P-<slug> · <title>
+>
+> - **Where:** <external location the published copy lives>
+> - **Version:** <published version identifier, and the date it went out>
+> - **Collected:** <script path, and whether it is idempotent — or "by hand">
+> - **Basis:** <what in `docs/` this rests on, plus that claim's own basis>
+> - **Status:** current | stale — <if stale, the specific gap>

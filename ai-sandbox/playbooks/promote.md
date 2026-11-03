@@ -61,7 +61,9 @@ checkbox in the `docs/` file it came from.
 
 ## 5. Delete the working copy
 
-Remove what moved from `CHECKPOINT-<thread>.md` / `ASSUMPTIONS.md`. Duplication between `docs/` and
+Remove what moved from `CHECKPOINT-<thread>.md` / `ASSUMPTIONS.md` / `DECISIONS.md`. A working
+decision that has held becomes an ADR carrying the reasons recorded when it was taken, and its
+`D-` entry is deleted. Duplication between `docs/` and
 `ai-sandbox/` is precisely what this system is built to prevent: two copies drift, and then
 neither is trustworthy.
 

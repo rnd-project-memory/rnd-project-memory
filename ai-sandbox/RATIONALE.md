@@ -161,6 +161,17 @@ The one rule here whose violation a later edit cannot repair. Once committed, th
 git history on every clone, and removal means rewriting history everywhere. Default every source
 to `reference-only`; committing is the deliberate exception.
 
+### A decision is written when taken, and matures by holding
+
+R&D runs on trials and repeats. Few decisions are mature when they are made, and a decision proves
+itself by holding while the work goes on. By then the memory of why it was taken has faded, so an
+ADR written at maturity records a conclusion without its reasons. A register in `ai-sandbox/`
+takes the decision while the reasons are fresh, and measures maturity by age unchanged. It moves
+the decision into an ADR once it has held. `docs/` is reviewed before every landing, so it is the
+wrong place for choices revised every week. The register sits beside `ASSUMPTIONS.md` and is
+different from it. An assumption is a bet about the world, settled by evidence. A decision is a
+choice, settled by people. One adopter had only the first, and filed its choices there.
+
 ### Identities are guarded like secrets, but only where a project opts in
 
 Author, committer and tagger are published with every commit and tag, and no later edit
@@ -362,6 +373,7 @@ automates the mechanical half.
 | A claim nobody can trace | Source was never registered | Register it retroactively, or drop the claim |
 | An experiment that cannot be re-run | Reproducibility fields not captured | Treat its result as unverified |
 | An experiment cited from `docs/` whose evidence file is gitignored | The record didn't say what stands in as evidence | Add a `results/` pointer, or don't promote it |
+| A stalled-thread notice deferred at every session | The deferral had no end, or was written by an assistant | Only the holder defers, with a revisit date; `check.sh` honours the date and nothing else |
 | Another session file left `Status: open` | Running in parallel, or interrupted; the file cannot say which | Ask. Leave it if live; freeze as `abandoned` only on the person's word; never backfill |
 | `docs/CLAIMS.md` disagrees with `docs/` | The index was updated separately, or not at all | Re-sync; it belongs in the same change as the promotion |
 | A claim in `docs/` with no `CLAIMS.md` row | Promotion skipped step 3's substep | Add it, or the claim is unfindable by the next promotion |

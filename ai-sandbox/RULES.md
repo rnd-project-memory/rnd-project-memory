@@ -61,6 +61,10 @@
   Otherwise the device stops being how the system is adopted and becomes how its rules are avoided,
   one reasonable exception at a time.
 - Data and tool traps go in `ai-sandbox/CAVEATS.yaml`, found by subject — not read start to end.
+- **A choice too young for an ADR goes in `ai-sandbox/DECISIONS.md` when it is taken**, with why
+  then, what was rejected and what would reopen it. It is not an assumption: those are bets about
+  the world. It moves into an ADR once it has held. Reasons written months later are reconstructed,
+  not recorded.
 - Every claim promoted into `docs/` gets a row in `docs/CLAIMS.md` with its basis (`EXP-…`,
   `S-…`, `sessions/…`, or `ADR-…`), written in the same change.
 - **A record that describes a check is never rewritten to satisfy it.** These files are prose

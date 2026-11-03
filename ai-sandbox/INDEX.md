@@ -32,6 +32,7 @@ artefact, never as working notes — see `AGENTS.md`.
 | `CHECKPOINT-<thread>.md` | Current unresolved state, one per thread | rewrite, ≤150 lines, holder only |
 | `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
 | `ASSUMPTIONS.md` | What the design bets on | edit |
+| `DECISIONS.md` | Choices taken, too young for an ADR; mature by holding | add; edit when revised; move to an ADR when it has held |
 | `SOURCES.md` | Source register with IDs — empty; this project reasons rather than cites | append |
 | `CAVEATS.yaml` | Tool traps from the experiment harness; no data environment here | append, corrected in place |
 | `PUBLICATIONS.md` | What was published externally — empty; nothing published externally | edit |
@@ -65,31 +66,22 @@ Its prohibitions are in `docs/method.md`, and its last finding is `Q-prompt-phra
 > is blocking it. What happened belongs in `sessions/`, what is unresolved in a thread checkpoint.
 > This file loads into every session; `check.sh` reports this section past 15 lines.
 
-**One thread is open.** `install-path` closed on 2026-11-03: history rewritten, identity guard
-on (`ADR-015`, `v3.8.0`), and install findings fixed on `next`.
-`adopter-review` holds what one adopter's memory showed after eight weeks. `v3.6.0` shipped the
-detectable part, and the session-start sweep no longer freezes live parallel sessions (issue #3).
-`v3.7.0` shipped implementation packages (`ADR-014`, issue #2) and the configuration
-distribution. Still design: working decisions, staleness, a session-mode axis.
+**`adopter-review` has shipped every gap**, through `v3.9.0`, and is ready to close once its
+prohibitions have a home. `install-path` closed on 2026-11-03. History was rewritten and the
+identity guard is on (`ADR-015`).
 
-The green-start programme is closed. Its arc and lessons are in
-`sessions/2026-08-28-the-gate-costs-nothing.md`. `check.sh` still cannot tell honest absence from
-confident fiction, a boundary `ADR-013` recorded.
-
-**`Q-positioning-against-prior-art` 🔴** asks whether this adds anything over shipped memory and
-spec-driven tools, to be settled by a pre-registered comparison. `Q-who-keeps-the-history` and
-`Q-session-boundary` 🟡 now have adopter evidence.
-`Q-unexercised-components` 🟡 is down to the hook. `Q-oss-intake` 🟡 and `Q-contribution-flow` 🟢
-need answers from outside this repository.
-
+**`Q-positioning-against-prior-art` 🔴** is the live question: does this add anything over
+shipped memory and spec-driven tools, settled by a pre-registered comparison.
+`Q-who-keeps-the-history`, `Q-session-boundary` and `Q-unexercised-components` 🟡 remain, as do
+`Q-prompt-phrasing-confound` 🟢 and two questions answerable only outside this repository.
 ---
 
 ## Latest completed session
 
-2026-11-03: `install-path` closed. Work identities were removed from all published history, and an
-opt-in identity guard shipped in `v3.8.0` (`ADR-015`). Install findings 1–5 were fixed on `next`,
-unreleased. The thread's prohibitions moved to `docs/method.md`, and finding 6 became
-`Q-prompt-phrasing-confound`.
+2026-11-03: `v3.9.0` released. A working-decisions register (`DECISIONS.md`), deferrals that need a
+human and a revisit date, `Mode:` on sessions, severity by consequence, register examples as
+blockquotes, and the install findings. `install-path` closed earlier the same day. `adopter-review`
+has shipped every gap and is ready to close.
 
 ## What a new session does
 

@@ -15,7 +15,10 @@
 #   id        C-<slug>. Assigned once, never renamed.
 #   subject   The lookup key: a table, a column, a script path.
 #   kind      Free text — e.g. `table`, `tool`. No fixed dictionary on purpose.
-#   severity  critical | moderate | minor. `critical` means fails silently, not "important".
+#   severity  invalidates-results | costs-a-rerun | minor: what missing this trap costs.
+#             Every caveat fails silently, since that is what makes it a caveat, so silence cannot
+#             also be a severity. Entries written before v3.9.0 carry critical | moderate | minor,
+#             and keep them.
 #   what      What actually happens, in prose.
 #   found     Date discovered.
 #   basis     EXP-… / sessions/… / S-… — or `—` if genuinely none exists.

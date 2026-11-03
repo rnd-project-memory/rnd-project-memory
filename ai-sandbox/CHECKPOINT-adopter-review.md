@@ -2,10 +2,10 @@
 
 - **Held by:** esdevop@gmail.com · since 2026-10-25
 - **Status:** active
-- **Resume from:** Gaps 4 and 5 are built on `next` and unreleased. Gap 3's design was revised by
-  the author's observation, that R&D decisions mature by holding over time while their memory
-  fades. The proposal is a working-decisions register in `ai-sandbox/` that matures into ADRs, and
-  it awaits confirmation. Then build, and release.
+- **Resume from:** every gap has shipped. Gaps 1, 2 and 7 in `v3.6.0`, 5 (check) and 6 in `v3.7.0`,
+  and 3, 4 and 5 (schema) in `v3.9.0`, and the root runs `v3.9.0`. The thread is ready to close.
+  What remains is to place its prohibitions, and the 28-day ripeness threshold, which the author
+  decides.
   **Do not do until re-verified:** do not state any of these as general to adopters. They come from
   one project, one author, one snapshot, and two of them (Gaps 3 and 4) may be specific to a
   prototype-phase project. Do not quote, paraphrase or name anything identifying the adopter: its
@@ -31,24 +31,8 @@
 
 ## In progress
 
-### Gap 3 — no home for working decisions (priority: high; design revised, awaiting confirmation)
-
-Proposed: `ai-sandbox/DECISIONS.md`, `D-<slug>`. Written at the moment of decision, with what was
-decided, why now, the alternatives rejected, who decided, and what would reopen it. It matures by
-age unchanged, and `check.sh` lists long-held entries as ADR candidates. On maturity it moves into
-an ADR. If dropped, it is deleted with a `LOG.md` row. Reasoning:
-`sessions/2026-11-03-staleness-exit-and-session-mode.md`.
-
-### Gap 5 — built on `next`, unreleased
-
-`Mode:` on session records, counted by `check.sh`, and `severity:` redefined by consequence, with
-old values kept.
-
-### Gap 4 — built on `next`, unreleased
-
-Only the holder defers, with a revisit date. `check.sh` reports stalled threads and honours only a
-human's dated deferral.
-
+Nothing. Gaps 3–5 shipped in `v3.9.0` (`sessions/2026-11-03-decisions-that-mature.md`,
+`sessions/2026-11-03-staleness-exit-and-session-mode.md`).
 ---
 
 ## Out of scope for this thread

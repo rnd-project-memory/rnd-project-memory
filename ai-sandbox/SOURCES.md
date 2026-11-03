@@ -29,7 +29,6 @@ anything whose sensitivity has not been established.
 
 | ID | Type | Title | Sensitivity | Date read | Status |
 |----|------|-------|-------------|-----------|--------|
-| `S-<slug>` | | | | | |
 | `S-adopter-snapshot-2026-10-25` | adopter snapshot | One adopting project's memory, about 8 weeks on `v3.5.0` | reference-only | 2026-10-25 | ingested |
 | `S-github-spec-kit-history` | web page | GitHub Spec Kit — project history (official) | reference-only | 2026-10-26 | partial |
 | `S-fowler-sdd-tools-2025` | article | Understanding Spec-Driven Development: Kiro, spec-kit, and Tessl (B. Böckeler, martinfowler.com, 2025-10-15) | reference-only | 2026-10-26 | partial |
@@ -42,16 +41,20 @@ anything whose sensitivity has not been established.
 
 ---
 
-## S-<slug> · <title>
-
-- **Type:** PDF | Confluence | transcript | conversation | dataset doc
-- **Origin:** <URL, SharePoint path, or `sources/<file>`>
-- **Source date:** <when the source itself was written>
-- **Date read:** <when it was ingested — matters for mutable sources>
-- **Sensitivity:** committable | reference-only
-- **Status:** ingested | partial | superseded by S-<slug>
-- **Answers:** <which questions this source can settle>
-- **Notes:** <caveats, contested claims, sections worth revisiting>
+> **Shape of an entry.** Copy it below this line without the `> `, one per entry. It sits in a
+> blockquote so that an untouched register reads as empty, and no check counts the example as
+> an entry: a live example left beside real entries cannot be told from one.
+>
+> ## S-<slug> · <title>
+>
+> - **Type:** PDF | Confluence | transcript | conversation | dataset doc
+> - **Origin:** <URL, SharePoint path, or `sources/<file>`>
+> - **Source date:** <when the source itself was written>
+> - **Date read:** <when it was ingested — matters for mutable sources>
+> - **Sensitivity:** committable | reference-only
+> - **Status:** ingested | partial | superseded by S-<slug>
+> - **Answers:** <which questions this source can settle>
+> - **Notes:** <caveats, contested claims, sections worth revisiting>
 
 ## S-adopter-snapshot-2026-10-25 · One adopter's project memory, as of 2026-10-25
 
