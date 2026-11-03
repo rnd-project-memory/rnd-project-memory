@@ -114,6 +114,22 @@ else
   done
 fi
 
+# A marker half removed is invisible to the anchored count above: the opening deleted and the
+# closing `>>` left behind, or the reverse. One assisted install left two that way, in the two
+# session-loaded files, and this section said ok. So read the three files that carry markers,
+# tracking whether a marker is open: a `>>` line outside any marker, or `<<FILL` anywhere but the
+# start of a line, is a remnant. Code fences and blockquotes are skipped, being where prose shows
+# the syntax rather than carries it.
+rem=$(awk '
+  /^[[:space:]]*```/ { code = !code; next }
+  code { next }
+  /^[[:space:]]*>/ { next }
+  /^<<FILL:/ { if ($0 !~ />>/) open = 1; next }
+  open { if ($0 ~ />>/) open = 0; next }
+  /<<FILL/ || />>[[:space:]]*$/ { print "  ?     " FILENAME ":" FNR ": a marker half removed — finish the answer, delete what is left" }
+' AGENTS.md "$SB/INDEX.md" docs/problem.md 2>/dev/null)
+[ -n "$rem" ] && printf '%s\n' "$rem"
+
 n "Mechanism files against their released hashes"
 # .template-hashes ships with each release and lists every file upstream owns. Comparing
 # against it needs no network and no copy of the template — which is the whole point of

@@ -29,18 +29,16 @@ Read the handbook's sections 1–3 first — they are the whole idea, and the re
 ```bash
 git clone https://github.com/rnd-project-memory/rnd-project-memory.git
 cd rnd-project-memory
-./install.sh ../my-project my-project you@example.org
+./install.sh ../churn-signals "Churn Signals" you@example.org
 ```
 
 **Not GitHub's *Use this template*** — it copies the whole repository, this project's own live
 memory included, and you would start with a project whose history is somebody else's.
 
-`install.sh` does what has one correct answer and prints what it deliberately left: seven blanks
-only a person can answer, your first thread, and a check no script can perform. Before writing, it
-compares the transformed candidate tree with an existing destination using `git diff --no-index`;
-differing files are reported as collisions and the install stops without overwriting them. Resolve
-those files and rerun it. `skeleton/README.md` explains each step and why. On a project that
-already has history, read the handbook's §11 first — it re-orders all of this.
+The first argument is the folder, the second the project's title as every heading will show it.
+`install.sh` does what has one correct answer and prints what it deliberately left.
+**`skeleton/README.md` is the install guide**: each step, what is left to you, and why. On a
+project that already has history, read the handbook's §11 first. It re-orders all of this.
 
 The template does not globally ignore generic data-file extensions or a `data/` directory. Add
 project-specific patterns above the `.gitignore` upstream marker if this project wants them ignored.

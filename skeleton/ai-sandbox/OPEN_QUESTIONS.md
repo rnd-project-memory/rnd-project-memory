@@ -41,10 +41,14 @@ permanently. The handbook's §11 says why, and an adoption note in this file sho
 
 ---
 
-## Q-<slug> · <short title> 🔴
-
-- **Raised:** <DATE> · **Owner:** <human name, or blank if unclaimed>
-- **Source:** <where the gap surfaced — a document, a source ID, a session>
-- **Question:** <what is unknown>
-- **Why it matters:** <what decision it blocks>
-- **Progress:** <what has been established so far, or "none">
+> **Shape of an entry.** Copy it below this line without the `> `, one per entry. It sits in a
+> blockquote so that an untouched register reads as empty, and no check counts the example as
+> an entry: a live example left beside real entries cannot be told from one.
+>
+> ## Q-<slug> · <short title> 🔴
+>
+> - **Raised:** <DATE> · **Owner:** <human name, or blank if unclaimed>
+> - **Source:** <where the gap surfaced — a document, a source ID, a session>
+> - **Question:** <what is unknown>
+> - **Why it matters:** <what decision it blocks>
+> - **Progress:** <what has been established so far, or "none">

@@ -841,7 +841,7 @@ over the following weeks, in ordinary sessions. A section that reads as though t
 running this system by the end of the day sets up the opposite expectation, and the cost of that
 is a bootstrap declared finished while the intake file quietly becomes furniture.
 
-**1. Copy the structure.** `./install.sh <destination> <project-name> [user-email]` prepares it:
+**1. Copy the structure.** `./install.sh <destination-dir> "<Project Title>" [user-email]` prepares it:
 the copy set, the `gitignore.template` rename, the hooks, the token substitution and
 `.template-version`. It first builds the transformed candidate tree and compares every existing
 destination path with `git diff --no-index`: identical files are preserved, while differing paths

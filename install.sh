@@ -12,7 +12,10 @@
 # was written twice — as a pipeline in skeleton/README.md and as a loop in bootstrap-test.sh —
 # and changing the step meant editing both by hand.
 #
-# Usage:  ./install.sh <destination> <project-name> [user-email] [first-thread-slug]
+# Usage:  ./install.sh <destination-dir> "<Project Title>" [user-email] [first-thread-slug]
+#
+# The title is what every file's heading says, "# <Project Title> — Session Log". It is not the
+# folder name, and the two read as one string unless quoted apart.
 #
 # norcopy: belongs to the template repository. Never copied into an adopting project.
 
@@ -28,7 +31,7 @@ name=${2:-}
 mail=${3:-}
 slug=${4:-}
 
-[ -n "$dest" ] && [ -n "$name" ] || die "usage: ./install.sh <destination> <project-name> [user-email] [first-thread-slug]"
+[ -n "$dest" ] && [ -n "$name" ] || die "usage: ./install.sh <destination-dir> \"<Project Title>\" [user-email] [first-thread-slug]"
 
 src=$(git rev-parse --show-toplevel 2>/dev/null) || die "run this from a clone of the template repository"
 [ -d "$src/skeleton" ] || die "no skeleton/ in $src — this is not the template repository"
@@ -254,7 +257,7 @@ else
 fi
 
 # ─── Step 3a — report the mechanical substitutions ───────────────────────────
-did "$n files had <PROJECT_NAME> and <DATE> substituted"
+did "$n files had <PROJECT_NAME> and <DATE> substituted; the title is \"$name\""
 if [ -f "$dest/.template-version" ]; then
   did ".template-version records $label, skeleton @ $sha, applied $today"
 fi
@@ -286,6 +289,12 @@ fi
 
 [ -f "$dest/ai-sandbox/CHECKPOINT-thread.md" ] \
   && left "name your first thread: rerun with a fourth argument, or rename ai-sandbox/CHECKPOINT-thread.md by hand and set Held by:"
+# The title is a person's choice, and the folder name is the likeliest wrong one: one manual
+# install supplied it and got a slug as every heading, which nothing detected afterwards.
+[ "$name" = "$(basename "$dest")" ] \
+  && left "the title is the folder name, \"$name\" — if the project has a proper name, replace it in the headings: grep -rlF -- \"$name —\" $dest"
+[ -e "$dest/README.md" ] \
+  || left "the project has no README.md — the install writes none, since what the project is, and for whom, is yours to say"
 left "if the repository is public, list who may commit in .githooks/identity.allow — it ships empty, which checks nothing"
 left "delete sources/ and src/ if the project already keeps those somewhere, under any name"
 left "verify instruction loading in a fresh assistant session — it cannot be checked from"

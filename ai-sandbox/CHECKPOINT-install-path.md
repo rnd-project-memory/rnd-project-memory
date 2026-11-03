@@ -43,31 +43,12 @@
 
 ## In progress
 
-### Gap 1 — six open findings, none needing an experiment (priority: high)
+### Gap 1 — one finding left, and it is an experiment (priority: medium)
 
-The pre-registered design is closed: three runs, both questions answered, nothing further under
-it. What remains is ordinary work. Each is statable without naming a model, so `ADR-013`'s first
-gate is satisfied for all of them; the second sends most to a check or to prose rather than `RULES.md`.
-Re-read on 2026-10-25. `v3.5.0` made the install collision-safe and stopped it removing an
-adopter's README. `v3.6.0` made `check.sh` report an unrenamed checkpoint template. None of findings 1–6
-moved.
-
-1. **`OPEN_QUESTIONS.md`'s example entry carries no marker**, so an untouched register cannot be
-   told from a filled one. Run 2 left it standing beside three real entries and nothing said so.
-2. **`install.sh`'s second argument** and the guide's example make the destination path and the
-   project name read as one string. The manual arm supplied the folder name and got a wrong title
-   that nothing detected.
-3. **No arm produced a project `README.md`** — four of four — and nothing explains its absence.
-   `v3.5.0` preserves one that already exists; it still creates none.
-4. **Install guidance lives in three places**, one of which the install deletes — `skeleton/README.md`
-   is still dropped from the candidate tree.
-5. **The `<<FILL:` marker can be half-removed**; the anchored check does not see the remnant. Two
-   of seven were left that way in the first assisted arm, in the two session-loaded files.
-6. **Provider, interface and prompt phrasing are confounded** across the arms. *"Create a project"*
-   invites completion; *"adopt this template"* might not, and that is cheap and untested.
-Finding 7, *`install.sh` labels unreleased content with the last tag*, was closed on 2026-10-26 by
-`IMP-2026-10-26-install-unreleased-label`, shipped in `v3.7.0`. Installs now record
-`T`, `T+<sha>` or `T+<sha>-dirty`.
+Findings 1–5 and 7 are closed on `next`, unreleased (`sessions/2026-11-03-install-findings-1-to-6.md`).
+Finding 6 remains: provider, interface and prompt phrasing are confounded across the green-start
+arms. *Adopt this template* against *create a project*, on one provider, is cheap and untested.
+The thread is ready to close, with this finding as one open question. See *Promotion candidates*.
 
 ### Gap 2 — what the mechanical layer cannot see (priority: high)
 
@@ -93,9 +74,9 @@ host: a cache-purge request to GitHub Support, and any old-commit links in issue
 
 ## Promotion candidates
 
-None. `ADR-013` is the one thing that settled hard enough to move, and it moved on 2026-08-27 —
-five claims into `docs/method.md` with `CLAIMS.md` rows.
-
+The *Do not do* prohibitions above are knowledge with no other home. Proposed for
+`docs/method.md`, *Known limitations*, before this file is deleted. The proposal awaits the
+author.
 ---
 
 ## Out of scope for this thread

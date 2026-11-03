@@ -23,17 +23,20 @@ anything whose sensitivity has not been established.
 
 | ID | Type | Title | Sensitivity | Date read | Status |
 |----|------|-------|-------------|-----------|--------|
-| `S-<slug>` | | | | | |
 
 ---
 
-## S-<slug> · <title>
-
-- **Type:** PDF | Confluence | transcript | conversation | dataset doc
-- **Origin:** <URL, SharePoint path, or `sources/<file>`>
-- **Source date:** <when the source itself was written>
-- **Date read:** <when it was ingested — matters for mutable sources>
-- **Sensitivity:** committable | reference-only
-- **Status:** ingested | partial | superseded by S-<slug>
-- **Answers:** <which questions this source can settle>
-- **Notes:** <caveats, contested claims, sections worth revisiting>
+> **Shape of an entry.** Copy it below this line without the `> `, one per entry. It sits in a
+> blockquote so that an untouched register reads as empty, and no check counts the example as
+> an entry: a live example left beside real entries cannot be told from one.
+>
+> ## S-<slug> · <title>
+>
+> - **Type:** PDF | Confluence | transcript | conversation | dataset doc
+> - **Origin:** <URL, SharePoint path, or `sources/<file>`>
+> - **Source date:** <when the source itself was written>
+> - **Date read:** <when it was ingested — matters for mutable sources>
+> - **Sensitivity:** committable | reference-only
+> - **Status:** ingested | partial | superseded by S-<slug>
+> - **Answers:** <which questions this source can settle>
+> - **Notes:** <caveats, contested claims, sections worth revisiting>

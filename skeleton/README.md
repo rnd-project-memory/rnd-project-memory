@@ -19,8 +19,8 @@ gone rather than being deleted with it.
 Clone this repository, then run the installer against a directory that is not it:
 
 ```bash
-./install.sh ../my-project my-project you@example.org
-./install.sh ../my-project my-project you@example.org latency-budget   # naming the first thread
+./install.sh ../churn-signals "Churn Signals" you@example.org
+./install.sh ../churn-signals "Churn Signals" you@example.org latency-budget   # naming the first thread
 ```
 
 Run from a clone of the template repository. The destination need not exist or be a repository —

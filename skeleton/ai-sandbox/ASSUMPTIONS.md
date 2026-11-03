@@ -43,11 +43,15 @@
 
 ---
 
-## A-<slug> · <statement> — `ASSUMED`
-
-- **Raised:** <DATE> · **Owner:** <human name, or blank if unclaimed>
-- **Basis:** <what it rests on — source ID, reasoning, or convention — or `—` if none exists>
-- **If false:** <what breaks, and how badly>
-- **What would settle it:** <the check that would confirm or kill it>
-- **Does not license:** <optional — the specific thing this assumption is too narrow to justify,
-  when the statement is stronger than what it actually covers>
+> **Shape of an entry.** Copy it below this line without the `> `, one per entry. It sits in a
+> blockquote so that an untouched register reads as empty, and no check counts the example as
+> an entry: a live example left beside real entries cannot be told from one.
+>
+> ## A-<slug> · <statement> — `ASSUMED`
+>
+> - **Raised:** <DATE> · **Owner:** <human name, or blank if unclaimed>
+> - **Basis:** <what it rests on — source ID, reasoning, or convention — or `—` if none exists>
+> - **If false:** <what breaks, and how badly>
+> - **What would settle it:** <the check that would confirm or kill it>
+> - **Does not license:** <optional — the specific thing this assumption is too narrow to justify,
+>   when the statement is stronger than what it actually covers>

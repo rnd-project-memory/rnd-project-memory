@@ -296,6 +296,23 @@ else
   bad "install with a non-conflicting existing README failed"
 fi
 
+say "Register and marker gate"
+# A register's shipped example lives in a blockquote, so an untouched register reads as empty.
+live=$(grep -lE '^## [A-Z]-<slug>' "$dest"/ai-sandbox/*.md 2>/dev/null)
+[ -z "$live" ] \
+  && ok "no register ships a live example entry" \
+  || bad "a register ships its example as a live entry: $live"
+case "$out" in
+  *"a marker half removed"*) bad "check.sh reports a half-removed marker after a complete fill";;
+  *) ok "no marker remnant after the blanks are answered";;
+esac
+cp "$dest/ai-sandbox/INDEX.md" "$dest/ai-sandbox/INDEX.md.orig"
+printf 'what is left of a marker.>>\n' >> "$dest/ai-sandbox/INDEX.md"
+(cd "$dest" && ./check.sh 2>&1) | grep -q 'INDEX.md:[0-9]*: a marker half removed' \
+  && ok "a half-removed marker is reported" \
+  || bad "a half-removed marker is not reported"
+mv "$dest/ai-sandbox/INDEX.md.orig" "$dest/ai-sandbox/INDEX.md"
+
 say "Identity guard gate"
 # Published identity metadata cannot be withdrawn, so the guard blocks. It must stay silent until a
 # project lists anyone, since a check firing on a project that never asked teaches --no-verify,
