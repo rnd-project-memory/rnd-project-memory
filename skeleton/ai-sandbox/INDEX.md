@@ -28,6 +28,7 @@ Entry point for every session. Loaded automatically through `AGENTS.md`.
 | `CHECKPOINT-<thread>.md` | Current unresolved state, one per thread | rewrite, ≤150 lines, holder only |
 | `OPEN_QUESTIONS.md` | Active questions (resolved are deleted) | edit |
 | `ASSUMPTIONS.md` | What the method bets on | edit |
+| `DECISIONS.md` | Choices taken, too young for an ADR; mature by holding | add; edit when revised; move to an ADR when it has held |
 | `SOURCES.md` | Source register with IDs | append |
 | `CAVEATS.yaml` | Data and tool traps, found by subject | append, corrected in place |
 | `PUBLICATIONS.md` | What was published externally, and its status | edit |

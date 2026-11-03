@@ -313,6 +313,19 @@ printf 'what is left of a marker.>>\n' >> "$dest/ai-sandbox/INDEX.md"
   || bad "a half-removed marker is not reported"
 mv "$dest/ai-sandbox/INDEX.md.orig" "$dest/ai-sandbox/INDEX.md"
 
+say "Working decisions gate"
+dc="$dest/ai-sandbox/DECISIONS.md"; cp "$dc" "$dc.orig"
+printf '\n## D-held-choice · held\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '40 days ago' +%F)" >> "$dc"
+printf '\n## D-young-choice · young\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '3 days ago' +%F)" >> "$dc"
+dout=$(cd "$dest" && ./check.sh 2>&1)
+printf '%s\n' "$dout" | grep -q 'ripe  D-held-choice: held 40 days' \
+  && ok "a decision held 40 days is listed as ripe for an ADR" \
+  || bad "a decision held 40 days is not listed as ripe"
+printf '%s\n' "$dout" | grep -q 'D-young-choice' \
+  && bad "a 3-day-old decision is listed as ripe" \
+  || ok "a young decision is not listed"
+mv "$dc.orig" "$dc"
+
 say "Staleness gate"
 # Only a human defers a stalled thread, and a deferral names its end. Tested on a checkpoint whose
 # last commit is forty days old, against four states of the log.

@@ -119,6 +119,7 @@ scaffold   ai-sandbox/INDEX.md
 scaffold   ai-sandbox/CHECKPOINT-thread.md
 scaffold   ai-sandbox/OPEN_QUESTIONS.md
 scaffold   ai-sandbox/ASSUMPTIONS.md
+scaffold   ai-sandbox/DECISIONS.md
 scaffold   ai-sandbox/SOURCES.md
 scaffold   ai-sandbox/CAVEATS.yaml
 scaffold   ai-sandbox/PUBLICATIONS.md

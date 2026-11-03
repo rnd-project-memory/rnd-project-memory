@@ -53,6 +53,7 @@ table before any file format.
 | A data or tool trap — a plausible, silently wrong answer | `ai-sandbox/CAVEATS.yaml` | append; corrected in place, never deleted |
 | A question with no answer yet | `ai-sandbox/OPEN_QUESTIONS.md` | add; **delete** when answered |
 | Something the method bets on | `ai-sandbox/ASSUMPTIONS.md` | add; **delete** when confirmed |
+| A choice taken, too young for an ADR | `ai-sandbox/DECISIONS.md` | add **when taken**; edit when revised; **move** to an ADR once it has held |
 | Something published externally, drifting from `docs/` | `ai-sandbox/PUBLICATIONS.md` | add; `stale` is a legitimate resting status |
 | Executable logic | `src/` | git |
 
@@ -323,6 +324,7 @@ ai-sandbox/                    ← working memory between sessions
   CHECKPOINT-<thread>.md       ← in-flight reasoning; one per thread, ≤150 lines, holder-only write
   OPEN_QUESTIONS.md            ← active questions only
   ASSUMPTIONS.md               ← what the method bets on
+  DECISIONS.md                 ← choices taken, too young for an ADR; written when taken, mature by holding
   SOURCES.md                   ← source register
   CAVEATS.yaml                 ← data/tool traps, found by subject; never deleted, only corrected
   PUBLICATIONS.md              ← what was published externally, and whether it has drifted
@@ -510,6 +512,7 @@ delivery. The copies are gone.
 | `ai-sandbox/CHECKPOINT-<thread>.md` | One per thread; in-flight reasoning, rewritten, ≤150 lines, written only by whoever it names `Held by:` |
 | `ai-sandbox/OPEN_QUESTIONS.md` | Active questions only; deleted when answered |
 | `ai-sandbox/ASSUMPTIONS.md` | What the method bets on |
+| `ai-sandbox/DECISIONS.md` | Working decisions: written when taken, moved into an ADR once they have held |
 | `ai-sandbox/SOURCES.md` | Source register: IDs, provenance, sensitivity |
 | `ai-sandbox/CAVEATS.yaml` | Data/tool traps, found by subject; never deleted, only corrected |
 | `ai-sandbox/PUBLICATIONS.md` | What was published externally, and whether it has drifted from `docs/`; `stale` is a legitimate resting status |

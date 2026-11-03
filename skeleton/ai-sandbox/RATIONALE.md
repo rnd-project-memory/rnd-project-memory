@@ -161,6 +161,17 @@ The one rule here whose violation a later edit cannot repair. Once committed, th
 git history on every clone, and removal means rewriting history everywhere. Default every source
 to `reference-only`; committing is the deliberate exception.
 
+### A decision is written when taken, and matures by holding
+
+R&D runs on trials and repeats. Few decisions are mature when they are made, and a decision proves
+itself by holding while the work goes on. By then the memory of why it was taken has faded, so an
+ADR written at maturity records a conclusion without its reasons. A register in `ai-sandbox/`
+takes the decision while the reasons are fresh, and measures maturity by age unchanged. It moves
+the decision into an ADR once it has held. `docs/` is reviewed before every landing, so it is the
+wrong place for choices revised every week. The register sits beside `ASSUMPTIONS.md` and is
+different from it. An assumption is a bet about the world, settled by evidence. A decision is a
+choice, settled by people. One adopter had only the first, and filed its choices there.
+
 ### Identities are guarded like secrets, but only where a project opts in
 
 Author, committer and tagger are published with every commit and tag, and no later edit
