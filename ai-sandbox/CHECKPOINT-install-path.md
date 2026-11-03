@@ -82,16 +82,13 @@ assisted. The half that repeats every session has never been timed by hand: a se
 written, a checkpoint rewritten, the registers swept. That is where the availability dependency
 actually lives, and it is why the question is still open with its install half answered.
 
-### Gap 4 — a work identity in published history (priority: high, undecided)
+### Gap 4 — a work identity in published history (priority: high, in progress)
 
-The six commits from `08fde8d` to `216a755` (2026-09-26) name a work identity as author, and they
-are already on `origin/main`. `docs/constraints.md` binds this public repository against
-employer-identifying content *including in history*. The identity is not repeated here, for the
-same reason. Two exits, neither taken: rewrite those commits and force-push, or record why they
-stay. That is the author's call, not this file's. It also bears on `Q-oss-intake`, which already
-records one run made under a work identity. The 2026-08-28 near miss was content in files; this is
-commit metadata, which the secret hook does not read either.
-
+Decided on 2026-11-03 by the author: rewrite (option A), plus an opt-in identity guard in the
+template and this repository. Rewritten locally and verified clean: 21 commits and 4 tags affected
+across two work addresses, and one record redacted. `ADR-015` is drafted. **Not yet pushed.** The
+author signs `ADR-015`, then `v3.8.0` is cut and `main`, `next` and the tags are force-pushed
+(`sessions/2026-11-03-no-work-identity-in-public-history.md`).
 ---
 
 ## Promotion candidates

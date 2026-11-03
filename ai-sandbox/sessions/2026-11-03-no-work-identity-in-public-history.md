@@ -46,3 +46,58 @@ not overridden:
   has no false positives;
 - a listed identity matches exactly, so there is no heuristic to cry wolf.
 
+**The guard, built and tested.**
+
+- `skeleton/.githooks/identity.allow` is profile layer and ships empty, which checks nothing.
+- `pre-commit` gains an identity check that runs before anything else, since a commit with nothing
+  staged still records who made it.
+- A new `pre-push` checks author, committer and tagger of every commit and tag about to be
+  published.
+- `check.sh` reports the guard's state, `install.sh` names it as left to the adopter, and `MANIFEST`
+  lists both files.
+- The rule is in `RULES.md`, with rationale in `RATIONALE.md`, setup text in the skeleton's
+  `AGENTS.md`, and the handbook's §9 and §12.
+- Tested on a scratch install: the empty list passes; an unlisted author is blocked; a glob passes,
+  case-insensitively; at push, an unlisted tagger and an unlisted author are each blocked.
+- `bootstrap-test.sh` gains five gates, and passes. Committed as `a744486`, a hash from before the
+  rewrite.
+
+**The rewrite.**
+
+- A full backup bundle of the old history was written to the scratchpad. It contains the
+  identities and is not to be committed.
+- The rewrite ran on a separate clone, with `git filter-branch`, since `filter-repo` is not
+  installed and nothing was downloaded. An env filter replaced both work addresses for author and
+  committer, a tree filter replaced the address in the one record with a redaction marker, and
+  tags were carried with `--tag-name-filter cat`. The four tags with a work tagger were re-created
+  with the same target, message and date.
+- The clone's remote was removed, refs and reflogs dropped, and objects pruned.
+
+**Verified:**
+
+- neither address and neither name occurs in any object;
+- every author, committer and tagger is `esdevop@gmail.com`;
+- the record carries the marker;
+- all 114 commits changed hash.
+
+**The first measurement was incomplete.** It counted 6 affected commits. Pairing old and new
+commits showed the second address as author and committer of 15 more early commits, and every
+commit changed. My filter had excluded addresses containing `gmail`, `noreply` or `example`, and
+the second address evidently matched one of them. The rewrite matched exact addresses, so it was
+not affected. The total is 21 commits and 4 tags. An under-counting filter is the instrument
+failure this repository keeps warning about, met in my own check.
+
+**The map.** Old to new hashes, keyed by author date, committer date and subject (unique across all
+114), is in `ai-sandbox/results/history-rewrite-commit-map__20261103T163853Z.json`.
+`results/README.md` explains it.
+
+**A constraint met head-on.** `docs/constraints.md` said *two executables ship*. `pre-push` makes
+it three, so the row is amended openly, along with the handbook's §12 count, rather than worked
+around.
+
+**This repository's own list:** `.githooks/identity.allow` names `esdevop@gmail.com`. The root's
+hooks are vendored, so they enforce it from the next release, `v3.8.0`. Because this is a safety
+fix for a cost already paid, it ships at once under the branch rule.
+
+**Waiting on the author:** the sign-off of `ADR-015` and the `constraints.md` amendment, and the
+go-ahead for the force-push.

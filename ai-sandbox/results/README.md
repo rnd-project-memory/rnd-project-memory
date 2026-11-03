@@ -32,3 +32,16 @@ without the raw, possibly gitignored, data behind it"*. It carries each arm's ve
 interface, cost, both pre-registered outcomes, and the **sha256 of every raw file**, so that a
 reader who has the raw evidence can confirm it is what these records cite, and a reader who does
 not still has the outcomes.
+
+---
+
+## Why hashes cited before 2026-11-03 do not resolve
+
+On 2026-11-03 every commit was rewritten to remove work identities from author, committer and
+tagger metadata, and from one session record (`ADR-015`). Every commit hash changed. Records written
+before then are immutable, so the hashes they cite (in prose, in `Commit:` fields, in reviews) are
+left as written.
+
+`history-rewrite-commit-map__20261103T163853Z.json` resolves them. It holds one row per commit,
+old hash, new hash and subject, for all 114 commits that existed at the rewrite. To follow an old citation, look
+up its hash under `old`. A cited short hash is a prefix of one `old` value.

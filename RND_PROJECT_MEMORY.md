@@ -1136,7 +1136,7 @@ that ship as bare imperatives get "helpfully" violated.
 
 ### What is checked mechanically
 
-Prose rules aimed at a probabilistic executor decay. Two scripts ship in the skeleton, with
+Prose rules aimed at a probabilistic executor decay. Three scripts ship in the skeleton, with
 deliberately different severity:
 
 | Artifact | Checks | Mode |
@@ -1150,7 +1150,7 @@ version strings read as undated numbers, for instance — and a noisy check shar
 with the secret scan is a check that gets disabled after its first irritating run. The one rule
 whose violation cannot be repaired by editing a file must not be hostage to that.
 
-### The failure mode both scripts share
+### The failure mode the scripts share
 
 **A check that scans the repository will find the repository's own instructions.** The registers
 explain in their preambles that `Resolved` must never be used; the playbooks cite `[S-latency-spec
