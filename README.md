@@ -47,7 +47,7 @@ commits by default.
 
 ## Status
 
-`v3.9.0`. Twenty releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.10.0`. Twenty-one releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -131,6 +131,11 @@ nobody remembers why they were made. A stalled thread is deferred only by its ho
 with a revisit date, where the adopter's assistant deferred everything every session. Sessions
 carry a `Mode:`. `CAVEATS.yaml` `severity:` measures what a miss costs. Register examples no longer
 pose as entries, and `check.sh` sees a half-removed install blank.
+
+**`v3.10.0`: only the user ends a session.** Saving and closing were one gesture, so an
+assistant that saved carefully also closed the session, at its own reading of *done*, while the
+user still meant to go on. They are two now: save at any time, with the record left open; close
+only on the user's word. Working decisions ripen for an ADR at 60 days.
 
 What is still narrow: one adopting project besides these three starts and one more read after
 weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
