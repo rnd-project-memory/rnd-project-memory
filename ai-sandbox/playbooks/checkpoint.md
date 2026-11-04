@@ -1,12 +1,22 @@
-# Playbook — Close a session
+# Playbook — Save a session, and close it when the user says so
 
-Run at the end of a session, or at any point a reliable save is wanted.
-Follow the steps **in order**.
+Two gestures, deliberately apart (`RULES.md`).
 
-## 1. Close and freeze the session file
+- **Save**: steps 2–5, at any point a reliable save is wanted, as often as you like. The session
+  record stays `open` and is appended to afterwards. Saving never ends the session.
+- **Close**: step 1 and step 5's `LOG.md` row, **only when the user says the session is over**.
+  Closing freezes the record for good, and work after it belongs to a new session. So a close the
+  user did not ask for either strands their next thought in a new record or, worse, gets written
+  into a frozen one.
+
+When the work looks finished, save, then ask whether to close. Do not close on your own reading of
+*done*.
+
+## 1. Close and freeze the session file — on the user's word only
 
 The file already exists — `session-start.md` created it and the session has been appending
-to it. This step **closes** it; it does not compose it from memory.
+to it. This step **closes** it; it does not compose it from memory. Run it only when the user has
+said the session is over, never as part of a save.
 
 - Fill any gaps in **Decisions** and **Next** that the session did not write as it went.
 - Set `**Status:** closed`.
@@ -112,7 +122,7 @@ abandoned is deleted. Either deletion gets a `LOG.md` row naming the outcome.
 
 ## 5. Update the log and index
 
-- `sessions/LOG.md` — one row: date, topic, outcome, link to the session file. The outcome
+- `sessions/LOG.md` — **at close only**, one row: date, topic, outcome, link to the session file. The outcome
   names **what was resolved**, not just what was worked on: this row is the only cue a later
   reader gets that a deleted question ever had an answer.
 - `experiments/LOG.md` — a row for each experiment run this session.
@@ -128,9 +138,10 @@ unprompted.**
 
 ## Checklist
 
-- [ ] Session file written
+- [ ] Session record appended; still `open` unless the user said the session is over
 - [ ] Promotions agreed and applied
 - [ ] Thread checkpoint(s) rewritten (≤150 lines) or closed to `docs/` + one `OPEN_QUESTIONS.md` entry
 - [ ] Registers updated, resolved entries deleted
-- [ ] `LOG.md` and `INDEX.md` (incl. thread table) updated
+- [ ] `INDEX.md` (incl. thread table) updated; `LOG.md` row only at close
+- [ ] Closed only on the user's word; otherwise asked whether to close
 - [ ] Commit proposed

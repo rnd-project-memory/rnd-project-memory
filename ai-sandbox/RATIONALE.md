@@ -110,6 +110,17 @@ the archive worth keeping.
 
 Corrections go into the next record, referring back.
 
+### Only the user ends a session
+
+Saving and closing used to be one gesture. `checkpoint.md` was for *the end of a session, or any
+point a reliable save is wanted*, and its first step froze the record. An assistant that saved
+carefully therefore ended the session, at its own reading of *done*. The user's next thought then
+had two places to go, and both were wrong: a new record, fragmenting the day (this repository's
+assistant produced eight records in one day that way), or a frozen one, breaking immutability.
+Users report it as assistants *closing my session on their own*. Saving is now free and leaves the
+record open. Closing is the user's call, since only the user knows whether there is more. No
+check can tell a requested close from an unrequested one, so it is a rule, under `ADR-013`.
+
 ### Another open session is asked about, never frozen on a guess
 
 The first version of this rule said an `open` file from any earlier session was interrupted, and

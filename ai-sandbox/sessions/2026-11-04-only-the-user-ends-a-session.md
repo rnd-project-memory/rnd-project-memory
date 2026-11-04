@@ -1,6 +1,6 @@
 # 2026-11-04 · Only the user ends a session
 
-- **Status:** open
+- **Status:** closed
 - **Configuration:** Solo
 - **Mode:** design
 - **Participants:** author — claude-opus-5-5
@@ -54,3 +54,23 @@ and the playbook points at it. So it is a rule, plus the playbook split that rem
 sessions that have not loaded this template's rules.
 
 **Saved, not closed.** This record stays `open` until the author says the session is over.
+
+**Released, on the author's word.** `v3.10.0`, MINOR. It carries this change and the 60-day
+ripeness threshold. The tag names the `RULES.md` rule and the `checkpoint.md` split. The root was
+raised: `check.sh`, `RULES.md`, `RATIONALE.md`, `checkpoint.md` and `sessions/_TEMPLATE.md` were
+replaced. The root's INDEX and `DECISIONS.md` already carried the scaffold changes.
+`.template-version` was updated last.
+
+The release was recorded in this session rather than in a new one. Under the new rule, a new record
+could only have been closed by asking again. The author's instruction (close, commit, release) is
+carried out as one sequence, with the close last.
+
+## Decisions
+
+- Save and close are two gestures, and only the user closes.
+- `Q-session-boundary` answered and deleted.
+- `v3.10.0` released.
+
+## Next
+
+No thread is open. `Q-positioning-against-prior-art` is the live question.

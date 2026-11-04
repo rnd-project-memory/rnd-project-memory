@@ -8,7 +8,8 @@
 
 > `open` means **this session, right now**. Append to this file as the session runs —
 > a decision reached is a decision written down, not something to reconstruct at the end.
-> `checkpoint.md` sets it to `closed`, after which the file is immutable.
+> It is set to `closed` only when the user ends the session (`checkpoint.md`, *Close*), after
+> which the file is immutable. Saving leaves it `open`.
 >
 > Another `open` file is either running in parallel or was interrupted, and only the person can
 > say which. Never change it on a guess; `session-start.md` says what to do.
