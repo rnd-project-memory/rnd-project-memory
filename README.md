@@ -47,7 +47,7 @@ commits by default.
 
 ## Status
 
-`v3.10.0`. Twenty-one releases. The memory half — sections 1–14 of the handbook — has been run
+`v3.11.0`. Twenty-two releases. The memory half — sections 1–14 of the handbook — has been run
 against a real single-author project; the delivery half (§15) has been exercised across two real
 structural migrations.
 
@@ -136,6 +136,13 @@ pose as entries, and `check.sh` sees a half-removed install blank.
 assistant that saved carefully also closed the session, at its own reading of *done*, while the
 user still meant to go on. They are two now: save at any time, with the record left open; close
 only on the user's word. Working decisions ripen for an ADR at 60 days.
+
+**`v3.11.0`: a plan revision follows its design revision.** Met at work. A design was revised
+properly into `DESIGN.r1.md`, but its plan was edited in place, and the reports of finished steps
+stopped matching the plan they cite. Revisions now share one number, so `DESIGN.rN.md` pairs with
+`PLAN.rN.md`. `check.sh` halts a package while its design is ahead of its plan, or while a
+released file differs from its release, and names the way back. A revision must account for every
+step it supersedes.
 
 What is still narrow: one adopting project besides these three starts and one more read after
 weeks of use, multi-user behaviour reasoned from the design rather than observed, and upgrades
