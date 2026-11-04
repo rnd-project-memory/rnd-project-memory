@@ -67,4 +67,5 @@ setting out to find out.>>
    relevant to today's focus, then `OPEN_QUESTIONS.md`.
 2. Do not read `docs/` wholesale — open a document when it is actually needed.
 3. Ask for the session focus if it was not given.
-4. Close with `playbooks/checkpoint.md`.
+4. Save with `playbooks/checkpoint.md` as the work goes. Close only when the user says the session
+   is over, and ask rather than close when it looks done.

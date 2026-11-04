@@ -37,7 +37,9 @@
   something needs promoting to `docs/` — not that the prose needs shortening.
 - Write every entry for a reader who missed the session. In three months that reader is you.
 - The session file is created at the **start** of a session (`Status: open`) and appended to as it
-  runs; `checkpoint.md` closes it. Immutable once closed. **Another `open` session file is not
+  runs. **Only the user ends a session.** Save as often as needed (`checkpoint.md`, *Save*), but
+  close the record only when the user says the session is over, and ask rather than close when
+  the work looks done. Immutable once closed. **Another `open` session file is not
   yours to change.** It is either running in parallel or was interrupted, and only the person can
   say which. Ask, and freeze it as `abandoned` only on their word. Never backfill.
 - Experiment records are immutable once written. Corrections go into the next one.
@@ -90,7 +92,7 @@ Ask to follow one of these by path:
 | Playbook | When |
 |----------|------|
 | `ai-sandbox/playbooks/session-start.md` | Opening a session |
-| `ai-sandbox/playbooks/checkpoint.md` | Closing a session, or any save point |
+| `ai-sandbox/playbooks/checkpoint.md` | Saving at any point; closing when the user ends the session |
 | `ai-sandbox/playbooks/promote.md` | Moving a conclusion into `docs/` |
 | `ai-sandbox/playbooks/ingest-source.md` | Adding a PDF, wiki page, or transcript |
 | `ai-sandbox/playbooks/run-experiment.md` | Running and recording an analysis |

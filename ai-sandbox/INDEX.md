@@ -71,7 +71,7 @@ prohibitions are in `docs/method.md` and `docs/constraints.md`. `install-path`'s
 
 **`Q-positioning-against-prior-art` 🔴** is the live question: does this add anything over
 shipped memory and spec-driven tools, settled by a pre-registered comparison.
-`Q-who-keeps-the-history`, `Q-session-boundary` and `Q-unexercised-components` 🟡 remain, as do
+`Q-who-keeps-the-history` and `Q-unexercised-components` 🟡 remain, as do
 `Q-prompt-phrasing-confound` 🟢 and two questions answerable only outside this repository.
 ---
 
@@ -87,4 +87,5 @@ release. Earlier the same day: `v3.9.0`, and `install-path` closed.
    relevant to today's focus, then `OPEN_QUESTIONS.md`.
 2. Do not read `docs/` wholesale — open a document when it is actually needed.
 3. Ask for the session focus if it was not given.
-4. Close with `playbooks/checkpoint.md`.
+4. Save with `playbooks/checkpoint.md` as the work goes. Close only when the user says the session
+   is over, and ask rather than close when it looks done.
