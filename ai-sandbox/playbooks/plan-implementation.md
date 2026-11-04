@@ -86,11 +86,36 @@ that is a gap in the design, not a choice to make in the plan. Return to step 2.
 Executors never edit the design or the plan. They end an attempt as `blocked` and say why. Those
 reports are what this step reads.
 
-- **Revise** when the plan is wrong: a gate that tests the wrong thing, a missing or mis-ordered
-  step, a card too vague to follow. Write `PLAN.r<n>.md` as a full copy. Give it `Supersedes:`, the
-  reason citing the report that showed it, and `Changed steps:`. A changed step gets a new ID, and
-  unchanged steps keep theirs, so their reports stay valid. Release it as in step 4, and add a
-  `revised` row to the log.
+Revisions share one number per package, N, and `DESIGN.md` and `PLAN.md` are revision 0.
+
+- **Revise the design** when it is wrong. Write `DESIGN.rN.md` as a full copy, approved by a named
+  human like the first. **The moment it exists, execution stops.** `check.sh` shows no step
+  `ready` until `PLAN.rN.md` (same N) is released with `Design:` naming it. Then write that plan.
+- **Revise the plan alone** when the plan is wrong but the design stands: a gate that tests the
+  wrong thing, a missing or mis-ordered step, a card too vague to follow. Write `PLAN.rN.md` under
+  the next N, with `Design:` naming the design it still implements.
+- **Either way, account for every step of the plan you supersede.**
+  - `Carried steps:`, unchanged, keep their IDs. Their reports stay valid only if their meaning did
+    not move. A carried step whose `Read:` cites a design section the revision rewrote has changed,
+    whatever its card says, so list it under `Changed steps:` instead.
+  - `Changed steps:` get new IDs.
+  - `Dropped steps:` are gone, with the reason in the revision's text.
+
+  `check.sh` reports any step of the superseded plan that is in none of the three.
+- **Re-run the carried steps' gates** at the revision's base. Record them as
+  `reviews/revision-rN__<YYYYMMDD>T<HHMM>Z.md`, with `Run reviewed:` set to `—`. A step accepted
+  under the old plan is then accepted under the new one on evidence, not on habit.
+- Release the plan as in step 4, and add one `revised` row to the log naming N and what changed.
+
+**If a released file was edited in place**, which is exactly what this step exists to prevent,
+`check.sh` reports it on the package's line. Recover:
+
+1. restore the file from its release commit: `git show <release-commit>:<path> > <path>`;
+2. put the change into the next revision instead;
+3. commit both.
+
+The reports citing the file are valid again, since they cite what it says once more. Nothing was
+lost: the history kept the released text.
 - **Branch** when execution uncovers work the design did not foresee, which must be done before a
   step can proceed. Open a new package, with its own design and plan, whose `DESIGN.md` names the
   step it unblocks: `Unblocks: IMP-…/S-<nn>`. Then revise the parent. The step's replacement in

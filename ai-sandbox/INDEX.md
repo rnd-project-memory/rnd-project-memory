@@ -67,7 +67,7 @@ prohibitions are in `docs/method.md` and `docs/constraints.md`. `install-path`'s
 > This file loads into every session; `check.sh` reports this section past 15 lines.
 
 **No thread is open.** Both closed on 2026-11-03, with everything they found shipped through
-`v3.10.0`, where only the user ends a session.
+`v3.11.0`.
 
 **`Q-positioning-against-prior-art` 🔴** is the live question: does this add anything over
 shipped memory and spec-driven tools, settled by a pre-registered comparison.
@@ -77,8 +77,9 @@ shipped memory and spec-driven tools, settled by a pre-registered comparison.
 
 ## Latest completed session
 
-2026-11-04: `v3.10.0` released. Save and close are two gestures, and only the user ends a session.
-`Q-session-boundary` answered. Working decisions ripen at 60 days.
+2026-11-04: `v3.10.0` (only the user ends a session) and `v3.11.0` (a plan revision follows its
+design revision; an edited release halts the package) released. The second came from a case met
+at work.
 
 ## What a new session does
 

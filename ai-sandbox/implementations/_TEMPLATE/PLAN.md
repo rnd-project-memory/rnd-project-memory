@@ -1,21 +1,30 @@
-# IMP-<YYYY-MM-DD>-<slug> · Plan r1
+# IMP-<YYYY-MM-DD>-<slug> · Plan
 
 - **Status:** draft
 - **Released:** <YYYY-MM-DD> by <who>
 - **Design:** `DESIGN.md`
 - **Session:** <the session record the plan was written and released in>
 - **Supersedes:** —
+- **Carried steps:** —
 - **Changed steps:** —
+- **Dropped steps:** —
 - **Base:** <the branch or ref every step starts from and commits to>
 - **Runtime:** <pointer to `DATA_ENVIRONMENT.md` or `playbooks/local/<recipe>.md` — cited, never copied here>
 
 > **Steps and gates. No status.** Written by the capable model from the approved design. When
 > `Status:` becomes `released`, the file is fixed: steps, gates and expected values never change.
 > What happened lives in `runs/`, what was accepted in `reviews/`, and `check.sh` derives status
-> from them. A wrong gate or a missing step is a revision, `PLAN.r<n>.md`: a full copy with
-> `Supersedes:`, the reason, and `Changed steps:`. Unchanged steps keep their IDs. A changed step
-> gets a new one, and an ID is never reused. Work the plan did not foresee is a new package that
-> names the step it unblocks.
+> from them.
+>
+> **Revisions share one number per package.** `DESIGN.md` and `PLAN.md` are revision 0. A design
+> revision is always a pair, `DESIGN.rN.md` with `PLAN.rN.md` under the same N, because a changed
+> design needs a plan that implements it. A plan-only revision (a wrong gate, a missing step) takes
+> the next N alone, and its `Design:` names the design it still implements. A revision is a full
+> copy. It gives `Supersedes:` and the reason, citing the report or design change behind it, and
+> accounts for every step of the plan it supersedes: `Carried steps:` (unchanged, IDs kept),
+> `Changed steps:` (replaced under new IDs) and `Dropped steps:`. A carried step whose `Read:` cites
+> a design section the revision rewrote has changed, whatever its card says. An ID is never reused.
+> Work the plan did not foresee is a new package that names the step it unblocks.
 >
 > **A card is the executor's context budget.** An executor reads this header, its own card, what
 > the card lists under `Read:`, and the runtime pointer. Nothing else. Write the card so that is

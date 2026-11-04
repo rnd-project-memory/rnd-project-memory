@@ -78,3 +78,9 @@ passes.
 
 **Recorded** as `D-paired-design-plan-revisions`, decided by esdevop. Documented in handbook §3
 and §4, and a `RATIONALE.md` paragraph. The work project is described only in general terms.
+
+**Released.** `v3.11.0`, MINOR, at once under `D-batch-template-releases`: a fix for a cost paid
+at work. The tag names the two changed playbooks. `RULES.md` is unchanged. Root raised: `check.sh`,
+`RATIONALE.md`, both playbooks and the design and plan templates replaced. This repository's one
+package, accepted, shows no halt, since its released files were never edited. Saved, not closed:
+the record stays open until the author ends the session.

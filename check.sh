@@ -586,7 +586,50 @@ else
     # A plan not yet released is not executable: its steps get no state, only structure findings.
     released=1
     grep -qE '^[-*] \*\*Status:\*\*[[:space:]]*released' "$plan" || released=0
-    known=" "; states=" "; warn=""; list=""
+
+    # Revisions share one number per package, and a design revision is always paired with a plan
+    # under the same N. Any of the following halts the package, so that no step is ready: the
+    # design is ahead of the plan, the plan rests on an unapproved design, or a released design or
+    # plan was edited after its release commit. That last one is what one adopter's agent did after
+    # a design revision, so the reports of steps already done stopped matching the plan they cite.
+    # The edit is in the history, and so is the cure: restore the released text, revise instead.
+    halt=""; warn=""
+    design=$( { ls "$d"/DESIGN.md 2>/dev/null; ls "$d"/DESIGN.r*.md 2>/dev/null | sort -V; } | tail -1)
+    pd=$(grep -m1 -E '^[-*] \*\*Design:\*\*' "$plan" | sed 's/^[-*] \*\*Design:\*\*//' | tr -d '`' | awk '{print $1}')
+    if [ -n "$design" ] && [ -n "$pd" ]; then
+      if [ ! -f "$d/$pd" ]; then halt="its Design: names $pd, which does not exist"
+      elif [ "$pd" != "$(basename "$design")" ]; then halt="$(basename "$design") is ahead of $(basename "$plan"), which implements $pd"
+      elif ! grep -qE '^[-*] \*\*Status:\*\*[[:space:]]*approved' "$d/$pd"; then halt="$(basename "$plan") rests on $pd, which is not approved"; fi
+    fi
+    for dr in "$d"/DESIGN.r*.md; do
+      [ -f "$dr" ] || continue
+      n=${dr##*/DESIGN.}; [ -f "$d/PLAN.$n" ] || [ "$dr" = "$design" ] \
+        || warn="$warn  ?     $id: $(basename "$dr") has no PLAN.$n — a design revision is always paired with its plan\n"
+    done
+    for f in "$d"/DESIGN*.md "$d"/PLAN*.md; do
+      [ -f "$f" ] || continue
+      rc=""
+      for c in $(git log --reverse --format=%H -- "$f" 2>/dev/null); do
+        git show "$c:$f" 2>/dev/null | grep -qE '^[-*] \*\*Status:\*\*[[:space:]]*(released|approved)' && { rc=$c; break; }
+      done
+      [ -n "$rc" ] || continue
+      # Judged by content, not by commits: restoring the released text clears it, as a warning must.
+      git diff --quiet "$rc" -- "$f" 2>/dev/null && continue
+      ne=$(git rev-list --count "$rc..HEAD" -- "$f" 2>/dev/null)
+      halt="${halt:+$halt; }$(basename "$f") differs from its release at ${rc:0:7} (edited in ${ne:-0} commit(s) since) — restore it (git show ${rc:0:7}:$f) and put the change in a revision"
+    done
+    # Every step of the superseded plan is carried, changed or dropped, and none vanishes silently.
+    plans=$( { ls "$d"/PLAN.md 2>/dev/null; ls "$d"/PLAN.r*.md 2>/dev/null | sort -V; } )
+    prev=$(printf '%s\n' "$plans" | tail -2 | head -1)
+    if [ "$prev" != "$plan" ] && [ -f "$prev" ]; then
+      acct=$(grep -E '^[-*] \*\*(Carried|Changed|Dropped) steps:\*\*' "$plan" | grep -oE 'S-[0-9]+')
+      for o in $(grep -oE '^### S-[0-9]+' "$prev" | awk '{print $2}'); do
+        grep -qE "^### $o " "$plan" && continue
+        printf '%s\n' "$acct" | grep -qx "$o" \
+          || warn="$warn  ?     $id: $o of $(basename "$prev") is in neither $(basename "$plan") nor its Changed/Dropped steps\n"
+      done
+    fi
+    known=" "; states=" "; list=""
     while IFS='|' read -r sid deps ho ngates bad; do
       [ -n "$sid" ] || continue
       for dep in $(printf '%s' "$deps" | grep -oE 'S-[0-9]+'); do
@@ -639,7 +682,8 @@ else
       id && /^[-*] \*\*Gate [^:]*:\*\*/ { ng++; if ($0 !~ /→/) bad++ }
       END { flush() }' "$plan")
     printf '%b' "$warn"
-    if [ "$open" -eq 1 ] && [ "$released" -eq 0 ]; then echo "  $id ($(basename "$plan"), not released — no step is executable)"
+    if [ "$open" -eq 1 ] && [ -n "$halt" ]; then echo "  $id ($(basename "$plan"), HALTED — no step is executable): $halt"
+    elif [ "$open" -eq 1 ] && [ "$released" -eq 0 ]; then echo "  $id ($(basename "$plan"), not released — no step is executable)"
     elif [ "$open" -eq 1 ]; then echo "  $id ($(basename "$plan"))"; printf '%b' "$list"; fi
   done
 fi

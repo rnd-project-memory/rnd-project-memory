@@ -18,8 +18,9 @@ worktree created from the default branch may not contain the package, or this pl
 
 `./check.sh` lists each open package's steps with a derived state. Take a step marked `ready`: no
 attempt yet, and every dependency satisfied. A `mechanical` dependency is satisfied when it has
-`passed`, a `judgement` one only when it is `accepted`. Use the highest `PLAN.r<n>.md`, or `PLAN.md`
-if there is no revision.
+`passed`, a `judgement` one only when it is `accepted`. Use the highest `PLAN.rN.md`, or `PLAN.md`
+if there is no revision. **If `check.sh` says the design is ahead of the plan, or the plan was
+edited after release, no step is ready.** Stop, and report it to whoever revises the plan.
 
 ## 2. Claim it
 
