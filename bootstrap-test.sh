@@ -313,6 +313,57 @@ printf 'what is left of a marker.>>\n' >> "$dest/ai-sandbox/INDEX.md"
   || bad "a half-removed marker is not reported"
 mv "$dest/ai-sandbox/INDEX.md.orig" "$dest/ai-sandbox/INDEX.md"
 
+say "Revision gate"
+# One adopter's agent revised the design into DESIGN.r1.md, then edited the released PLAN.md in place
+# and committed it, so the reports of steps already done no longer matched the plan they cite. The
+# scenario, step by step.
+rp="$dest/ai-sandbox/implementations/IMP-2000-01-03-revision"
+mkdir -p "$rp/runs" "$rp/reviews"
+printf -- '- **Status:** approved\n' > "$rp/DESIGN.md"
+cat > "$rp/PLAN.md" <<'PLAN'
+- **Status:** released
+- **Design:** `DESIGN.md`
+### S-01 · a
+- **Depends on:** —
+- **Handoff:** mechanical
+- **Gate G-01-1:** `true` → exit 0
+### S-02 · b
+- **Depends on:** S-01
+- **Handoff:** mechanical
+- **Gate G-02-1:** `true` → exit 0
+PLAN
+printf -- '- **Verdict:** accepted\n' > "$rp/reviews/S-01__20000103T0000Z.md"
+printf '| IMP-2000-01-03-revision | 2000-01-03 | opened | first-thread | | fixture |\n' >> "$dest/ai-sandbox/implementations/LOG.md"
+rev_commit() { git -C "$dest" add -A ai-sandbox/implementations >/dev/null; (cd "$dest" && git commit -qm "$1" >/dev/null 2>&1); }
+rev_out() { (cd "$dest" && ./check.sh 2>&1) | grep 'IMP-2000-01-03-revision'; }
+rev_commit "revision fixture released"
+rev_out | grep -qE 'IMP-2000-01-03-revision \(PLAN.md\)$' \
+  && ok "a released plan with an approved design executes" \
+  || bad "the released fixture plan is not shown as executable"
+printf -- '- **Status:** approved\n' > "$rp/DESIGN.r1.md"; rev_commit "design revised"
+rev_out | grep -q 'HALTED.*DESIGN.r1.md is ahead of PLAN.md' \
+  && ok "a design revision without its plan halts execution" \
+  || bad "execution was not halted when the design got ahead of the plan"
+printf '### S-03 · edited in place\n- **Depends on:** —\n- **Handoff:** mechanical\n- **Gate G-03-1:** `true` → exit 0\n' >> "$rp/PLAN.md"
+rev_commit "the mistake: PLAN.md edited in place"
+rev_out | grep -q 'PLAN.md differs from its release at .* (edited in 1 commit(s) since)' \
+  && ok "a released plan edited in place, and committed, is reported" \
+  || bad "a committed in-place edit of a released plan is not reported"
+git -C "$dest" show "HEAD~2:ai-sandbox/implementations/IMP-2000-01-03-revision/PLAN.md" > "$rp/PLAN.md"
+sed 's/`DESIGN.md`/`DESIGN.r1.md`/; s/^### S-02 · b/### S-03 · b, revised/; s/G-02-1/G-03-1/' "$rp/PLAN.md" \
+  | sed '1a - **Carried steps:** S-01' > "$rp/PLAN.r1.md"
+# Checked before the revision is committed, which is when an author can still fix it.
+rev_out | grep -q 'S-02 of PLAN.md is in neither PLAN.r1.md nor its Changed/Dropped steps' \
+  && ok "a step that vanishes from a revision without being accounted for is reported" \
+  || bad "a silently dropped step is not reported"
+sed -i '2a - **Changed steps:** S-02 → S-03' "$rp/PLAN.r1.md"
+rev_commit "recovered: PLAN.md restored, PLAN.r1.md released"
+rout=$( (cd "$dest" && ./check.sh 2>&1) | sed -n '/IMP-2000-01-03-revision (PLAN.r1.md)$/,+2p')
+printf '%s\n' "$rout" | grep -qE 'S-01 +accepted' && printf '%s\n' "$rout" | grep -qE 'S-03 +ready' \
+  && ok "after recovery the carried step stays accepted and the revised step is ready" \
+  || bad "after recovery the package does not show S-01 accepted and S-03 ready"
+git -C "$dest" reset -q --hard HEAD~4; rm -rf "$rp"
+
 say "Working decisions gate"
 dc="$dest/ai-sandbox/DECISIONS.md"; cp "$dc" "$dc.orig"
 printf '\n## D-held-choice · held\n\n- **Decided:** %s · **by:** fixture\n' "$(date -d '70 days ago' +%F)" >> "$dc"

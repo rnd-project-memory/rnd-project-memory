@@ -91,3 +91,19 @@
 - **Reopen if:** ripe entries are routinely revised soon after, which would mean the wait is too
   short, or entries sit unpromoted long past 60 days, which would mean the listing is not acted on.
 - **Basis:** `sessions/2026-11-03-ripeness-60-days-and-close-adopter-review.md`
+
+## D-paired-design-plan-revisions · A design revision and its plan share one revision number
+
+- **Decided:** 2026-11-04 · **by:** esdevop
+- **Why now:** in a work project, a design revised into `DESIGN.r1.md` had its plan changed in place
+  in `PLAN.md`, so the reports of steps already done stopped matching the plan they cite.
+- **Decision:** revisions share one number per package. `DESIGN.rN.md` is always paired with
+  `PLAN.rN.md`, and a plan-only revision takes the next number alone. Until the pair is complete,
+  or while a released file differs from its release, `check.sh` halts the package.
+- **Rejected:** independent numbers for design and plan, linked only by `Design:`. It has no gaps,
+  but the pairing cannot be seen in the names, and an agent looking for *the plan for the new
+  design* edits `PLAN.md`. Naming alone, without detection, would not have stopped the in-place
+  edit.
+- **Reopen if:** plan-only revisions are common enough that gaps in design numbering confuse
+  readers, or carried steps turn out wrong after revisions despite the re-run.
+- **Basis:** `sessions/2026-11-04-plan-revisions-follow-design-revisions.md`

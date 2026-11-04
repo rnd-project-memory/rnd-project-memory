@@ -10,7 +10,8 @@
 > **The contract the plan is written against.** Drafted with the capable model, in sessions whose
 > records hold the reasoning. It is approved by a named human, always: a design approved by nobody
 > but its author has checked nothing. Then `Status:` becomes `approved`, and the file is never
-> edited again. A change after approval is `DESIGN.r<n>.md`, with `Supersedes:` and a reason.
+> edited again. A change after approval is `DESIGN.rN.md`, with `Supersedes:` and a reason, approved the same way,
+> and always released with `PLAN.rN.md` under the same N. Until that plan exists, nothing executes.
 >
 > **Links point backwards.** A record names the earlier records it rests on, once, when it is
 > written. Closed records are never edited to point forwards, so the reverse direction is found by

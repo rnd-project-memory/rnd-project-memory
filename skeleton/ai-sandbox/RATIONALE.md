@@ -298,6 +298,12 @@ reads `runs/` and `reviews/`, never a status field, because a typed status state
 drifts. One adopter's plans carried typed status, and an item came to read *done* and *not done*
 at once, beside gates reported passed with nothing on disk behind them.
 
+A revised design halts the package until its plan, under the same revision number, is released.
+A design that moves ahead of its plan leaves every *ready* step implementing the old design, and an
+executor cannot see that from its card. The same halt applies when a released plan or design
+differs from its release commit, which `check.sh` reads from git, so it survives the edit being
+committed. One adopter's agent did exactly that after a design revision.
+
 The plan itself never changes after release, for the same reason a record never does. An edited
 gate and an edited status line look the same in a diff, so a plan that may be edited is a contract
 nobody can hold an executor to. A revision is a new file, so every report still names the plan it

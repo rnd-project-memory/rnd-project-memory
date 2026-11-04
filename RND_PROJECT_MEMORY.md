@@ -160,7 +160,7 @@ and it separates four things a single plan document mixes:
 | File | Written by | Write mode |
 |------|-----------|-----------|
 | `DESIGN.md` | capable model and a person; a named human approves | fixed once approved |
-| `PLAN.md`: step cards, dependencies, gates with expected values | capable model | fixed once released; a change is `PLAN.r<n>.md` |
+| `PLAN.md`: step cards, dependencies, gates with expected values | capable model | fixed once released; a change is `PLAN.rN.md`, paired with `DESIGN.rN.md` when the design changed |
 | `runs/<step>__<utc>.md`: one attempt, every gate's observed value | the executor | immutable, one file per attempt |
 | `reviews/<step>__<utc>.md`: gates re-run, accepted or rejected | a reviewer | immutable |
 
@@ -177,10 +177,17 @@ do, and when to stop and report rather than improvise. A cheaper executor loadin
 spends the tokens the split exists to save, and is invited to decide what the card did not. Runtime
 instructions are cited from `DATA_ENVIRONMENT.md` or `playbooks/local/`, never copied into a plan.
 
-**Plans change by new files.** A wrong gate or a missing step is a revision, written by the capable
-model from the executors' `blocked` reports. Work the design did not foresee is a new package that
-names the step it unblocks, and the parent's revision adds that package to the step's
-`Depends on:`, so the step waits until the branch is accepted. Executors never edit the plan.
+**Plans change by new files, and a plan revision follows its design revision.** Revisions share one
+number per package. A revised design `DESIGN.rN.md` is always released with `PLAN.rN.md`, and until
+that plan exists `check.sh` halts the package. A wrong gate or a missing step is a plan-only
+revision under the next number. Every revision accounts for each step it supersedes: carried,
+changed or dropped. A released design or plan that differs from its release commit halts the
+package too, with the way back named: restore the released text, and revise. One adopter's agent
+revised a design properly and then edited the released plan in place, and the reports of steps
+already done stopped matching the plan they cited. Revisions are written by the capable model,
+from the executors' `blocked` reports. Executors never edit the plan. Work the design did not
+foresee is a new package that names the step it unblocks, and the parent's revision adds that
+package to the step's `Depends on:`, so the step waits until the branch is accepted.
 `implementations/LOG.md` records each package's events (`opened`, `revised`, `branched`,
 `accepted`, `abandoned`), one row each, with tags on the `opened` row.
 
@@ -339,7 +346,7 @@ ai-sandbox/                    ← working memory between sessions
     local/                     ← the project's own procedures — content, not mechanism (§7)
   sessions/LOG.md + <date>-<slug>.md
   experiments/LOG.md + EXP-<YYYY-MM-DD>-<slug>.md
-  implementations/LOG.md + IMP-<YYYY-MM-DD>-<slug>/   ← DESIGN.md, PLAN.md[, PLAN.r<n>.md], runs/, reviews/
+  implementations/LOG.md + IMP-<YYYY-MM-DD>-<slug>/   ← DESIGN.md, PLAN.md[, DESIGN.rN.md, PLAN.rN.md], runs/, reviews/
 
 src/                           ← analysis code, in whatever the project uses
 sources/                       ← committable source material only (§9)
